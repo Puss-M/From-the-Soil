@@ -1,19 +1,65 @@
 'use client';
 
-import { Suspense, useState, useCallback, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Environment, Stars, Float } from '@react-three/drei';
-import { StationNode } from './StationNode';
-import { RouteVisualizer } from './RouteVisualizer';
+import { useState, useCallback } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera, Stars, Float, Text } from '@react-three/drei';
 import { TerrainMesh } from './TerrainMesh';
 import { stations } from '@/data/stations';
 import { Station } from '@/types';
 import { useStore } from '@/store/useStore';
 import * as THREE from 'three';
 
-function MapContent() {
+// Simplified Station Node (inline to avoid import issues)
+function SimpleStation({ 
+  station, 
+  isSelected, 
+  onClick 
+}: { 
+  station: Station; 
+  isSelected: boolean; 
+  onClick: () => void;
+}) {
+  const color = isSelected ? '#22d3ee' : '#4a7c59';
+  
+  return (
+    <group position={station.position} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+      {/* Base */}
+      <mesh position={[0, 0.2, 0]}>
+        <cylinderGeometry args={[0.3, 0.4, 0.4, 6]} />
+        <meshStandardMaterial color="#334155" />
+      </mesh>
+      
+      {/* Building */}
+      <mesh position={[0, 0.6, 0]}>
+        <boxGeometry args={[0.4, 0.6, 0.4]} />
+        <meshStandardMaterial color={color} emissive={isSelected ? color : '#000'} emissiveIntensity={isSelected ? 0.5 : 0} />
+      </mesh>
+      
+      {/* Roof */}
+      <mesh position={[0, 1.1, 0]}>
+        <coneGeometry args={[0.35, 0.4, 4]} />
+        <meshStandardMaterial color="#1e293b" />
+      </mesh>
+      
+      {/* Label */}
+      <Text
+        position={[0, 1.6, 0]}
+        fontSize={0.25}
+        color="white"
+        anchorX="center"
+        anchorY="middle"
+        outlineWidth={0.02}
+        outlineColor="#000"
+      >
+        {station.name}
+      </Text>
+    </group>
+  );
+}
+
+export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
+  const { startStation, endStation, setRoute, setPhase } = useStore();
   const [hoveredStation, setHoveredStation] = useState<string | null>(null);
-  const { startStation, endStation, setRoute } = useStore();
 
   const handleStationClick = useCallback((station: Station) => {
     if (!startStation) {
@@ -25,92 +71,6 @@ function MapContent() {
     }
   }, [startStation, endStation, setRoute]);
 
-  // Rotate camera slowly
-  const controlsRef = useRef<any>(null);
-  
-  return (
-    <>
-      {/* Background & Atmosphere */}
-      <color attach="background" args={['#05121b']} />
-      <fog attach="fog" args={['#05121b', 10, 50]} />
-
-      {/* Camera */}
-      <PerspectiveCamera makeDefault position={[0, 15, 18]} fov={45} />
-      
-      {/* Controls */}
-      <OrbitControls
-        ref={controlsRef}
-        enablePan={true}
-        enableZoom={true}
-        enableRotate={true}
-        minDistance={10}
-        maxDistance={40}
-        maxPolarAngle={Math.PI / 2.1}
-        target={[0, 0, 0]}
-      />
-
-      {/* Lighting - Dramatic "Stage" Lighting */}
-      <ambientLight intensity={0.2} color="#112F41" /> {/* Deep Cool Ambient */}
-      
-      {/* Warm Key Light (Sun/Life) */}
-      <directionalLight 
-        position={[15, 20, 10]} 
-        intensity={1.5}
-        color="#F5E6CA" 
-        castShadow
-        shadow-mapSize={[2048, 2048]}
-      />
-      
-      {/* Cool Rim Light (Moon/Tech) */}
-      <spotLight 
-        position={[-20, 10, -10]} 
-        intensity={2} 
-        color="#22D3EE"
-        angle={0.5}
-        penumbra={1}
-      />
-
-      {/* Top Fill */}
-      <pointLight position={[0, 20, 0]} intensity={0.5} color="#e0f2fe" />
-
-      {/* Environment */}
-      <Environment preset="city" blur={0.8} background={false} />
-      
-      {/* Dynamic Stars (Simple implementation for now) */}
-      <Stars radius={80} depth={20} count={2000} factor={3} saturation={0} fade speed={0.5} />
-
-      {/* Terrain */}
-      <TerrainMesh size={30} resolution={128} />
-
-      {/* Stations */}
-      {stations.map((station) => (
-        <Float key={station.id} speed={2} rotationIntensity={0.2} floatIntensity={0.5}>
-            <StationNode
-              station={station}
-              isSelected={startStation?.id === station.id || endStation?.id === station.id}
-              isHovered={hoveredStation === station.id}
-              onClick={() => handleStationClick(station)}
-              onHover={(hovered) => setHoveredStation(hovered ? station.id : null)}
-            />
-        </Float>
-      ))}
-
-      {/* Route */}
-      <RouteVisualizer 
-        startStation={startStation} 
-        endStation={endStation} 
-      />
-    </>
-  );
-}
-
-interface MapSceneProps {
-  onStartJourney?: () => void;
-}
-
-export function MapScene({ onStartJourney }: MapSceneProps) {
-  const { startStation, endStation, setPhase } = useStore();
-
   const handleStartJourney = () => {
     if (startStation && endStation) {
       setPhase('transition');
@@ -121,10 +81,68 @@ export function MapScene({ onStartJourney }: MapSceneProps) {
   return (
     <div className="relative w-full h-full">
       {/* 3D Canvas */}
-      <Canvas shadows className="bg-slate-900">
-        <Suspense fallback={null}>
-          <MapContent />
-        </Suspense>
+      <Canvas camera={{ position: [0, 15, 20], fov: 45 }}>
+        {/* Background */}
+        <color attach="background" args={['#0a1628']} />
+        <fog attach="fog" args={['#0a1628', 20, 60]} />
+        
+        {/* Controls */}
+        <OrbitControls 
+          minDistance={10}
+          maxDistance={40}
+          maxPolarAngle={Math.PI / 2.1}
+        />
+        
+        {/* Lighting */}
+        <ambientLight intensity={0.5} color="#4a6fa5" />
+        <directionalLight 
+          position={[15, 20, 10]} 
+          intensity={1.5}
+          color="#F5E6CA" 
+          castShadow
+        />
+        <spotLight 
+          position={[-20, 10, -10]} 
+          intensity={2} 
+          color="#22D3EE"
+          angle={0.5}
+          penumbra={1}
+        />
+        
+        {/* Stars */}
+        <Stars radius={80} depth={30} count={1500} factor={3} fade speed={0.5} />
+
+        {/* Terrain */}
+        <TerrainMesh size={30} resolution={128} />
+
+        {/* Stations */}
+        {stations.map((station) => (
+          <Float key={station.id} speed={2} rotationIntensity={0.1} floatIntensity={0.2}>
+            <SimpleStation
+              station={station}
+              isSelected={startStation?.id === station.id || endStation?.id === station.id}
+              onClick={() => handleStationClick(station)}
+            />
+          </Float>
+        ))}
+
+        {/* Route Line */}
+        {startStation && endStation && (
+          <line>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                count={2}
+                array={new Float32Array([
+                  ...startStation.position,
+                  ...endStation.position
+                ])}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#22d3ee" linewidth={2} />
+          </line>
+        )}
       </Canvas>
 
       {/* 标题 */}
@@ -188,11 +206,11 @@ export function MapScene({ onStartJourney }: MapSceneProps) {
           <div className="text-xs text-slate-400 mb-2">地形图例</div>
           <div className="flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded bg-[#2D5A4A]" />
+              <div className="w-3 h-3 rounded bg-[#112F41]" />
               <span className="text-slate-300">水域</span>
             </div>
             <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded bg-[#4A7C59]" />
+              <div className="w-3 h-3 rounded bg-[#407D5C]" />
               <span className="text-slate-300">平原</span>
             </div>
             <div className="flex items-center gap-1">
