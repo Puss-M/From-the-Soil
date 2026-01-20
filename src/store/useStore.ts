@@ -2,39 +2,13 @@
 
 import { create } from 'zustand';
 
-// 驿站数据类型
-export interface Station {
-  id: string;
-  name: string;
-  nameEn: string;
-  position: [number, number, number];
-  climate: ClimateData;
-  buildingGene: string;
-}
-
-// 气候数据类型
-export interface ClimateData {
-  rainfall: number;      // 降雨量 (mm)
-  humidity: number;      // 湿度 (%)
-  temperature: number;   // 温度 (°C)
-  altitude: number;      // 海拔 (m)
-  sunlight: number;      // 日照系数 (0-1)
-  defense: number;       // 防御等级 (0-10)
-}
-
-// 收集品类型
-export interface CollectionItem {
-  id: string;
-  name: string;
-  category: string;
-  collected: boolean;
-}
+import { ClimateData, Station, CollectionItem, AppPhase, ViewMode } from '@/types';
 
 // 应用状态类型
 interface AppState {
   // 当前阶段
-  phase: 'map' | 'transition' | 'roaming';
-  setPhase: (phase: 'map' | 'transition' | 'roaming') => void;
+  phase: AppPhase;
+  setPhase: (phase: AppPhase) => void;
 
   // 路线数据
   startStation: Station | null;
@@ -61,7 +35,7 @@ interface AppState {
   collectItem: (itemId: string) => void;
 
   // 视角模式
-  viewMode: 'tourist' | 'god';
+  viewMode: ViewMode;
   toggleViewMode: () => void;
 }
 
