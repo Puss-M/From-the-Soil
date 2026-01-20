@@ -191,7 +191,7 @@ export function TransitionScene({ onComplete, onBack }: TransitionSceneProps) {
         <button
           onClick={handleComplete}
           className="absolute top-6 right-6 z-10 px-4 py-2 
-                     bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400
+                     bg-linear-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400
                      rounded-lg text-white text-sm font-medium transition-all
                      shadow-lg shadow-cyan-500/25"
         >

@@ -151,7 +151,7 @@ export function MapScene({ onStartJourney }: MapSceneProps) {
             disabled={!startStation || !endStation}
             className={`w-full py-3 rounded-lg font-medium transition-all ${
               startStation && endStation
-                ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 shadow-lg shadow-cyan-500/25'
+                ? 'bg-linear-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 shadow-lg shadow-cyan-500/25'
                 : 'bg-slate-700 text-slate-500 cursor-not-allowed'
             }`}
           >

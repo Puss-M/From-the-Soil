@@ -51,7 +51,7 @@ export function CollectionDock() {
         {/* 进度条 */}
         <div className="mt-3 h-1 bg-slate-700 rounded-full overflow-hidden">
           <div 
-            className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-500"
+            className="h-full bg-linear-to-r from-cyan-500 to-blue-500 transition-all duration-500"
             style={{ width: `${(collectedCount / Math.max(totalItems, 1)) * 100}%` }}
           />
         </div>

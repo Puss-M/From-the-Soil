@@ -47,7 +47,7 @@ export function DashboardHUD() {
             </div>
             <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300"
+                className="h-full bg-linear-to-r from-cyan-500 to-blue-500 transition-all duration-300"
                 style={{ width: `${(currentClimate.rainfall / 2000) * 100}%` }}
               />
             </div>
@@ -61,7 +61,7 @@ export function DashboardHUD() {
             </div>
             <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-300"
+                className="h-full bg-linear-to-r from-blue-500 to-indigo-500 transition-all duration-300"
                 style={{ width: `${currentClimate.humidity}%` }}
               />
             </div>
@@ -75,7 +75,7 @@ export function DashboardHUD() {
             </div>
             <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-blue-500 via-green-500 to-orange-500 transition-all duration-300"
+                className="h-full bg-linear-to-r from-blue-500 via-green-500 to-orange-500 transition-all duration-300"
                 style={{ width: `${((currentClimate.temperature + 10) / 40) * 100}%` }}
               />
             </div>
@@ -89,7 +89,7 @@ export function DashboardHUD() {
             </div>
             <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-300"
+                className="h-full bg-linear-to-r from-emerald-500 to-teal-500 transition-all duration-300"
                 style={{ width: `${(currentClimate.altitude / 4000) * 100}%` }}
               />
             </div>
@@ -103,7 +103,7 @@ export function DashboardHUD() {
             </div>
             <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-300"
+                className="h-full bg-linear-to-r from-yellow-500 to-amber-500 transition-all duration-300"
                 style={{ width: `${currentClimate.sunlight * 100}%` }}
               />
             </div>
@@ -117,7 +117,7 @@ export function DashboardHUD() {
             </div>
             <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-red-500 to-rose-500 transition-all duration-300"
+                className="h-full bg-linear-to-r from-red-500 to-rose-500 transition-all duration-300"
                 style={{ width: `${(currentClimate.defense / 10) * 100}%` }}
               />
             </div>

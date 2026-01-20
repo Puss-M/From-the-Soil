@@ -168,7 +168,7 @@ export function InteractiveElement({
             {/* 收集按钮 */}
             <button
               onClick={handleCollect}
-              className="w-full py-2 bg-gradient-to-r from-cyan-500 to-blue-500 
+              className="w-full py-2 bg-linear-to-r from-cyan-500 to-blue-500 
                          hover:from-cyan-400 hover:to-blue-400
                          rounded-lg text-white text-sm font-medium transition-all"
             >
