@@ -128,20 +128,18 @@ export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
 
         {/* Route Line */}
         {startStation && endStation && (
-          <line>
+          <mesh>
             <bufferGeometry>
-              <bufferAttribute
+              <float32BufferAttribute
                 attach="attributes-position"
-                count={2}
-                array={new Float32Array([
+                args={[new Float32Array([
                   ...startStation.position,
                   ...endStation.position
-                ])}
-                itemSize={3}
+                ]), 3]}
               />
             </bufferGeometry>
-            <lineBasicMaterial color="#22d3ee" linewidth={2} />
-          </line>
+            <lineBasicMaterial color="#22d3ee" />
+          </mesh>
         )}
       </Canvas>
 
