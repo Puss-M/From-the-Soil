@@ -1,8 +1,8 @@
 'use client';
 
 import { useRef, useState, useMemo } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import { Text, Html } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
+import { Text, Html, Float } from '@react-three/drei';
 import * as THREE from 'three';
 import { Station } from '@/types';
 
@@ -12,6 +12,61 @@ interface StationNodeProps {
   isHovered: boolean;
   onClick: () => void;
   onHover: (hovered: boolean) => void;
+}
+
+// Procedural Pavilion Component
+function Pavilion({ color, scale = 1, glowing = false }: { color: THREE.Color, scale?: number, glowing?: boolean }) {
+    // Roof Geometry (Pyramid with 4 sides)
+    const roofGeo = useMemo(() => {
+        const geo = new THREE.ConeGeometry(1, 0.6, 4, 1);
+        geo.rotateY(Math.PI / 4); // Align with axes
+        geo.translate(0, 0.8, 0); // Lift up
+        return geo;
+    }, []);
+
+    // Pillars (4 corners)
+    const pillarGeo = useMemo(() => {
+        const geo = new THREE.CylinderGeometry(0.05, 0.05, 0.8);
+        geo.translate(0, 0.4, 0);
+        return geo;
+    }, []);
+
+    const baseGeo = useMemo(() => new THREE.CylinderGeometry(0.8, 0.9, 0.2, 4).rotateY(Math.PI/4), []);
+
+    return (
+        <group scale={scale}>
+            {/* Base */}
+            <mesh geometry={baseGeo} position={[0, 0.1, 0]}>
+                <meshStandardMaterial color="#334155" />
+            </mesh>
+
+            {/* Pillars */}
+            {[[-0.4, -0.4], [0.4, -0.4], [-0.4, 0.4], [0.4, 0.4]].map(([x, z], i) => (
+                <mesh key={i} geometry={pillarGeo} position={[x, 0, z]}>
+                    <meshStandardMaterial color="#475569" />
+                </mesh>
+            ))}
+
+            {/* Roof */}
+            <mesh geometry={roofGeo}>
+                <meshStandardMaterial 
+                    color={glowing ? '#0ea5e9' : '#1e293b'} 
+                    emissive={glowing ? '#0ea5e9' : '#000000'}
+                    emissiveIntensity={glowing ? 0.5 : 0}
+                    roughness={0.2}
+                    metalness={0.8}
+                />
+            </mesh>
+
+            {/* Glow Core */}
+            {glowing && (
+                <mesh position={[0, 0.5, 0]}>
+                    <sphereGeometry args={[0.2, 16, 16]} />
+                    <meshBasicMaterial color="#00ffff" />
+                </mesh>
+            )}
+        </group>
+    );
 }
 
 export function StationNode({ 
@@ -24,124 +79,101 @@ export function StationNode({
   const groupRef = useRef<THREE.Group>(null);
   const [localHover, setLocalHover] = useState(false);
 
-  // 悬浮动画
+  // Hover Animation
   useFrame((state) => {
     if (groupRef.current) {
       const t = state.clock.elapsedTime;
-      groupRef.current.position.y = station.position[1] + Math.sin(t * 2 + station.position[0]) * 0.05;
+      // Gentle float
+      const hoverOffset = (isSelected || isHovered) ? 0.2 : 0;
+      groupRef.current.position.y = THREE.MathUtils.lerp(
+          groupRef.current.position.y,
+          station.position[1] + hoverOffset + Math.sin(t * 2 + station.position[0]) * 0.05,
+          0.1
+      );
       
-      // 选中时发光脉冲
-      if (isSelected) {
-        const scale = 1 + Math.sin(t * 3) * 0.05;
-        groupRef.current.scale.setScalar(scale);
-      } else {
-        groupRef.current.scale.setScalar(1);
-      }
+      // Selected pulse scale
+      const targetScale = isSelected ? 1.2 : isHovered ? 1.1 : 1;
+      groupRef.current.scale.setScalar(THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.1));
     }
   });
 
-  // 建筑颜色根据气候变化
+  // Color calculation
   const buildingColor = useMemo(() => {
     const rainfall = station.climate.rainfall;
-    // 干旱→黄褐色，湿润→青灰色
+    // Dry -> Ochre, Wet -> Teal
     const t = rainfall / 2000;
     return new THREE.Color().lerpColors(
-      new THREE.Color('#8B7355'), // 干旱土黄
-      new THREE.Color('#4A5568'), // 湿润青灰
+      new THREE.Color('#C4A484'), // Ochre
+      new THREE.Color('#2D5A4A'), // Teal
       t
     );
   }, [station.climate.rainfall]);
 
-  // 屋顶高度根据降雨量
-  const roofHeight = 0.15 + (station.climate.rainfall / 2000) * 0.25;
+  // Interaction handlers
+  const handlePointerOver = (e: any) => {
+    e.stopPropagation();
+    setLocalHover(true);
+    onHover(true);
+    document.body.style.cursor = 'pointer';
+  };
+
+  const handlePointerOut = () => {
+    setLocalHover(false);
+    onHover(false);
+    document.body.style.cursor = 'auto';
+  };
 
   return (
     <group 
       ref={groupRef} 
       position={station.position}
       onClick={(e) => { e.stopPropagation(); onClick(); }}
-      onPointerOver={(e) => { e.stopPropagation(); setLocalHover(true); onHover(true); }}
-      onPointerOut={() => { setLocalHover(false); onHover(false); }}
+      onPointerOver={handlePointerOver}
+      onPointerOut={handlePointerOut}
     >
-      {/* 微缩建筑模型 */}
-      <group scale={0.5}>
-        {/* 地基 */}
-        <mesh position={[0, 0.05, 0]}>
-          <boxGeometry args={[0.8, 0.1, 0.6]} />
-          <meshStandardMaterial color="#1a1a2e" />
-        </mesh>
-
-        {/* 主体 */}
-        <mesh position={[0, 0.35, 0]}>
-          <boxGeometry args={[0.6, 0.5, 0.5]} />
-          <meshStandardMaterial 
+        {/* The Pavilion Model */}
+        <Pavilion 
             color={buildingColor} 
-            emissive={isSelected ? '#00ffff' : '#000000'}
-            emissiveIntensity={isSelected ? 0.3 : 0}
-          />
-        </mesh>
+            scale={0.5} 
+            glowing={isSelected || isHovered} 
+        />
 
-        {/* 屋顶 */}
-        <mesh position={[0, 0.6 + roofHeight / 2, 0]}>
-          <coneGeometry args={[0.5, roofHeight, 4]} />
-          <meshStandardMaterial 
-            color="#2d3748" 
-            emissive={isSelected ? '#0ea5e9' : '#000000'}
-            emissiveIntensity={isSelected ? 0.2 : 0}
-          />
-        </mesh>
-
-        {/* 发光边框 */}
-        <lineSegments position={[0, 0.35, 0]}>
-          <edgesGeometry args={[new THREE.BoxGeometry(0.62, 0.52, 0.52)]} />
-          <lineBasicMaterial 
-            color={isSelected ? '#00ffff' : isHovered ? '#0ea5e9' : '#334155'} 
-            linewidth={2} 
-          />
-        </lineSegments>
-      </group>
-
-      {/* 驿站名称 */}
+      {/* Station Name */}
       <Text
-        position={[0, -0.3, 0]}
-        fontSize={0.15}
+        position={[0, -0.2, 0]}
+        fontSize={0.25}
+        font="/fonts/NotoSerifSC-Bold.woff2" // We'll need to handle fonts, falling back to default if missing
         color={isSelected ? '#00ffff' : '#e2e8f0'}
         anchorX="center"
         anchorY="top"
+        outlineWidth={0.02}
+        outlineColor="#000000"
       >
         {station.name}
       </Text>
 
-      {/* 悬停信息面板 */}
+      {/* Hover Info Panel (HTML) */}
       {(localHover || isHovered) && !isSelected && (
-        <Html position={[0.8, 0.5, 0]} distanceFactor={10}>
-          <div className="bg-black/80 backdrop-blur-sm border border-cyan-500/50 rounded-lg p-3 min-w-48 pointer-events-none">
-            <div className="text-cyan-400 font-bold text-sm mb-2">{station.name}</div>
-            <div className="space-y-1 text-xs">
-              <div className="flex justify-between">
-                <span className="text-slate-400">降雨量</span>
-                <span className="text-white">{station.climate.rainfall}mm</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">湿度</span>
-                <span className="text-white">{station.climate.humidity}%</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">建筑基因</span>
-                <span className="text-cyan-300">{station.buildingGene}</span>
-              </div>
+        <Html position={[0, 1.5, 0]} center distanceFactor={10} style={{ pointerEvents: 'none' }}>
+            <div className="bg-black/80 backdrop-blur-md border border-cyan-500/30 rounded-lg p-2 min-w-[120px] text-center transform transition-all duration-300">
+                <div className="text-cyan-400 font-bold text-xs">{station.name}</div>
+                <div className="h-px bg-cyan-500/20 my-1"/>
+                <div className="text-[10px] text-slate-300">
+                    <div>🌧️ {station.climate.rainfall}mm</div>
+                    <div>🛡️ Lv.{station.climate.defense}</div>
+                </div>
             </div>
-          </div>
         </Html>
       )}
 
-      {/* 选中光环 */}
+      {/* Selection Ring */}
       {isSelected && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-          <ringGeometry args={[0.4, 0.5, 32]} />
-          <meshBasicMaterial color="#00ffff" transparent opacity={0.5} side={THREE.DoubleSide} />
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
+          <ringGeometry args={[0.6, 0.7, 32]} />
+          <meshBasicMaterial color="#00ffff" transparent opacity={0.6} side={THREE.DoubleSide} />
         </mesh>
       )}
     </group>
   );
 }
+

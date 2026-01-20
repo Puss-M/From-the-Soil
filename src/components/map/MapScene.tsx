@@ -1,79 +1,101 @@
 'use client';
 
-import { Suspense, useState, useCallback } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Environment, Stars } from '@react-three/drei';
+import { Suspense, useState, useCallback, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera, Environment, Stars, Float } from '@react-three/drei';
 import { StationNode } from './StationNode';
 import { RouteVisualizer } from './RouteVisualizer';
-import { TerrainMesh, TerrainGrid } from './TerrainMesh';
+import { TerrainMesh } from './TerrainMesh';
 import { stations } from '@/data/stations';
 import { Station } from '@/types';
 import { useStore } from '@/store/useStore';
+import * as THREE from 'three';
 
 function MapContent() {
   const [hoveredStation, setHoveredStation] = useState<string | null>(null);
-  const { startStation, endStation, setRoute, setPhase } = useStore();
+  const { startStation, endStation, setRoute } = useStore();
 
   const handleStationClick = useCallback((station: Station) => {
     if (!startStation) {
-      // 第一次点击设为起点
       setRoute(station, null as unknown as Station);
     } else if (!endStation) {
-      // 第二次点击设为终点
       setRoute(startStation, station);
     } else {
-      // 重新选择起点
       setRoute(station, null as unknown as Station);
     }
   }, [startStation, endStation, setRoute]);
 
+  // Rotate camera slowly
+  const controlsRef = useRef<any>(null);
+  
   return (
     <>
-      {/* 相机 */}
-      <PerspectiveCamera makeDefault position={[0, 12, 12]} fov={50} />
+      {/* Background & Atmosphere */}
+      <color attach="background" args={['#05121b']} />
+      <fog attach="fog" args={['#05121b', 10, 50]} />
+
+      {/* Camera */}
+      <PerspectiveCamera makeDefault position={[0, 15, 18]} fov={45} />
       
-      {/* 控制器 */}
+      {/* Controls */}
       <OrbitControls
+        ref={controlsRef}
         enablePan={true}
         enableZoom={true}
         enableRotate={true}
-        minDistance={5}
-        maxDistance={30}
-        maxPolarAngle={Math.PI / 2.2}
+        minDistance={10}
+        maxDistance={40}
+        maxPolarAngle={Math.PI / 2.1}
         target={[0, 0, 0]}
       />
 
-      {/* 灯光 */}
-      <ambientLight intensity={0.4} />
+      {/* Lighting - Dramatic "Stage" Lighting */}
+      <ambientLight intensity={0.2} color="#112F41" /> {/* Deep Cool Ambient */}
+      
+      {/* Warm Key Light (Sun/Life) */}
       <directionalLight 
-        position={[10, 20, 10]} 
-        intensity={0.8}
+        position={[15, 20, 10]} 
+        intensity={1.5}
+        color="#F5E6CA" 
         castShadow
+        shadow-mapSize={[2048, 2048]}
       />
-      <pointLight position={[-10, 10, -10]} intensity={0.3} color="#4A7C59" />
-      <pointLight position={[10, 5, 10]} intensity={0.2} color="#8FB996" />
+      
+      {/* Cool Rim Light (Moon/Tech) */}
+      <spotLight 
+        position={[-20, 10, -10]} 
+        intensity={2} 
+        color="#22D3EE"
+        angle={0.5}
+        penumbra={1}
+      />
 
-      {/* 环境 */}
-      <Environment preset="night" />
-      <Stars radius={100} depth={50} count={1000} factor={4} fade speed={1} />
+      {/* Top Fill */}
+      <pointLight position={[0, 20, 0]} intensity={0.5} color="#e0f2fe" />
 
-      {/* 地形 */}
-      <TerrainMesh size={20} resolution={64} />
-      <TerrainGrid />
+      {/* Environment */}
+      <Environment preset="city" blur={0.8} background={false} />
+      
+      {/* Dynamic Stars (Simple implementation for now) */}
+      <Stars radius={80} depth={20} count={2000} factor={3} saturation={0} fade speed={0.5} />
 
-      {/* 驿站节点 */}
+      {/* Terrain */}
+      <TerrainMesh size={30} resolution={128} />
+
+      {/* Stations */}
       {stations.map((station) => (
-        <StationNode
-          key={station.id}
-          station={station}
-          isSelected={startStation?.id === station.id || endStation?.id === station.id}
-          isHovered={hoveredStation === station.id}
-          onClick={() => handleStationClick(station)}
-          onHover={(hovered) => setHoveredStation(hovered ? station.id : null)}
-        />
+        <Float key={station.id} speed={2} rotationIntensity={0.2} floatIntensity={0.5}>
+            <StationNode
+              station={station}
+              isSelected={startStation?.id === station.id || endStation?.id === station.id}
+              isHovered={hoveredStation === station.id}
+              onClick={() => handleStationClick(station)}
+              onHover={(hovered) => setHoveredStation(hovered ? station.id : null)}
+            />
+        </Float>
       ))}
 
-      {/* 路线可视化 */}
+      {/* Route */}
       <RouteVisualizer 
         startStation={startStation} 
         endStation={endStation} 

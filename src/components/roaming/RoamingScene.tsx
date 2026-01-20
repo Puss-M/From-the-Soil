@@ -2,12 +2,14 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Environment, ContactShadows, Grid } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, Environment, ContactShadows, Grid, Stars } from '@react-three/drei';
 import { MorphingHouse } from '@/components/MorphingHouse';
 import { InteractiveElement } from './InteractiveElement';
 import { CollectionDock } from '@/components/ui/CollectionDock';
 import { useStore } from '@/store/useStore';
 import { CollectionItem } from '@/types';
+import { ClimateEffects } from '@/components/ClimateEffects';
+import { ControlPanel } from '@/components/ControlPanel';
 
 // 可收集的构件数据
 const collectibleItems: CollectionItem[] = [
@@ -81,13 +83,23 @@ function RoamingContent() {
         target={[0, 1, 0]}
       />
 
-      {/* 灯光 */}
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 15, 10]} intensity={1} castShadow />
-      <pointLight position={[-5, 5, -5]} intensity={0.3} color="#00ffff" />
+      {/* 灯光 - Dramatic */}
+      <ambientLight intensity={0.2} color="#1e293b" />
+      <directionalLight 
+        position={[10, 15, 10]} 
+        intensity={1.2} 
+        castShadow 
+        color="#fff7ed" // Warm sun
+        shadow-mapSize={[2048, 2048]}
+      />
+      <pointLight position={[-5, 5, -5]} intensity={0.5} color="#38bdf8" /> {/* Cool fill */}
 
       {/* 环境 */}
-      <Environment preset="city" />
+      <Environment preset="city" blur={0.8} />
+      <Stars radius={100} depth={50} count={2000} factor={4} fade speed={1} />
+      
+      {/* 气候粒子 */}
+      <ClimateEffects />
 
       {/* 地面 */}
       <Grid
@@ -106,9 +118,11 @@ function RoamingContent() {
 
       <ContactShadows
         position={[0, -0.01, 0]}
-        opacity={0.4}
+        opacity={0.6}
         scale={20}
-        blur={2}
+        blur={2.5}
+        far={5}
+        color="#0f172a"
       />
 
       {/* 主建筑 */}
@@ -148,7 +162,7 @@ export function RoamingScene({ onBack }: RoamingSceneProps) {
   };
 
   return (
-    <div className="relative w-full h-full bg-slate-900">
+    <div className="relative w-full h-full bg-slate-900 overflow-hidden font-sans">
       {/* 3D Canvas */}
       <Canvas shadows className="bg-slate-900">
         <Suspense fallback={null}>
@@ -156,58 +170,60 @@ export function RoamingScene({ onBack }: RoamingSceneProps) {
         </Suspense>
       </Canvas>
 
-      {/* 标题 */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 text-center">
-        <h2 className="text-2xl font-bold text-white tracking-wider mb-1">
-          民居漫游
+      {/* 左侧：环境控制面板 */}
+      <ControlPanel />
+
+      {/* 顶部标题 */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 text-center pointer-events-none">
+        <h2 className="text-3xl font-bold text-white tracking-[0.2em] mb-1 font-serif drop-shadow-md">
+          {endStation?.name || '民居漫游'}
         </h2>
-        <p className="text-cyan-400 text-sm">
-          {endStation?.name || '目的地'} · {endStation?.buildingGene || '探索中'}
-        </p>
-      </div>
-
-      {/* 返回按钮 */}
-      <button
-        onClick={handleBack}
-        className="absolute top-6 left-6 z-10 px-4 py-2 bg-black/50 hover:bg-black/70 
-                   border border-white/20 rounded-lg text-white text-sm transition-colors"
-      >
-        ← 返回旅途
-      </button>
-
-      {/* 视角切换 */}
-      <div className="absolute top-6 right-6 z-10">
-        <button
-          onClick={toggleViewMode}
-          className="px-4 py-2 bg-black/50 hover:bg-black/70 
-                     border border-white/20 rounded-lg text-white text-sm transition-colors"
-        >
-          {viewMode === 'tourist' ? '🎯 游客视角' : '🌍 上帝视角'}
-        </button>
-      </div>
-
-      {/* 小地图占位 */}
-      <div className="absolute top-20 right-6 z-10 w-32 h-32">
-        <div className="bg-black/50 backdrop-blur-sm border border-white/20 rounded-lg 
-                        w-full h-full flex items-center justify-center">
-          <span className="text-xs text-slate-400">小地图</span>
+        <div className="flex items-center justify-center gap-2 text-cyan-400 text-sm font-mono">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span>{endStation?.buildingGene || 'ARCHITECTURAL EXPLORATION'}</span>
         </div>
       </div>
 
-      {/* 操作提示 */}
-      <div className="absolute left-6 bottom-24 z-10">
-        <div className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-lg p-3">
-          <div className="text-xs text-slate-400 mb-2">操作说明</div>
-          <div className="text-xs text-slate-300 space-y-1">
-            <div>• 点击发光构件查看详情</div>
-            <div>• 拖拽旋转视角</div>
-            <div>• 滚轮缩放</div>
-          </div>
+      {/* 底部导航区域 */}
+      <div className="absolute bottom-10 left-10 z-20 flex gap-4">
+          <button
+            onClick={handleBack}
+            className="px-6 py-3 bg-black/40 hover:bg-black/60 backdrop-blur-md
+                       border border-white/10 hover:border-white/30 rounded-full 
+                       text-white text-sm transition-all flex items-center gap-2 group"
+          >
+            <span className="group-hover:-translate-x-1 transition-transform">←</span>
+            BACK TO MAP
+          </button>
+          
+          <button
+            onClick={toggleViewMode}
+            className="px-6 py-3 bg-black/40 hover:bg-black/60 backdrop-blur-md
+                       border border-cyan-500/20 hover:border-cyan-500/50 rounded-full 
+                       text-cyan-400 text-sm transition-all"
+          >
+            {viewMode === 'tourist' ? '🎯 TOURIST VIEW' : '🌍 GOD VIEW'}
+          </button>
+      </div>
+
+      {/* 右侧：小地图与图谱 (Replacing MiniMap with just a placeholder/dock) */}
+      <div className="absolute top-6 right-6 z-10 w-64 space-y-4">
+        {/* Mininav */}
+        <div className="bg-black/40 backdrop-blur-md border border-white/10 rounded-xl p-4">
+           <div className="text-[10px] text-zinc-500 uppercase tracking-widest mb-2">Navigation</div>
+           <div className="h-32 rounded-lg bg-slate-800/50 flex items-center justify-center border border-white/5">
+                <span className="text-xs text-slate-500">MINIMAP ONLINE</span>
+           </div>
         </div>
       </div>
 
-      {/* 图谱收集 Dock */}
-      <CollectionDock />
+      {/* 图谱收集 Dock - Centered Bottom */}
+      <div className="absolute bottom-10 right-10 z-20">
+         {/* <CollectionDock /> - Keeping it if it works, usually bottom centered */}
+      </div>
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl z-20">
+         <CollectionDock /> 
+      </div>
     </div>
   );
 }
