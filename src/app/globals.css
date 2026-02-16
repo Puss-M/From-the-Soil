@@ -1,0 +1,35 @@
+:root {
+  --background: #0f172a;
+  --foreground: #e2e8f0;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", "Noto Sans SC", Arial, Helvetica, sans-serif;
+  overflow: hidden;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(34, 211, 238, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 211, 238, 0.5);
+}
+
+/* 选中高亮 */
+::selection {
+  background: rgba(34, 211, 238, 0.3);
+  color: #fff;
+}
