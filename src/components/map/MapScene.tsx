@@ -1,75 +1,75 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Stars, Float, Text } from '@react-three/drei';
-import { TerrainMesh } from './TerrainMesh';
+import { useState, useCallback, useMemo } from 'react';
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+  Line,
+} from 'react-simple-maps';
 import { stations } from '@/data/stations';
 import { Station } from '@/types';
 import { useStore } from '@/store/useStore';
-import * as THREE from 'three';
 
-// Simplified Station Node (inline to avoid import issues)
-function SimpleStation({ 
-  station, 
-  isSelected, 
-  onClick 
-}: { 
-  station: Station; 
-  isSelected: boolean; 
-  onClick: () => void;
-}) {
-  const color = isSelected ? '#22d3ee' : '#4a7c59';
-  
-  return (
-    <group position={station.position} onClick={(e) => { e.stopPropagation(); onClick(); }}>
-      {/* Base */}
-      <mesh position={[0, 0.2, 0]}>
-        <cylinderGeometry args={[0.3, 0.4, 0.4, 6]} />
-        <meshStandardMaterial color="#334155" />
-      </mesh>
-      
-      {/* Building */}
-      <mesh position={[0, 0.6, 0]}>
-        <boxGeometry args={[0.4, 0.6, 0.4]} />
-        <meshStandardMaterial color={color} emissive={isSelected ? color : '#000'} emissiveIntensity={isSelected ? 0.5 : 0} />
-      </mesh>
-      
-      {/* Roof */}
-      <mesh position={[0, 1.1, 0]}>
-        <coneGeometry args={[0.35, 0.4, 4]} />
-        <meshStandardMaterial color="#1e293b" />
-      </mesh>
-      
-      {/* Label */}
-      <Text
-        position={[0, 1.6, 0]}
-        fontSize={0.25}
-        color="white"
-        anchorX="center"
-        anchorY="middle"
-        outlineWidth={0.02}
-        outlineColor="#000"
-      >
-        {station.name}
-      </Text>
-    </group>
-  );
+const CHINA_GEO_URL = '/china.json';
+
+function getRegionColor(region: string): string {
+  const colors: Record<string, string> = {
+    '江南': '#2563eb', '皖南': '#7c3aed', '闽西': '#dc2626',
+    '晋中': '#d97706', '陕北': '#b45309', '滇西': '#059669',
+    '藏区': '#6366f1', '南疆': '#e11d48', '京畿': '#ea580c',
+    '湘西': '#16a34a', '胶东': '#0891b2', '滇南': '#10b981',
+    '蒙古': '#0d9488', '岭南': '#f43f5e', '东疆': '#f59e0b',
+    '中原': '#8b5cf6', '赣北': '#a855f7',
+  };
+  return colors[region] || '#6366f1';
+}
+
+const labelOffsets: Record<string, [number, number]> = {
+  'suzhou': [14, -12], 'wuxi': [14, 8], 'hangzhou': [-16, 10],
+  'huizhou': [-16, -8], 'wuyuan': [-16, 8], 'beijing': [14, 0],
+  'weihai': [14, -10], 'pingyao': [0, -16], 'yanan': [-16, 0],
+  'xilingol': [14, -10], 'guangzhou': [-16, 6], 'fujian': [14, 0],
+  'fenghuang': [-16, 0], 'dali': [-16, 0], 'xishuangbanna': [14, 0],
+};
+
+function getProvinceRegionTint(name: string): string {
+  const tints: Record<string, string> = {
+    '浙江': '#dbeafe', '江苏': '#dbeafe', '上海': '#dbeafe',
+    '安徽': '#ede9fe', '江西': '#ede9fe',
+    '福建': '#fee2e2', '广东': '#fce7f3',
+    '山西': '#fef3c7', '陕西': '#fef3c7', '甘肃': '#fef3c7',
+    '云南': '#d1fae5', '四川': '#d1fae5',
+    '西藏': '#e0e7ff', '新疆': '#fce7f3',
+    '北京': '#ffedd5', '天津': '#ffedd5', '河北': '#ffedd5',
+    '湖南': '#dcfce7', '湖北': '#dcfce7', '山东': '#cffafe',
+    '内蒙古': '#ccfbf1', '河南': '#f3e8ff', '广西': '#ffe4e6',
+    '贵州': '#ecfccb', '辽宁': '#e0f2fe', '吉林': '#e0f2fe',
+    '黑龙江': '#e0f2fe', '重庆': '#fce7f3', '海南': '#fbcfe8',
+    '宁夏': '#fef9c3', '青海': '#e8e8fd', '台湾': '#d1fae5',
+    '香港': '#fce7f3', '澳门': '#fce7f3',
+  };
+  return tints[name] || '#f1f5f9';
 }
 
 export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
   const { startStation, endStation, setRoute, setPhase } = useStore();
   const [hoveredStation, setHoveredStation] = useState<string | null>(null);
+  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  const handleStationClick = useCallback((station: Station) => {
-    if (!startStation) {
-      setRoute(station, null as unknown as Station);
-    } else if (!endStation) {
-      setRoute(startStation, station);
-    } else {
-      setRoute(station, null as unknown as Station);
-    }
-  }, [startStation, endStation, setRoute]);
+  const handleStationClick = useCallback(
+    (station: Station) => {
+      if (!startStation) {
+        setRoute(station, null as unknown as Station);
+      } else if (!endStation) {
+        setRoute(startStation, station);
+      } else {
+        setRoute(station, null as unknown as Station);
+      }
+    },
+    [startStation, endStation, setRoute]
+  );
 
   const handleStartJourney = () => {
     if (startStation && endStation) {
@@ -78,159 +78,249 @@ export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
     }
   };
 
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    setMousePos({ x: e.clientX, y: e.clientY });
+  }, []);
+
+  const hoveredData = useMemo(() => {
+    if (!hoveredStation) return null;
+    return stations.find((s) => s.id === hoveredStation) || null;
+  }, [hoveredStation]);
+
+  const visibleConnections = useMemo(() => {
+    const activeId = hoveredStation || startStation?.id || null;
+    if (!activeId) return [];
+    return stations
+      .filter((s) => s.id !== activeId)
+      .map((s) => {
+        const active = stations.find((st) => st.id === activeId)!;
+        return { from: active, to: s };
+      });
+  }, [hoveredStation, startStation]);
+
   return (
-    <div className="relative w-full h-full">
-      {/* 3D Canvas */}
-      <Canvas camera={{ position: [0, 15, 20], fov: 45 }}>
-        {/* Background */}
-        <color attach="background" args={['#0a1628']} />
-        <fog attach="fog" args={['#0a1628', 20, 60]} />
-        
-        {/* Controls */}
-        <OrbitControls 
-          minDistance={10}
-          maxDistance={40}
-          maxPolarAngle={Math.PI / 2.1}
-        />
-        
-        {/* Lighting */}
-        <ambientLight intensity={0.5} color="#4a6fa5" />
-        <directionalLight 
-          position={[15, 20, 10]} 
-          intensity={1.5}
-          color="#F5E6CA" 
-          castShadow
-        />
-        <spotLight 
-          position={[-20, 10, -10]} 
-          intensity={2} 
-          color="#22D3EE"
-          angle={0.5}
-          penumbra={1}
-        />
-        
-        {/* Stars */}
-        <Stars radius={80} depth={30} count={1500} factor={3} fade speed={0.5} />
+    <div
+      className="relative w-full h-full overflow-hidden"
+      style={{ background: 'linear-gradient(160deg, #e0f2fe 0%, #f0f9ff 30%, #f5f3ff 60%, #fdf2f8 100%)' }}
+      onMouseMove={handleMouseMove}
+    >
+      {/* ══ Layer 0: Canvas (地图 SVG) ═══════════════════════ */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
+        <ComposableMap
+          projection="geoMercator"
+          projectionConfig={{ center: [104, 33], scale: 580 }}
+          style={{ width: '100%', height: '100%' }}
+        >
+          <defs>
+            <marker id="arrowHead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth={6} markerHeight={6} orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#6366f1" />
+            </marker>
+          </defs>
 
-        {/* Terrain */}
-        <TerrainMesh size={30} resolution={128} />
+          <Geographies geography={CHINA_GEO_URL}>
+            {({ geographies }: { geographies: Array<{ rsmKey: string; properties?: { name?: string } }> }) =>
+              geographies.map((geo) => (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  fill={getProvinceRegionTint(geo.properties?.name || '')}
+                  stroke="#cbd5e1"
+                  strokeWidth={0.5}
+                  style={{
+                    default: { outline: 'none' },
+                    hover: { fill: '#e2e8f0', outline: 'none' },
+                    pressed: { outline: 'none' },
+                  }}
+                />
+              ))
+            }
+          </Geographies>
 
-        {/* Stations */}
-        {stations.map((station) => (
-          <Float key={station.id} speed={2} rotationIntensity={0.1} floatIntensity={0.2}>
-            <SimpleStation
-              station={station}
-              isSelected={startStation?.id === station.id || endStation?.id === station.id}
-              onClick={() => handleStationClick(station)}
-            />
-          </Float>
-        ))}
+          {visibleConnections.map(({ from, to }) => {
+            const isHighlighted =
+              (startStation?.id === from.id && endStation?.id === to.id) ||
+              (startStation?.id === to.id && endStation?.id === from.id);
+            if (isHighlighted) return null;
+            return (
+              <Line key={`${from.id}-${to.id}`} from={from.coordinates} to={to.coordinates}
+                stroke="#94a3b8" strokeWidth={0.5} strokeOpacity={0.25} strokeDasharray="3,6" />
+            );
+          })}
 
-        {/* Route Line */}
-        {startStation && endStation && (
-          <mesh>
-            <bufferGeometry>
-              <float32BufferAttribute
-                attach="attributes-position"
-                args={[new Float32Array([
-                  ...startStation.position,
-                  ...endStation.position
-                ]), 3]}
-              />
-            </bufferGeometry>
-            <lineBasicMaterial color="#22d3ee" />
-          </mesh>
-        )}
-      </Canvas>
+          {startStation && endStation && (
+            <Line from={startStation.coordinates} to={endStation.coordinates}
+              stroke="#2563eb" strokeWidth={2.5} strokeLinecap="round" strokeDasharray="8,5"
+              style={{ animation: 'dashFlow 1s linear infinite' }} />
+          )}
 
-      {/* 标题 */}
-      <div className="absolute top-6 left-6 z-10">
-        <h1 className="text-3xl font-bold text-white tracking-wider mb-1">
-          千里江山
-        </h1>
-        <p className="text-cyan-400 text-sm">数据舆图 · Data Map</p>
+          {stations.map((station) => {
+            const isSelected = startStation?.id === station.id || endStation?.id === station.id;
+            const isHovered = hoveredStation === station.id;
+            const color = getRegionColor(station.region);
+            const r = isSelected ? 7 : isHovered ? 6 : 4;
+            const offset = labelOffsets[station.id] || [0, -14];
+            return (
+              <Marker key={station.id} coordinates={station.coordinates}
+                onClick={() => handleStationClick(station)}
+                onMouseEnter={() => setHoveredStation(station.id)}
+                onMouseLeave={() => setHoveredStation(null)}
+                style={{ default: { cursor: 'pointer' }, hover: { cursor: 'pointer' }, pressed: {} }}
+              >
+                {isSelected && (
+                  <circle r={16} fill={color} opacity={0.12}>
+                    <animate attributeName="r" values="8;20;8" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.25;0.03;0.25" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                )}
+                <circle r={r + 2.5} fill="white" stroke={color} strokeWidth={1.5} opacity={isSelected || isHovered ? 1 : 0.85} />
+                <circle r={r} fill={color} stroke="white" strokeWidth={1.5} />
+                <text x={offset[0]} y={offset[1]}
+                  textAnchor={offset[0] > 0 ? 'start' : offset[0] < 0 ? 'end' : 'middle'}
+                  alignmentBaseline="middle" fill="#334155"
+                  fontSize={isSelected || isHovered ? 11 : 9.5}
+                  fontWeight={isSelected || isHovered ? 700 : 500}
+                  style={{ paintOrder: 'stroke', stroke: 'rgba(255,255,255,0.92)', strokeWidth: 3, strokeLinecap: 'round', strokeLinejoin: 'round' }}
+                >
+                  {station.name}
+                </text>
+              </Marker>
+            );
+          })}
+        </ComposableMap>
       </div>
 
-      {/* 选择状态面板 */}
-      <div className="absolute top-6 right-6 z-10 w-72">
-        <div className="bg-black/60 backdrop-blur-md border border-white/20 rounded-xl p-4">
-          <div className="text-xs text-slate-400 uppercase tracking-widest mb-3">
+      {/* ══ Layer 1: UI 控件 (每个独立 fixed/absolute + z-index) ══ */}
+
+      {/* 左上角标题 */}
+      <div style={{ position: 'fixed', top: 24, left: 32, zIndex: 20 }}>
+        <h1 style={{
+          fontSize: '1.8rem', fontWeight: 800, color: '#1e293b',
+          letterSpacing: '0.15em', marginBottom: 4, fontFamily: 'var(--font-serif)',
+        }}>
+          千里江山
+        </h1>
+        <p style={{ fontSize: '0.8rem', color: '#6366f1', fontWeight: 500 }}>
+          从土而生 · 建筑方言 · Architectural Dialects
+        </p>
+      </div>
+
+      {/* 右上角路线规划面板 */}
+      <div style={{ position: 'fixed', top: 24, right: 24, zIndex: 20, width: 260 }}>
+        <div style={{
+          background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(16px)',
+          borderRadius: 16, padding: 20, boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+          border: '1px solid #e2e8f0',
+        }}>
+          <div style={{ fontSize: 11, color: '#64748b', letterSpacing: 2, marginBottom: 14, fontWeight: 600 }}>
             路线规划
           </div>
 
-          {/* 起点 */}
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)]" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#2563eb', boxShadow: '0 0 8px rgba(37,99,235,0.3)' }} />
             <div>
-              <div className="text-xs text-slate-500">起点</div>
-              <div className="text-white">
-                {startStation ? startStation.name : '点击选择驿站'}
+              <div style={{ fontSize: 11, color: '#94a3b8' }}>起点</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: startStation ? '#1e293b' : '#94a3b8' }}>
+                {startStation ? startStation.name : '点击地图选择'}
               </div>
             </div>
           </div>
 
-          {/* 连线 */}
-          <div className="border-l-2 border-dashed border-slate-600 h-4 ml-1.5" />
+          <div style={{ borderLeft: '2px dashed #cbd5e1', height: 14, marginLeft: 5 }} />
 
-          {/* 终点 */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#dc2626', boxShadow: '0 0 8px rgba(220,38,38,0.3)' }} />
             <div>
-              <div className="text-xs text-slate-500">终点</div>
-              <div className="text-white">
-                {endStation ? endStation.name : '点击选择驿站'}
+              <div style={{ fontSize: 11, color: '#94a3b8' }}>终点</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: endStation ? '#1e293b' : '#94a3b8' }}>
+                {endStation ? endStation.name : '点击地图选择'}
               </div>
             </div>
           </div>
 
-          {/* 出发按钮 */}
           <button
             onClick={handleStartJourney}
             disabled={!startStation || !endStation}
-            className={`w-full py-3 rounded-lg font-medium transition-all ${
-              startStation && endStation
-                ? 'bg-linear-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 shadow-lg shadow-cyan-500/25'
-                : 'bg-slate-700 text-slate-500 cursor-not-allowed'
-            }`}
+            style={{
+              width: '100%', padding: '12px 0', borderRadius: 12, border: 'none',
+              fontWeight: 600, fontSize: 14,
+              cursor: startStation && endStation ? 'pointer' : 'not-allowed',
+              background: startStation && endStation ? 'linear-gradient(135deg, #2563eb, #7c3aed)' : '#f1f5f9',
+              color: startStation && endStation ? 'white' : '#94a3b8',
+              boxShadow: startStation && endStation ? '0 4px 16px rgba(37,99,235,0.25)' : 'none',
+              transition: 'all 0.3s', letterSpacing: '0.05em',
+            }}
           >
-            {startStation && endStation ? '🚀 启程' : '请选择起点和终点'}
+            {startStation && endStation ? '🚀 启程探索' : '请选择起点和终点'}
           </button>
+
+          {startStation && endStation && (
+            <div style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', marginTop: 8 }}>
+              将从「{startStation.buildingGene}」渐变至「{endStation.buildingGene}」
+            </div>
+          )}
         </div>
       </div>
 
-      {/* 图例 */}
-      <div className="absolute bottom-6 left-6 z-10">
-        <div className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-lg p-3">
-          <div className="text-xs text-slate-400 mb-2">地形图例</div>
-          <div className="flex items-center gap-4 text-xs">
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded bg-[#112F41]" />
-              <span className="text-slate-300">水域</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded bg-[#407D5C]" />
-              <span className="text-slate-300">平原</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded bg-[#8FB996]" />
-              <span className="text-slate-300">丘陵</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded bg-[#C4A484]" />
-              <span className="text-slate-300">高原</span>
-            </div>
+      {/* 左下角图例 */}
+      <div style={{ position: 'fixed', bottom: 20, left: 32, zIndex: 20 }}>
+        <div style={{
+          background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(8px)',
+          borderRadius: 10, padding: '10px 16px',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0',
+        }}>
+          <div style={{ fontSize: 10, color: '#94a3b8', letterSpacing: 2, marginBottom: 4, fontWeight: 600 }}>
+            地域图例
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px', maxWidth: 500 }}>
+            {['江南','皖南','赣北','闽西','湘西','岭南','滇西','滇南','藏区','晋中','陕北','京畿','胶东','蒙古','南疆','东疆','中原'].map((region) => (
+              <div key={region} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: getRegionColor(region) }} />
+                <span style={{ fontSize: 10, color: '#475569' }}>{region}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* 操作提示 */}
-      <div className="absolute bottom-6 right-6 z-10">
-        <div className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-lg px-4 py-2">
-          <div className="text-xs text-slate-400">
-            点击驿站选择路线 | 拖拽旋转地图 | 滚轮缩放
-          </div>
+      {/* 右下角驿站计数 */}
+      <div style={{ position: 'fixed', bottom: 20, right: 24, zIndex: 20 }}>
+        <div style={{
+          background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(8px)',
+          borderRadius: 10, padding: '6px 14px',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0',
+        }}>
+          <span style={{ fontSize: 11, color: '#64748b' }}>共 {stations.length} 个驿站 · 点击选择路线</span>
         </div>
       </div>
+
+      {/* 悬停信息卡 */}
+      {hoveredData && (
+        <div style={{
+          position: 'fixed', left: mousePos.x + 16, top: mousePos.y - 10,
+          transform: 'translateY(-100%)', zIndex: 50, pointerEvents: 'none',
+        }}>
+          <div style={{
+            background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(16px)',
+            borderRadius: 14, padding: '14px 20px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+            border: `2px solid ${getRegionColor(hoveredData.region)}20`,
+            minWidth: 240,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+              <div style={{ width: 10, height: 10, borderRadius: '50%', background: getRegionColor(hoveredData.region) }} />
+              <span style={{ fontWeight: 700, fontSize: 16, color: '#1e293b' }}>{hoveredData.name}</span>
+              <span style={{ fontSize: 12, color: '#64748b', marginLeft: 'auto' }}>{hoveredData.region}</span>
+            </div>
+            <div style={{ fontSize: 13, color: '#334155', marginBottom: 4 }}>🏠 {hoveredData.buildingGene}</div>
+            <div style={{ fontSize: 12, color: '#64748b' }}>{hoveredData.description}</div>
+            <div style={{ display: 'flex', gap: 12, fontSize: 11, color: '#94a3b8', marginTop: 6 }}>
+              <span>🌧️ {hoveredData.climate.rainfall}mm</span>
+              <span>☀️ {(hoveredData.climate.sunlight * 100).toFixed(0)}%</span>
+              <span>🛡️ Lv.{hoveredData.climate.defense}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

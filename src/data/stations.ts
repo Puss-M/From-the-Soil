@@ -8,6 +8,7 @@ export const stations: Station[] = [
     name: '苏州驿',
     nameEn: 'Suzhou',
     position: [-4, 0.3, 4],
+    coordinates: [120.62, 31.30],
     climate: {
       rainfall: 1200,
       humidity: 82,
@@ -27,6 +28,7 @@ export const stations: Station[] = [
     name: '徽州驿',
     nameEn: 'Huizhou',
     position: [-2, 0.8, 2],
+    coordinates: [118.33, 29.86],
     climate: {
       rainfall: 1500,
       humidity: 78,
@@ -46,6 +48,7 @@ export const stations: Station[] = [
     name: '永定驿',
     nameEn: 'Yongding',
     position: [-3, 0.5, -1],
+    coordinates: [116.73, 24.73],
     climate: {
       rainfall: 1800,
       humidity: 85,
@@ -65,6 +68,7 @@ export const stations: Station[] = [
     name: '平遥驿',
     nameEn: 'Pingyao',
     position: [3, 1.2, 3],
+    coordinates: [112.18, 37.19],
     climate: {
       rainfall: 450,
       humidity: 55,
@@ -84,6 +88,7 @@ export const stations: Station[] = [
     name: '延安驿',
     nameEn: "Yan'an",
     position: [4, 1.5, 1],
+    coordinates: [109.49, 36.59],
     climate: {
       rainfall: 350,
       humidity: 45,
@@ -103,6 +108,7 @@ export const stations: Station[] = [
     name: '大理驿',
     nameEn: 'Dali',
     position: [0, 2, -3],
+    coordinates: [100.23, 25.59],
     climate: {
       rainfall: 1000,
       humidity: 70,
@@ -122,6 +128,7 @@ export const stations: Station[] = [
     name: '拉萨驿',
     nameEn: 'Lhasa',
     position: [2, 2.5, -4],
+    coordinates: [91.17, 29.65],
     climate: {
       rainfall: 200,
       humidity: 35,
@@ -141,6 +148,7 @@ export const stations: Station[] = [
     name: '喀什驿',
     nameEn: 'Kashgar',
     position: [5, 1.8, -2],
+    coordinates: [75.99, 39.47],
     climate: {
       rainfall: 100,
       humidity: 30,
@@ -160,6 +168,7 @@ export const stations: Station[] = [
     name: '北京驿',
     nameEn: 'Beijing',
     position: [1, 0.5, 4],
+    coordinates: [116.40, 39.90],
     climate: {
       rainfall: 600,
       humidity: 55,
@@ -179,6 +188,7 @@ export const stations: Station[] = [
     name: '凤凰驿',
     nameEn: 'Fenghuang',
     position: [-1, 0.6, 1],
+    coordinates: [109.60, 27.95],
     climate: {
       rainfall: 1400,
       humidity: 80,
@@ -198,6 +208,7 @@ export const stations: Station[] = [
     name: '威海驿',
     nameEn: 'Weihai',
     position: [0, 0.3, 5],
+    coordinates: [122.12, 37.50],
     climate: {
       rainfall: 700,
       humidity: 70,
@@ -217,6 +228,7 @@ export const stations: Station[] = [
     name: '版纳驿',
     nameEn: 'Xishuangbanna',
     position: [-1, 1.5, -4],
+    coordinates: [100.80, 22.00],
     climate: {
       rainfall: 1600,
       humidity: 88,
@@ -236,6 +248,7 @@ export const stations: Station[] = [
     name: '草原驿',
     nameEn: 'Xilingol',
     position: [3, 1.0, 5],
+    coordinates: [116.07, 43.94],
     climate: {
       rainfall: 300,
       humidity: 40,
@@ -255,6 +268,7 @@ export const stations: Station[] = [
     name: '广州驿',
     nameEn: 'Guangzhou',
     position: [-3, 0.3, -3],
+    coordinates: [113.26, 23.13],
     climate: {
       rainfall: 1800,
       humidity: 82,
@@ -274,6 +288,7 @@ export const stations: Station[] = [
     name: '吐鲁番驿',
     nameEn: 'Turpan',
     position: [5, 0.8, 0],
+    coordinates: [89.19, 42.94],
     climate: {
       rainfall: 50,
       humidity: 25,
@@ -293,6 +308,7 @@ export const stations: Station[] = [
     name: '古驿站',
     nameEn: 'Ancient Post',
     position: [1, 1.0, 0],
+    coordinates: [113.65, 34.75],
     climate: {
       rainfall: 500,
       humidity: 50,
@@ -312,6 +328,7 @@ export const stations: Station[] = [
     name: '杭州驿',
     nameEn: 'Hangzhou',
     position: [-5, 0.3, 3],
+    coordinates: [120.15, 30.27],
     climate: {
       rainfall: 1400,
       humidity: 78,
@@ -331,6 +348,7 @@ export const stations: Station[] = [
     name: '婺源驿',
     nameEn: 'Wuyuan',
     position: [-2, 0.9, 0],
+    coordinates: [117.86, 29.25],
     climate: {
       rainfall: 1600,
       humidity: 80,
@@ -350,6 +368,7 @@ export const stations: Station[] = [
     name: '无锡驿',
     nameEn: 'Wuxi',
     position: [-4, 0.3, 5],
+    coordinates: [120.31, 31.49],
     climate: {
       rainfall: 1100,
       humidity: 80,

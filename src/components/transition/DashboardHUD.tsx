@@ -1,10 +1,11 @@
 'use client';
 
 import { useStore } from '@/store/useStore';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 export function DashboardHUD() {
-  const { currentClimate, transitionProgress, startStation, endStation } = useStore();
+  const { currentClimate, startStation, endStation } = useStore();
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   // 计算当前插值的气候数据
   const displayData = useMemo(() => {
@@ -26,125 +27,105 @@ export function DashboardHUD() {
     return { roofPitch, eavesOverhang, windowScale };
   }, [currentClimate]);
 
+  const indicators = [
+    { icon: '🌧️', label: '降雨量', value: `${displayData.rainfall} mm`, pct: (currentClimate.rainfall / 2000) * 100, color: '#0ea5e9' },
+    { icon: '💧', label: '湿度', value: `${displayData.humidity}%`, pct: currentClimate.humidity, color: '#6366f1' },
+    { icon: '🌡️', label: '温度', value: `${displayData.temperature}°C`, pct: ((currentClimate.temperature + 10) / 40) * 100, color: '#f97316' },
+    { icon: '⛰️', label: '海拔', value: `${displayData.altitude} m`, pct: (currentClimate.altitude / 4000) * 100, color: '#10b981' },
+    { icon: '☀️', label: '日照', value: `${displayData.sunlight}%`, pct: currentClimate.sunlight * 100, color: '#eab308' },
+    { icon: '🛡️', label: '防御', value: `Lv.${displayData.defense}`, pct: (currentClimate.defense / 10) * 100, color: '#ef4444' },
+  ];
+
   return (
-    <div className="absolute left-6 top-1/2 -translate-y-1/2 z-10 w-56">
-      <div className="bg-black/70 backdrop-blur-md border border-cyan-500/30 rounded-xl p-4">
-        {/* 标题 */}
-        <div className="flex items-center gap-2 mb-4 pb-2 border-b border-white/10">
-          <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-xs text-cyan-400 uppercase tracking-widest">
-            环境仪表盘
+    <div className="absolute left-6 top-1/2 -translate-y-1/2 z-10" style={{ width: isCollapsed ? 48 : 220 }}>
+      <div
+        style={{
+          background: 'rgba(255,255,255,0.92)',
+          backdropFilter: 'blur(16px)',
+          borderRadius: 14,
+          padding: isCollapsed ? '8px' : '16px',
+          boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+          border: '1px solid #e2e8f0',
+          transition: 'all 0.3s ease',
+          overflow: 'hidden',
+        }}
+      >
+        {/* 折叠头部 */}
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            width: '100%',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: isCollapsed ? '4px' : '0 0 8px 0',
+            borderBottom: isCollapsed ? 'none' : '1px solid #e2e8f0',
+            marginBottom: isCollapsed ? 0 : 12,
+          }}
+        >
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', flexShrink: 0 }} />
+          {!isCollapsed && (
+            <span style={{ fontSize: 10, color: '#6366f1', letterSpacing: 3, fontWeight: 600, textTransform: 'uppercase' }}>
+              环境仪表盘
+            </span>
+          )}
+          <span style={{ fontSize: 12, color: '#94a3b8', marginLeft: 'auto' }}>
+            {isCollapsed ? '▶' : '◀'}
           </span>
-        </div>
+        </button>
 
-        {/* 气候参数 */}
-        <div className="space-y-3">
-          {/* 降雨量 */}
-          <div>
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-slate-400">🌧️ 降雨量</span>
-              <span className="text-cyan-400 font-mono">{displayData.rainfall} mm</span>
+        {/* 展开内容 */}
+        {!isCollapsed && (
+          <>
+            {/* 气候参数 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {indicators.map((ind) => (
+                <div key={ind.label}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 3 }}>
+                    <span style={{ color: '#64748b' }}>{ind.icon} {ind.label}</span>
+                    <span style={{ color: ind.color, fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{ind.value}</span>
+                  </div>
+                  <div style={{ height: 4, background: '#f1f5f9', borderRadius: 2, overflow: 'hidden' }}>
+                    <div
+                      style={{
+                        height: '100%',
+                        background: ind.color,
+                        width: `${Math.min(100, Math.max(0, ind.pct))}%`,
+                        borderRadius: 2,
+                        transition: 'width 0.3s ease',
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-linear-to-r from-cyan-500 to-blue-500 transition-all duration-300"
-                style={{ width: `${(currentClimate.rainfall / 2000) * 100}%` }}
-              />
-            </div>
-          </div>
 
-          {/* 湿度 */}
-          <div>
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-slate-400">💧 湿度</span>
-              <span className="text-blue-400 font-mono">{displayData.humidity}%</span>
-            </div>
-            <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-linear-to-r from-blue-500 to-indigo-500 transition-all duration-300"
-                style={{ width: `${currentClimate.humidity}%` }}
-              />
-            </div>
-          </div>
+            {/* 分隔线 */}
+            <div style={{ borderTop: '1px solid #e2e8f0', margin: '12px 0' }} />
 
-          {/* 温度 */}
-          <div>
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-slate-400">🌡️ 温度</span>
-              <span className="text-orange-400 font-mono">{displayData.temperature}°C</span>
+            {/* 建筑形态参数 */}
+            <div style={{ fontSize: 10, color: '#6366f1', letterSpacing: 3, marginBottom: 8, fontWeight: 600, textTransform: 'uppercase' }}>
+              建筑形态
             </div>
-            <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-linear-to-r from-blue-500 via-green-500 to-orange-500 transition-all duration-300"
-                style={{ width: `${((currentClimate.temperature + 10) / 40) * 100}%` }}
-              />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontFamily: 'var(--font-mono)', fontSize: 11 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#64748b' }}>屋顶坡度</span>
+                <span style={{ color: '#0ea5e9', fontWeight: 600 }}>{buildingParams.roofPitch.toFixed(1)}°</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#64748b' }}>屋檐出挑</span>
+                <span style={{ color: '#eab308', fontWeight: 600 }}>{buildingParams.eavesOverhang.toFixed(2)}m</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#64748b' }}>窗户比例</span>
+                <span style={{ color: '#ef4444', fontWeight: 600 }}>{(buildingParams.windowScale * 100).toFixed(0)}%</span>
+              </div>
             </div>
-          </div>
-
-          {/* 海拔 */}
-          <div>
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-slate-400">⛰️ 海拔</span>
-              <span className="text-emerald-400 font-mono">{displayData.altitude} m</span>
-            </div>
-            <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-linear-to-r from-emerald-500 to-teal-500 transition-all duration-300"
-                style={{ width: `${(currentClimate.altitude / 4000) * 100}%` }}
-              />
-            </div>
-          </div>
-
-          {/* 日照 */}
-          <div>
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-slate-400">☀️ 日照</span>
-              <span className="text-yellow-400 font-mono">{displayData.sunlight}%</span>
-            </div>
-            <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-linear-to-r from-yellow-500 to-amber-500 transition-all duration-300"
-                style={{ width: `${currentClimate.sunlight * 100}%` }}
-              />
-            </div>
-          </div>
-
-          {/* 防御 */}
-          <div>
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-slate-400">🛡️ 防御</span>
-              <span className="text-red-400 font-mono">Lv.{displayData.defense}</span>
-            </div>
-            <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-linear-to-r from-red-500 to-rose-500 transition-all duration-300"
-                style={{ width: `${(currentClimate.defense / 10) * 100}%` }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* 分隔线 */}
-        <div className="border-t border-white/10 my-4" />
-
-        {/* 建筑形态参数 */}
-        <div className="text-xs text-slate-400 uppercase tracking-widest mb-2">
-          建筑形态
-        </div>
-        <div className="space-y-2 font-mono text-xs">
-          <div className="flex justify-between">
-            <span className="text-slate-400">屋顶坡度</span>
-            <span className="text-cyan-400">{buildingParams.roofPitch.toFixed(1)}°</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-400">屋檐出挑</span>
-            <span className="text-yellow-400">{buildingParams.eavesOverhang.toFixed(2)}m</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-400">窗户比例</span>
-            <span className="text-red-400">{(buildingParams.windowScale * 100).toFixed(0)}%</span>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

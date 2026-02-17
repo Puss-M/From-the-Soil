@@ -55,7 +55,7 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 // 创建 Zustand Store
 export const useStore = create<AppState>((set, get) => ({
   // 阶段
-  phase: 'map', // 默认从地图选路开始
+  phase: 'landing', // 默认从引导页开始
   setPhase: (phase) => set({ phase }),
 
   // 路线

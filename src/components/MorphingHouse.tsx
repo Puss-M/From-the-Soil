@@ -22,9 +22,13 @@ function GLBModel({
 }) {
   const { scene } = useGLTF(url);
   const clonedScene = useMemo(() => scene.clone(true), [scene]);
+  const materialsRef = useRef<THREE.Material[]>([]);
+  const opacityTargetRef = useRef(opacity);
+  opacityTargetRef.current = opacity;
 
-  // 设置模型所有材质的透明度
+  // 收集所有材质引用（只在场景变化时执行一次）
   useEffect(() => {
+    const mats: THREE.Material[] = [];
     clonedScene.traverse((child) => {
       if (child instanceof THREE.Mesh && child.material) {
         const materials = Array.isArray(child.material)
@@ -32,25 +36,21 @@ function GLBModel({
           : [child.material];
         materials.forEach((mat) => {
           mat.transparent = true;
-          mat.opacity = opacity;
+          mat.opacity = opacityTargetRef.current;
           mat.needsUpdate = true;
+          mats.push(mat);
         });
       }
     });
-  }, [clonedScene, opacity]);
+    materialsRef.current = mats;
+  }, [clonedScene]);
 
-  // 平滑过渡透明度
+  // 平滑过渡透明度 — 只遍历缓存的材质数组，不再遍历场景树
   useFrame(() => {
-    clonedScene.traverse((child) => {
-      if (child instanceof THREE.Mesh && child.material) {
-        const materials = Array.isArray(child.material)
-          ? child.material
-          : [child.material];
-        materials.forEach((mat) => {
-          mat.opacity = THREE.MathUtils.lerp(mat.opacity, opacity, 0.1);
-        });
-      }
-    });
+    const target = opacityTargetRef.current;
+    for (const mat of materialsRef.current) {
+      mat.opacity = THREE.MathUtils.lerp(mat.opacity, target, 0.1);
+    }
   });
 
   if (!visible) return null;

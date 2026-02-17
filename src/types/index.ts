@@ -16,6 +16,7 @@ export interface Station {
   name: string; // 中文名 "苏州驿"
   nameEn: string; // 英文名 "Suzhou"
   position: [number, number, number]; // 3D 坐标
+  coordinates: [number, number]; // 真实经纬度 [经度, 纬度]
   climate: ClimateData;
   buildingGene: string; // 建筑基因 "抬梁式"
   description: string; // 描述
@@ -48,7 +49,7 @@ export interface NarrationSegment {
 }
 
 // 应用阶段
-export type AppPhase = "map" | "transition" | "roaming";
+export type AppPhase = "landing" | "map" | "transition" | "roaming";
 
 // 视角模式
 export type ViewMode = "tourist" | "god";
