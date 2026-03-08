@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning>
       <body
         className={`${notoSerif.variable} ${notoSans.variable} ${jetbrainsMono.variable} antialiased`}
         style={{ fontFamily: 'var(--font-sans), "Noto Sans SC", system-ui, sans-serif' }}
