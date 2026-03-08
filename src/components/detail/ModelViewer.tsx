@@ -84,7 +84,7 @@ export function ModelViewer({ station }: ModelViewerProps) {
         }}
       >
         <Suspense fallback={<LoadingFallback />}>
-          <PerspectiveCamera makeDefault position={[22, 16, 22]} fov={45} />
+          <PerspectiveCamera makeDefault position={[35, 25, 35]} fov={45} />
           <OrbitControls
             enablePan
             enableZoom
@@ -92,7 +92,7 @@ export function ModelViewer({ station }: ModelViewerProps) {
             enableDamping
             dampingFactor={0.08}
             minDistance={2}
-            maxDistance={30}
+            maxDistance={60}
             target={[0, 1, 0]}
             autoRotate
             autoRotateSpeed={0.5}
