@@ -54,21 +54,18 @@ function getProvinceRegionTint(name: string): string {
 }
 
 export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
-  const { startStation, endStation, setRoute, setPhase } = useStore();
+  const { startStation, endStation, setRoute, setPhase, setSelectedStation } = useStore();
+
   const [hoveredStation, setHoveredStation] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const handleStationClick = useCallback(
     (station: Station) => {
-      if (!startStation) {
-        setRoute(station, null as unknown as Station);
-      } else if (!endStation) {
-        setRoute(startStation, station);
-      } else {
-        setRoute(station, null as unknown as Station);
-      }
+      // 单击驿站 → 进入详情页
+      setSelectedStation(station);
+      setPhase('detail');
     },
-    [startStation, endStation, setRoute]
+    [setSelectedStation, setPhase]
   );
 
   const handleStartJourney = () => {

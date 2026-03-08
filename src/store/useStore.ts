@@ -10,6 +10,10 @@ interface AppState {
   phase: AppPhase;
   setPhase: (phase: AppPhase) => void;
 
+  // 选中的驿站 (详情页用)
+  selectedStation: Station | null;
+  setSelectedStation: (station: Station | null) => void;
+
   // 路线数据
   startStation: Station | null;
   endStation: Station | null;
@@ -57,6 +61,10 @@ export const useStore = create<AppState>((set, get) => ({
   // 阶段
   phase: 'landing', // 默认从引导页开始
   setPhase: (phase) => set({ phase }),
+
+  // 选中的驿站
+  selectedStation: null,
+  setSelectedStation: (station) => set({ selectedStation: station }),
 
   // 路线
   startStation: null,

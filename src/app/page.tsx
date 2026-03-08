@@ -5,6 +5,8 @@ import { LandingPage } from '@/components/LandingPage';
 import { MapScene } from '@/components/map/MapScene';
 import { TransitionScene } from '@/components/transition/TransitionScene';
 import { RoamingScene } from '@/components/roaming/RoamingScene';
+import { StationDetail } from '@/components/detail/StationDetail';
+
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
 
 const sceneVariants: Variants = {
@@ -33,6 +35,14 @@ export default function Home() {
             <MapScene />
           </motion.div>
         )}
+        {phase === 'detail' && (
+          <motion.div key="detail" className="w-full h-full"
+            variants={sceneVariants} initial="initial" animate="animate" exit="exit"
+          >
+            <StationDetail />
+          </motion.div>
+        )}
+
         {phase === 'transition' && (
           <motion.div key="transition" className="w-full h-full"
             variants={sceneVariants} initial="initial" animate="animate" exit="exit"
@@ -51,3 +61,5 @@ export default function Home() {
     </main>
   );
 }
+
+

@@ -49,7 +49,7 @@ export interface NarrationSegment {
 }
 
 // 应用阶段
-export type AppPhase = "landing" | "map" | "transition" | "roaming";
+export type AppPhase = "landing" | "map" | "transition" | "roaming" | "detail";
 
 // 视角模式
 export type ViewMode = "tourist" | "god";
