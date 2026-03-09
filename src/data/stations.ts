@@ -302,26 +302,7 @@ export const stations: Station[] = [
     region: '东疆',
     modelPath: '/models/阿以旺.glb',
   },
-  // 古驿站（通用驿站建筑）
-  {
-    id: 'yizhan',
-    name: '古驿站',
-    nameEn: 'Ancient Post',
-    position: [1, 1.0, 0],
-    coordinates: [113.65, 34.75],
-    climate: {
-      rainfall: 500,
-      humidity: 50,
-      temperature: 12,
-      altitude: 500,
-      sunlight: 0.7,
-      defense: 5,
-    },
-    buildingGene: '驿站',
-    description: '官道驿亭，传书递檄',
-    region: '中原',
-    modelPath: '/models/驿站.glb',
-  },
+
   // 杭州（苏式民居2）
   {
     id: 'hangzhou',

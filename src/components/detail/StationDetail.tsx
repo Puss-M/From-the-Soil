@@ -351,6 +351,22 @@ export function StationDetail() {
                       {selectedStation.name} · 数据可视化
                     </h2>
                   </div>
+                  {selectedStation.id === 'beijing' && (
+                    <div style={{
+                      marginTop: 32,
+                      width: '100%',
+                      height: 800,
+                      background: 'transparent',
+                      borderRadius: 16,
+                      overflow: 'hidden'
+                    }}>
+                      <iframe
+                        src="https://sugar.aipage.com/dashboard/7bd937bff3e778c380e8a1ec5b7eb297"
+                        style={{ width: '100%', height: '100%', border: 'none' }}
+                        title="北京四合院数据可视化"
+                      />
+                    </div>
+                  )}
                   {climate && <ClimateCharts climate={climate} stationName={selectedStation.name} />}
                   {decorations && decorations.length > 0 && (
                     <DecorationPanel decorations={decorations} stationName={selectedStation.name} />
