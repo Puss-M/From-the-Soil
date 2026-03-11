@@ -1,14 +1,23 @@
 @import "tailwindcss";
 
+html,
+body {
+  height: 100%;
+}
+
 :root {
-  --background: #f8fafc;
-  --foreground: #1e293b;
+  --background: #f5f0e6;
+  --foreground: #3a2e21;
+  --accent: #c8a97e;
+  --light-accent: #e8d4b5;
+  --dark-accent: #8b6b47;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   overflow: hidden;
+  font-family: 'SimSun', 'STSong', serif;
 }
 
 /* 自定义滚动条 */
@@ -21,18 +30,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.3);
+  background: rgba(200, 169, 126, 0.4);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.5);
+  background: rgba(200, 169, 126, 0.6);
 }
 
 /* 选中高亮 */
 ::selection {
-  background: rgba(99, 102, 241, 0.2);
-  color: #1e293b;
+  background: rgba(200, 169, 126, 0.25);
+  color: #3a2e21;
 }
 
 /* 场景过渡 */

@@ -19,7 +19,7 @@ export default function Home() {
   const { phase } = useStore();
 
   return (
-    <main className="w-screen h-dvh bg-slate-50 overflow-hidden" style={{ height: '100dvh' }}>
+    <main className="w-screen h-screen bg-slate-50 overflow-hidden">
       <AnimatePresence mode="wait">
         {phase === 'landing' && (
           <motion.div key="landing" className="w-full h-full"
