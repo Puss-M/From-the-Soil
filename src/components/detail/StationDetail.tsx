@@ -5,6 +5,7 @@ import { stationDetails } from '@/data/stationDetails';
 import { climateDetails } from '@/data/climateDetails';
 import { heritageData } from '@/data/heritageData';
 import { decorationData } from '@/data/decorationData';
+import { ArchitectureKnowledgeGraph } from './ArchitectureKnowledgeGraph';
 import { StationHeader } from './StationHeader';
 import { InfoCards } from './InfoCards';
 import { ClimateCharts } from './ClimateCharts';
@@ -251,7 +252,66 @@ export function StationDetail() {
               >
                 <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 32px 80px' }}>
                   <StationHeader station={selectedStation} heritage={heritage} climate={climate} />
-                  {detail && <InfoCards detail={detail} stationName={selectedStation.name} />}
+                  {detail && (
+                    <>
+                      <InfoCards detail={detail} stationName={selectedStation.name} />
+
+                      <div style={{ marginTop: 40, marginBottom: 44 }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: 16,
+                            marginBottom: 20,
+                            flexWrap: 'wrap',
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <div style={{ width: 4, height: 26, background: '#c4a882', borderRadius: 999 }} />
+                            <div>
+                              <h3 style={{
+                                fontSize: 20, fontWeight: 700, color: '#3a2a1a',
+                                margin: 0, letterSpacing: 2, fontFamily: 'var(--font-serif, serif)',
+                              }}>
+                                建筑基因知识图谱
+                              </h3>
+                              <div style={{
+                                marginTop: 4, fontSize: 11, color: '#a08b73',
+                                letterSpacing: 3, textTransform: 'uppercase', fontFamily: 'var(--font-mono)',
+                              }}>
+                                Architecture Gene Knowledge Graph
+                              </div>
+                            </div>
+                          </div>
+
+                          <div style={{
+                            padding: '8px 14px',
+                            background: 'rgba(255,255,255,0.7)',
+                            border: '1px solid rgba(196,168,130,0.24)',
+                            borderRadius: 999,
+                            color: '#8b7355',
+                            fontSize: 12,
+                            letterSpacing: 1,
+                          }}>
+                            拖拽节点可重新组织关系
+                          </div>
+                        </div>
+
+                        <div style={{
+                          height: 600,
+                          background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(250,245,238,0.98) 100%)',
+                          borderRadius: 20,
+                          border: '1px solid #e8e0d8',
+                          boxShadow: '0 12px 36px rgba(92, 74, 58, 0.08)',
+                          overflow: 'hidden',
+                          padding: 8,
+                        }}>
+                          <ArchitectureKnowledgeGraph detail={detail} stationName={selectedStation.name} />
+                        </div>
+                      </div>
+                    </>
+                  )}
                   {heritage && heritage.length > 0 && (
                     <div style={{ marginTop: 40 }}>
                       <h3 style={{
