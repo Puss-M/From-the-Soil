@@ -2,7 +2,13 @@
 
 import { create } from 'zustand';
 
-import { ClimateData, Station, CollectionItem, AppPhase, ViewMode } from '@/types';
+import {
+  ClimateData,
+  Station,
+  CollectionItem,
+  AppPhase,
+  ViewMode,
+} from '@/types';
 
 // 应用状态类型
 interface AppState {

@@ -234,7 +234,6 @@ export function LandingPage() {
   const [parallaxOffset, setParallaxOffset] = useState({ x: 0, y: 0 });
   const rootRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const startButtonRef = useRef<HTMLButtonElement | null>(null);
   const overlayControls = useAnimationControls();
 
   useParticleCanvas(canvasRef, Boolean(prefersReducedMotion));
@@ -260,6 +259,8 @@ export function LandingPage() {
     Boolean(prefersReducedMotion) || isTouchLike,
     handlePointerMove
   );
+
+  const startButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleStart = useCallback(async () => {
     if (isTransitioning || !startButtonRef.current || !rootRef.current) {

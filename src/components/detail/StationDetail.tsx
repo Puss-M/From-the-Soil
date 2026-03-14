@@ -8,9 +8,9 @@ import { decorationData } from '@/data/decorationData';
 import { ArchitectureKnowledgeGraph } from './ArchitectureKnowledgeGraph';
 import { StationHeader } from './StationHeader';
 import { InfoCards } from './InfoCards';
-import { ClimateCharts } from './ClimateCharts';
-import { DecorationPanel } from './DecorationPanel';
 import { ModelViewer } from './ModelViewer';
+import { HeritageDashboard } from './HeritageDashboard';
+import { VideoChronicle } from './VideoChronicle';
 import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -21,11 +21,13 @@ const TABS = [
   { key: 'charts', label: '数据可视化', icon: '📊', subtitle: 'Data Visualization' },
 ] as const;
 type TabKey = (typeof TABS)[number]['key'];
+type VisualizationTabKey = 'heritage' | 'video';
 
 /* ── 主组件 ────────────────────────────────── */
 export function StationDetail() {
   const { selectedStation, setPhase } = useStore();
   const [activeTab, setActiveTab] = useState<TabKey>('model');
+  const [activeVisualizationTab, setActiveVisualizationTab] = useState<VisualizationTabKey>('heritage');
   const [direction, setDirection] = useState(0);
 
   const handleTabChange = useCallback((newTab: TabKey) => {
@@ -382,54 +384,119 @@ export function StationDetail() {
           {activeTab === 'charts' && (
             <div key="charts-wrap" style={{
               position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-              overflow: 'auto',
+              overflow: 'hidden',
               background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0eb 30%, #f0ece6 100%)',
             }}>
               <motion.div
+                style={{ height: '100%' }}
                 custom={direction}
                 initial={{ opacity: 0, x: direction > 0 ? 60 : -60 }}
                 animate={{ opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } }}
                 exit={{ opacity: 0, x: direction > 0 ? -60 : 60, transition: { duration: 0.2 } }}
               >
-                <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 32px 80px' }}>
-                  <div style={{ textAlign: 'center', marginBottom: 36 }}>
-                    <div style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      gap: 16, marginBottom: 12,
-                    }}>
-                      <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, transparent, #c4a882)' }} />
-                      <span style={{ fontSize: 11, color: '#a08b73', letterSpacing: 6 }}>
-                        DATA VISUALIZATION
-                      </span>
-                      <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, #c4a882, transparent)' }} />
+                <div style={{ maxWidth: 1540, height: '100%', margin: '0 auto', padding: '10px 18px 8px' }}>
+                  <div style={{ textAlign: 'center', marginBottom: 12 }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: 20,
+                        marginBottom: 12,
+                        flexWrap: 'wrap',
+                      }}
+                    >
+                      <div>
+                        <div style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          gap: 16, marginBottom: 12,
+                        }}>
+                          <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, transparent, #c4a882)' }} />
+                          <span style={{ fontSize: 11, color: '#a08b73', letterSpacing: 6 }}>
+                            DATA VISUALIZATION
+                          </span>
+                          <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, #c4a882, transparent)' }} />
+                        </div>
+                        <h2 style={{
+                          fontSize: '1.8rem', fontWeight: 800, color: '#3a2a1a',
+                          letterSpacing: 4, margin: 0,
+                          fontFamily: 'var(--font-serif, serif)',
+                        }}>
+                          {selectedStation.name} · 数据可视化
+                        </h2>
+                      </div>
+
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: 6,
+                          padding: 6,
+                          borderRadius: 14,
+                          background: 'rgba(255,255,255,0.72)',
+                          border: '1px solid rgba(196,168,130,0.24)',
+                          boxShadow: '0 8px 24px rgba(91, 71, 47, 0.08)',
+                        }}
+                      >
+                        {[
+                          { key: 'heritage', label: '风物志' },
+                          { key: 'video', label: '影像志' },
+                        ].map((item) => {
+                          const isActive = activeVisualizationTab === item.key;
+
+                          return (
+                            <button
+                              key={item.key}
+                              type="button"
+                              onClick={() => setActiveVisualizationTab(item.key as VisualizationTabKey)}
+                              style={{
+                                border: 'none',
+                                cursor: 'pointer',
+                                padding: '10px 18px',
+                                borderRadius: 10,
+                                fontSize: 13,
+                                fontWeight: 700,
+                                letterSpacing: 1,
+                                color: isActive ? '#fff' : '#8b7355',
+                                background: isActive
+                                  ? 'linear-gradient(135deg, #8b7355, #6b5842)'
+                                  : 'transparent',
+                                boxShadow: isActive ? '0 6px 16px rgba(107,88,66,0.24)' : 'none',
+                                transition: 'all 0.2s ease',
+                              }}
+                            >
+                              {item.label}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                    <h2 style={{
-                      fontSize: '1.8rem', fontWeight: 800, color: '#3a2a1a',
-                      letterSpacing: 4, margin: 0,
-                      fontFamily: 'var(--font-serif, serif)',
-                    }}>
-                      {selectedStation.name} · 数据可视化
-                    </h2>
                   </div>
-                  {selectedStation.id === 'beijing' && (
-                    <div style={{
-                      marginTop: 32,
-                      width: '100%',
-                      height: 800,
-                      background: 'transparent',
-                      borderRadius: 16,
-                      overflow: 'hidden'
-                    }}>
-                      <iframe
-                        src="https://sugar.aipage.com/dashboard/7bd937bff3e778c380e8a1ec5b7eb297"
-                        style={{ width: '100%', height: '100%', border: 'none' }}
-                        title="北京四合院数据可视化"
-                      />
+                  {activeVisualizationTab === 'heritage' && climate && detail && (
+                    <HeritageDashboard
+                      station={selectedStation}
+                      climate={climate}
+                      detail={detail}
+                      heritage={heritage || []}
+                      decorations={decorations || []}
+                    />
+                  )}
+                  {activeVisualizationTab === 'heritage' && (!climate || !detail) && (
+                    <div
+                      style={{
+                        marginTop: 40,
+                        padding: '48px 32px',
+                        border: '1px solid #e8e0d8',
+                        borderRadius: 20,
+                        background: 'rgba(255,255,255,0.75)',
+                        textAlign: 'center',
+                        color: '#7c6a56',
+                      }}
+                    >
+                      当前驿站尚未接入完整的民居大屏数据。
                     </div>
                   )}
-                  {climate && <ClimateCharts climate={climate} stationName={selectedStation.name} />}
-                  {decorations && decorations.length > 0 && (
-                    <DecorationPanel decorations={decorations} stationName={selectedStation.name} />
+                  {activeVisualizationTab === 'video' && (
+                    <VideoChronicle station={selectedStation} />
                   )}
                 </div>
               </motion.div>
