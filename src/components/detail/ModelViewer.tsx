@@ -1,7 +1,7 @@
 'use client';
 
-import { Suspense, useMemo, useRef, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Suspense, useMemo } from 'react';
+import { Canvas } from '@react-three/fiber';
 import {
   OrbitControls,
   PerspectiveCamera,
@@ -9,7 +9,6 @@ import {
   ContactShadows,
   useGLTF,
   Html,
-  Float,
 } from '@react-three/drei';
 import * as THREE from 'three';
 import type { Station } from '@/types';
@@ -17,10 +16,10 @@ import type { Station } from '@/types';
 /* ── 单个 GLB 模型加载组件 ──────────────────────── */
 function GLBModel({ url }: { url: string }) {
   const { scene } = useGLTF(url);
-  const clonedScene = useMemo(() => scene.clone(true), [scene]);
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone(true);
 
-  useEffect(() => {
-    clonedScene.traverse((child) => {
+    clone.traverse((child) => {
       if (child instanceof THREE.Mesh && child.material) {
         const mats = Array.isArray(child.material) ? child.material : [child.material];
         mats.forEach((mat) => {
@@ -30,20 +29,28 @@ function GLBModel({ url }: { url: string }) {
         });
       }
     });
-  }, [clonedScene]);
+
+    const box = new THREE.Box3().setFromObject(clone);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const targetSize = 6;
+    const scaleFactor = maxDim > 0 ? targetSize / maxDim : 1;
+
+    clone.scale.setScalar(scaleFactor);
+    clone.position.set(
+      -center.x * scaleFactor,
+      -box.min.y * scaleFactor,
+      -center.z * scaleFactor
+    );
+
+    return clone;
+  }, [scene]);
 
   return <primitive object={clonedScene} castShadow receiveShadow />;
-}
-
-/* ── 自动旋转展台 ─────────────────────────────── */
-function Turntable({ children }: { children: React.ReactNode }) {
-  const groupRef = useRef<THREE.Group>(null);
-  useFrame((_, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.15;
-    }
-  });
-  return <group ref={groupRef}>{children}</group>;
 }
 
 /* ── 加载状态 ──────────────────────────────────── */
@@ -84,16 +91,16 @@ export function ModelViewer({ station }: ModelViewerProps) {
         }}
       >
         <Suspense fallback={<LoadingFallback />}>
-          <PerspectiveCamera makeDefault position={[35, 25, 35]} fov={45} />
+          <PerspectiveCamera makeDefault position={[10, 8, 10]} fov={45} />
           <OrbitControls
             enablePan
             enableZoom
             enableRotate
             enableDamping
             dampingFactor={0.08}
-            minDistance={2}
-            maxDistance={60}
-            target={[0, 1, 0]}
+            minDistance={3}
+            maxDistance={30}
+            target={[0, 2, 0]}
             autoRotate
             autoRotateSpeed={0.5}
           />
@@ -110,22 +117,18 @@ export function ModelViewer({ station }: ModelViewerProps) {
           <ContactShadows
             position={[0, -0.01, 0]}
             opacity={0.5}
-            scale={20}
+            scale={30}
             blur={2.5}
             far={5}
             color="#8b7355"
           />
           {/* 地台 */}
           <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow>
-            <circleGeometry args={[6, 64]} />
+            <circleGeometry args={[8, 64]} />
             <meshStandardMaterial color="#c8b89a" roughness={0.95} />
           </mesh>
-          {/* 模型 */}
-          <Float speed={1.5} rotationIntensity={0.05} floatIntensity={0.1}>
-            <group scale={[0.15, 0.15, 0.15]}>
-              <GLBModel url={station.modelPath} />
-            </group>
-          </Float>
+          {/* 模型 - 已在 GLBModel 内部自动归一化大小 */}
+          <GLBModel url={station.modelPath} />
         </Suspense>
       </Canvas>
 

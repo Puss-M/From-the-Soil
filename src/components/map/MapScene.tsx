@@ -1,16 +1,23 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { stations } from '@/data/stations';
 import { useStore } from '@/store/useStore';
 
-export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
-  const { startStation, endStation, setPhase, setSelectedStation } = useStore();
-  const [geoLoaded, setGeoLoaded] = useState(false);
+type MapEventParams = {
+  seriesType?: string;
+  data?: {
+    id?: string;
+  };
+};
 
+export function MapScene() {
+  const { setPhase, setSelectedStation } = useStore();
+  const [geoLoaded, setGeoLoaded] = useState(false);
   const [hoveredStation, setHoveredStation] = useState<string | null>(null);
+  const chartRef = useRef<ReactECharts | null>(null);
 
   useEffect(() => {
     fetch('/china.json')
@@ -22,20 +29,27 @@ export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
       .catch(err => console.error("Failed to load china.json", err));
   }, []);
 
-  const handleStartJourney = () => {
-    if (startStation && endStation) {
-      setPhase('transition');
-      onStartJourney?.();
-    }
-  };
-
   const hoveredData = useMemo(() => {
     if (!hoveredStation) return null;
     return stations.find((s) => s.id === hoveredStation) || null;
   }, [hoveredStation]);
 
+  const handleChartReady = useCallback((instance: echarts.ECharts) => {
+    const dom = instance.getDom();
+    const preventDoubleClickZoom = (event: Event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+
+    dom.addEventListener('dblclick', preventDoubleClickZoom);
+
+    return () => {
+      dom.removeEventListener('dblclick', preventDoubleClickZoom);
+    };
+  }, []);
+
   const onEvents = useMemo(() => ({
-    click: (params: any) => {
+    click: (params: MapEventParams) => {
       if (params.seriesType === 'effectScatter' && params.data) {
         const station = stations.find(s => s.id === params.data.id);
         if (station) {
@@ -44,7 +58,7 @@ export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
         }
       }
     },
-    mouseover: (params: any) => {
+    mouseover: (params: MapEventParams) => {
       if (params.seriesType === 'effectScatter' && params.data) {
         setHoveredStation(params.data.id);
       }
@@ -62,29 +76,27 @@ export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
       value: [...s.coordinates, s.name],
       id: s.id,
       itemStyle: {
-        color: hoveredStation === s.id || startStation?.id === s.id || endStation?.id === s.id ? '#8c221c' : '#cbbbae',
+        color: '#cbbbae',
         borderColor: '#ffffff',
         borderWidth: 1.5,
       }
     }));
 
-    const linesData = [];
-    if (startStation && endStation) {
-      linesData.push({
-        coords: [startStation.coordinates, endStation.coordinates],
-      });
-    }
-
     return {
       backgroundColor: 'transparent',
+      toolbox: {
+        show: false
+      },
+      dataZoom: [],
       tooltip: {
         trigger: 'item',
         show: false
       },
       geo: {
         map: 'china',
-        roam: true, // 允许缩放和平移
+        roam: 'scale', // 只允许缩放，禁止平移
         zoom: 1.2,
+        scaleLimit: { min: 0.8, max: 5 },
         center: [104.195397, 35.86166],
         label: {
           show: false,
@@ -138,32 +150,19 @@ export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
             shadowBlur: 4,
             shadowColor: 'rgba(0,0,0,0.2)'
           },
+          emphasis: {
+            itemStyle: {
+              color: '#8c221c',
+              shadowBlur: 8,
+              shadowColor: 'rgba(140,34,28,0.28)'
+            },
+            scale: true
+          },
           zlevel: 1
-        },
-        ...(linesData.length > 0 ? [{
-          type: 'lines',
-          coordinateSystem: 'geo',
-          zlevel: 2,
-          effect: {
-            show: true,
-            period: 4,
-            trailLength: 0.4,
-            color: '#8c221c',
-            symbol: 'arrow',
-            symbolSize: 5
-          },
-          lineStyle: {
-            color: '#8c221c',
-            width: 1.5,
-            opacity: 0.4,
-            curveness: 0.2,
-            type: 'dashed'
-          },
-          data: linesData
-        }] : [])
+        }
       ]
     };
-  }, [geoLoaded, hoveredStation, startStation, endStation]);
+  }, [geoLoaded]);
 
   function getRegionColor(region: string): string {
     const colors: Record<string, string> = {
@@ -185,9 +184,14 @@ export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
         {geoLoaded ? (
           <ReactECharts
+            ref={chartRef}
             option={option}
+            opts={{ renderer: 'canvas' }}
+            notMerge={false}
+            lazyUpdate={true}
             style={{ width: '100%', height: '100%' }}
             onEvents={onEvents}
+            onChartReady={handleChartReady}
           />
         ) : (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#5c4a3a' }}>加载地图中...</div>
@@ -205,63 +209,6 @@ export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
         <p style={{ fontSize: '0.8rem', color: '#8c221c', fontWeight: 500 }}>
           从土而生 · 建筑方言 · Architectural Dialects
         </p>
-      </div>
-
-      {/* 右上角路线规划面板 */}
-      <div style={{ position: 'fixed', top: 24, right: 24, zIndex: 20, width: 260 }}>
-        <div style={{
-          background: 'rgba(250,247,242,0.95)', backdropFilter: 'blur(16px)',
-          borderRadius: 4, padding: 20, boxShadow: '0 4px 24px rgba(92, 74, 58, 0.08)',
-          border: '1px solid #e8e0d8',
-        }}>
-          <div style={{ fontSize: 11, color: '#8a7d73', letterSpacing: 2, marginBottom: 14, fontWeight: 600 }}>
-            路线规划
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#3a2a1a', boxShadow: '0 0 8px rgba(58, 42, 26, 0.3)' }} />
-            <div>
-              <div style={{ fontSize: 11, color: '#8a7d73' }}>起点</div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: startStation ? '#3a2a1a' : '#8a7d73' }}>
-                {startStation ? startStation.name : '点击地图选择'}
-              </div>
-            </div>
-          </div>
-
-          <div style={{ borderLeft: '2px dashed #cbbbae', height: 14, marginLeft: 5 }} />
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#8c221c', boxShadow: '0 0 8px rgba(140, 34, 28, 0.3)' }} />
-            <div>
-              <div style={{ fontSize: 11, color: '#8a7d73' }}>终点</div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: endStation ? '#3a2a1a' : '#8a7d73' }}>
-                {endStation ? endStation.name : '点击地图选择'}
-              </div>
-            </div>
-          </div>
-
-          <button
-            onClick={handleStartJourney}
-            disabled={!startStation || !endStation}
-            style={{
-              width: '100%', padding: '12px 0', borderRadius: 4, border: '1px solid #e8e0d8',
-              fontWeight: 600, fontSize: 14,
-              cursor: startStation && endStation ? 'pointer' : 'not-allowed',
-              background: startStation && endStation ? '#8c221c' : '#f0ece3',
-              color: startStation && endStation ? '#faf7f2' : '#b0a498',
-              boxShadow: startStation && endStation ? '0 4px 16px rgba(140, 34, 28, 0.25)' : 'none',
-              transition: 'all 0.3s', letterSpacing: '0.05em',
-            }}
-          >
-            {startStation && endStation ? '🚀 启程探索' : '请选择起点和终点'}
-          </button>
-
-          {startStation && endStation && (
-            <div style={{ fontSize: 11, color: '#8a7d73', textAlign: 'center', marginTop: 8 }}>
-              将从「{startStation.buildingGene}」渐变至「{endStation.buildingGene}」
-            </div>
-          )}
-        </div>
       </div>
 
       {/* 左下角图例 */}
@@ -292,7 +239,7 @@ export function MapScene({ onStartJourney }: { onStartJourney?: () => void }) {
           borderRadius: 4, padding: '6px 14px',
           boxShadow: '0 4px 24px rgba(92, 74, 58, 0.08)', border: '1px solid #e8e0d8',
         }}>
-          <span style={{ fontSize: 11, color: '#8a7d73' }}>共 {stations.length} 个驿站 · 点击选择路线</span>
+          <span style={{ fontSize: 11, color: '#8a7d73' }}>共 {stations.length} 个驿站 · 点击探索详情</span>
         </div>
       </div>
 
