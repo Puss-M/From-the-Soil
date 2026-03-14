@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
-import type { EChartsOption } from 'echarts';
+import type { ECharts, EChartsOption } from 'echarts';
 import type { StationDetailData } from '@/data/stationDetails';
 
 interface Props {
@@ -26,6 +26,8 @@ type GraphNode = {
     color?: string;
     borderColor?: string;
     borderWidth?: number;
+    shadowBlur?: number;
+    shadowColor?: string;
   };
   label?: {
     color?: string;
@@ -75,6 +77,8 @@ function extractFragments(text: string) {
 
 export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
   const [zoom, setZoom] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
+  const chartRef = useRef<ReactECharts | null>(null);
 
   const option = useMemo(() => {
     const nodes: GraphNode[] = [
@@ -86,12 +90,14 @@ export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
         draggable: true,
         value: `${stationName} 建筑基因`,
         itemStyle: {
-          color: '#3a2a1a',
-          borderColor: '#c4a882',
-          borderWidth: 4,
+          color: '#ead7bb',
+          borderColor: '#f5ead7',
+          borderWidth: 3,
+          shadowBlur: 24,
+          shadowColor: 'rgba(214,185,139,0.28)',
         },
         label: {
-          color: '#f7f0e3',
+          color: '#2f2418',
           fontSize: 15,
           fontWeight: 700,
           width: 110,
@@ -118,11 +124,13 @@ export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
         value: content,
         itemStyle: {
           color: meta.color,
-          borderColor: '#f7f0e3',
+          borderColor: '#f5ead7',
           borderWidth: 2,
+          shadowBlur: 14,
+          shadowColor: `${meta.color}44`,
         },
         label: {
-          color: '#fffaf3',
+          color: '#fffdf8',
           fontSize: 12,
           fontWeight: 600,
           width: 70,
@@ -150,12 +158,14 @@ export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
           draggable: true,
           value: fragment,
           itemStyle: {
-            color: '#f7f0e3',
+            color: '#fff9f0',
             borderColor: meta.color,
             borderWidth: 1.5,
+            shadowBlur: 10,
+            shadowColor: `${meta.color}22`,
           },
           label: {
-            color: '#5c4a3a',
+            color: '#3f3226',
             fontSize: 11,
             width: 92,
             overflow: 'break',
@@ -179,11 +189,11 @@ export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
       backgroundColor: 'transparent',
       tooltip: {
         trigger: 'item',
-        backgroundColor: 'rgba(58, 42, 26, 0.92)',
-        borderColor: '#c4a882',
+        backgroundColor: 'rgba(26, 22, 18, 0.94)',
+        borderColor: '#8b7355',
         borderWidth: 1,
         textStyle: {
-          color: '#f7f0e3',
+          color: '#f3e7d2',
           fontSize: 12,
         },
         formatter: (params) => {
@@ -198,22 +208,24 @@ export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
         {
           type: 'graph',
           layout: 'force',
-          roam: false,
+          roam: 'move',
           zoom,
           center: ['50%', '50%'],
           draggable: true,
           data: nodes,
           links,
           force: {
-            repulsion: 320,
-            gravity: 0.04,
-            edgeLength: [90, 160],
-            friction: 0.12,
-            layoutAnimation: false,
+            repulsion: 420,
+            gravity: 0.03,
+            edgeLength: [110, 180],
+            friction: 0.08,
+            layoutAnimation: true,
           },
           label: {
             show: true,
-            position: 'inside',
+            position: 'right',
+            distance: 8,
+            formatter: '{b}',
           },
           emphasis: {
             focus: 'adjacency',
@@ -222,17 +234,61 @@ export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
             },
           },
           lineStyle: {
-            opacity: 0.75,
-            width: 1.5,
-            curveness: 0.04,
+            color: 'rgba(196,168,130,0.28)',
+            opacity: 0.82,
+            width: 1.2,
+            curveness: 0.06,
           },
         },
       ],
     } as EChartsOption;
   }, [detail, stationName, zoom]);
 
+  const handleChartReady = (instance: ECharts) => {
+    const dom = instance.getDom();
+
+    const handleWheel = (event: WheelEvent) => {
+      event.stopPropagation();
+    };
+    const handleMouseDown = () => {
+      setIsDragging(true);
+    };
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+    const handleMouseLeave = () => {
+      setIsDragging(false);
+    };
+
+    dom.addEventListener('wheel', handleWheel, { passive: true });
+    dom.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    dom.addEventListener('mouseleave', handleMouseLeave);
+  };
+
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        borderRadius: 18,
+        overflow: 'hidden',
+        background:
+          'radial-gradient(circle at 20% 20%, rgba(196,168,130,0.16) 0%, transparent 28%), linear-gradient(180deg, #fbf7f1 0%, #f3eadf 100%)',
+      }}
+    >
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage:
+            'linear-gradient(rgba(139,115,85,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(139,115,85,0.07) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
+          pointerEvents: 'none',
+        }}
+      />
       <div
         style={{
           position: 'absolute',
@@ -290,12 +346,37 @@ export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
         ZOOM {Math.round(zoom * 100)}%
       </div>
 
+      <div
+        style={{
+          position: 'absolute',
+          left: 14,
+          bottom: 14,
+          zIndex: 2,
+          padding: '8px 10px',
+          borderRadius: 12,
+          background: 'rgba(255,255,255,0.82)',
+          border: '1px solid rgba(196,168,130,0.24)',
+          color: '#8b7355',
+          fontSize: 11,
+          lineHeight: 1.5,
+          boxShadow: '0 8px 18px rgba(92,74,58,0.08)',
+        }}
+      >
+        空白处拖动画布，节点可单独拖动
+      </div>
+
       <ReactECharts
+        ref={chartRef}
         option={option}
         opts={{ renderer: 'canvas' }}
-        style={{ width: '100%', height: '100%' }}
+        style={{
+          width: '100%',
+          height: '100%',
+          cursor: isDragging ? 'grabbing' : 'grab',
+        }}
         notMerge={true}
         lazyUpdate={true}
+        onChartReady={handleChartReady}
       />
     </div>
   );
