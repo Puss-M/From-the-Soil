@@ -50,8 +50,9 @@ export function MapScene() {
 
   const onEvents = useMemo(() => ({
     click: (params: MapEventParams) => {
-      if (params.seriesType === 'effectScatter' && params.data) {
-        const station = stations.find(s => s.id === params.data.id);
+      const stationId = params.data?.id;
+      if (params.seriesType === 'effectScatter' && stationId) {
+        const station = stations.find(s => s.id === stationId);
         if (station) {
           setSelectedStation(station);
           setPhase('detail');
@@ -59,8 +60,9 @@ export function MapScene() {
       }
     },
     mouseover: (params: MapEventParams) => {
-      if (params.seriesType === 'effectScatter' && params.data) {
-        setHoveredStation(params.data.id);
+      const stationId = params.data?.id;
+      if (params.seriesType === 'effectScatter' && stationId) {
+        setHoveredStation(stationId);
       }
     },
     mouseout: () => {
