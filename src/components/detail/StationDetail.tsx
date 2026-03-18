@@ -394,8 +394,8 @@ export function StationDetail() {
                 animate={{ opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } }}
                 exit={{ opacity: 0, x: direction > 0 ? -60 : 60, transition: { duration: 0.2 } }}
               >
-                <div style={{ maxWidth: 1540, height: '100%', margin: '0 auto', padding: '10px 18px 8px' }}>
-                  <div style={{ textAlign: 'center', marginBottom: 12 }}>
+                <div style={{ maxWidth: 1540, height: '100%', margin: '0 auto', padding: '10px 18px 8px', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+                  <div style={{ textAlign: 'center', marginBottom: 10, flexShrink: 0 }}>
                     <div
                       style={{
                         display: 'flex',
@@ -471,33 +471,35 @@ export function StationDetail() {
                       </div>
                     </div>
                   </div>
-                  {activeVisualizationTab === 'heritage' && climate && detail && (
-                    <HeritageDashboard
-                      station={selectedStation}
-                      climate={climate}
-                      detail={detail}
-                      heritage={heritage || []}
-                      decorations={decorations || []}
-                    />
-                  )}
-                  {activeVisualizationTab === 'heritage' && (!climate || !detail) && (
-                    <div
-                      style={{
-                        marginTop: 40,
-                        padding: '48px 32px',
-                        border: '1px solid #e8e0d8',
-                        borderRadius: 20,
-                        background: 'rgba(255,255,255,0.75)',
-                        textAlign: 'center',
-                        color: '#7c6a56',
-                      }}
-                    >
-                      当前驿站尚未接入完整的民居大屏数据。
-                    </div>
-                  )}
-                  {activeVisualizationTab === 'video' && (
-                    <VideoChronicle station={selectedStation} />
-                  )}
+                  <div style={{ flex: 1, minHeight: 0 }}>
+                    {activeVisualizationTab === 'heritage' && climate && detail && (
+                      <HeritageDashboard
+                        station={selectedStation}
+                        climate={climate}
+                        detail={detail}
+                        heritage={heritage || []}
+                        decorations={decorations || []}
+                      />
+                    )}
+                    {activeVisualizationTab === 'heritage' && (!climate || !detail) && (
+                      <div
+                        style={{
+                          marginTop: 40,
+                          padding: '48px 32px',
+                          border: '1px solid #e8e0d8',
+                          borderRadius: 20,
+                          background: 'rgba(255,255,255,0.75)',
+                          textAlign: 'center',
+                          color: '#7c6a56',
+                        }}
+                      >
+                        当前驿站尚未接入完整的民居大屏数据。
+                      </div>
+                    )}
+                    {activeVisualizationTab === 'video' && (
+                      <VideoChronicle station={selectedStation} />
+                    )}
+                  </div>
                 </div>
               </motion.div>
             </div>
