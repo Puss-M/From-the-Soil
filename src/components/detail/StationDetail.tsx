@@ -18,16 +18,15 @@ import { AnimatePresence, motion } from 'framer-motion';
 const TABS = [
   { key: 'model',  label: '3D 模型',   icon: '🏛️', subtitle: 'Architectural Model' },
   { key: 'info',   label: '建筑档案',  icon: '📜', subtitle: 'Architecture Profile' },
-  { key: 'charts', label: '数据可视化', icon: '📊', subtitle: 'Data Visualization' },
+  { key: 'heritage', label: '风物志', icon: '🏺', subtitle: 'Heritage Dashboard' },
+  { key: 'video', label: '影像志', icon: '🎬', subtitle: 'Video Chronicle' },
 ] as const;
 type TabKey = (typeof TABS)[number]['key'];
-type VisualizationTabKey = 'heritage' | 'video';
 
 /* ── 主组件 ────────────────────────────────── */
 export function StationDetail() {
   const { selectedStation, setPhase } = useStore();
   const [activeTab, setActiveTab] = useState<TabKey>('model');
-  const [activeVisualizationTab, setActiveVisualizationTab] = useState<VisualizationTabKey>('heritage');
   const [direction, setDirection] = useState(0);
 
   const handleTabChange = useCallback((newTab: TabKey) => {
@@ -36,16 +35,6 @@ export function StationDetail() {
     setDirection(newIdx > oldIdx ? 1 : -1);
     setActiveTab(newTab);
   }, [activeTab]);
-
-  const goPrev = useCallback(() => {
-    const idx = TABS.findIndex((t) => t.key === activeTab);
-    if (idx > 0) handleTabChange(TABS[idx - 1].key);
-  }, [activeTab, handleTabChange]);
-
-  const goNext = useCallback(() => {
-    const idx = TABS.findIndex((t) => t.key === activeTab);
-    if (idx < TABS.length - 1) handleTabChange(TABS[idx + 1].key);
-  }, [activeTab, handleTabChange]);
 
   if (!selectedStation) {
     return (
@@ -60,14 +49,13 @@ export function StationDetail() {
   const climate = climateDetails[sid];
   const heritage = heritageData[sid];
   const decorations = decorationData[sid];
-  const curTabIdx = TABS.findIndex((t) => t.key === activeTab);
 
   return (
     <div style={{
       position: 'absolute',
       top: 0, left: 0, right: 0, bottom: 0,
       display: 'grid',
-      gridTemplateRows: '64px 1fr 52px',
+      gridTemplateRows: '72px 1fr',
       background: '#faf8f5',
     }}>
       {/* ═══ 顶部导航栏 (Row 1) ═══ */}
@@ -89,7 +77,7 @@ export function StationDetail() {
             border: '1px solid #e0d6cc',
             borderRadius: 10,
             cursor: 'pointer',
-            fontSize: 13,
+            fontSize: 15,
             fontWeight: 600,
             color: '#5c4a3a',
             transition: 'all 0.2s',
@@ -114,14 +102,14 @@ export function StationDetail() {
           flex: 1, minWidth: 0,
         }}>
           <h1 style={{
-            fontSize: 20, fontWeight: 700, color: '#3a2a1a', margin: 0,
+            fontSize: 24, fontWeight: 700, color: '#3a2a1a', margin: 0,
             fontFamily: 'var(--font-serif, serif)', letterSpacing: 3,
             whiteSpace: 'nowrap',
           }}>
             {selectedStation.name}
           </h1>
           <span style={{
-            fontSize: 12, color: '#a08b73', letterSpacing: 2,
+            fontSize: 14, color: '#a08b73', letterSpacing: 2,
             whiteSpace: 'nowrap',
           }}>
             {selectedStation.region} · {selectedStation.nameEn}
@@ -144,11 +132,11 @@ export function StationDetail() {
                 onClick={() => handleTabChange(tab.key)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 6,
-                  padding: '8px 18px',
+                  padding: '11px 22px',
                   border: 'none',
                   borderRadius: 10,
                   cursor: 'pointer',
-                  fontSize: 13,
+                  fontSize: 15,
                   fontWeight: isActive ? 700 : 500,
                   color: isActive ? '#fff' : '#8b7355',
                   background: isActive
@@ -167,7 +155,7 @@ export function StationDetail() {
                   if (!isActive) e.currentTarget.style.background = 'transparent';
                 }}
               >
-                <span style={{ fontSize: 15 }}>{tab.icon}</span>
+                <span style={{ fontSize: 16 }}>{tab.icon}</span>
                 {tab.label}
               </button>
             );
@@ -380,9 +368,9 @@ export function StationDetail() {
             </div>
           )}
 
-          {/* ── Tab 3: 数据可视化 ── */}
-          {activeTab === 'charts' && (
-            <div key="charts-wrap" style={{
+          {/* ── Tab 3: 风物志 ── */}
+          {activeTab === 'heritage' && (
+            <div key="heritage-wrap" style={{
               position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
               overflow: 'hidden',
               background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0eb 30%, #f0ece6 100%)',
@@ -400,7 +388,7 @@ export function StationDetail() {
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         gap: 20,
                         marginBottom: 12,
                         flexWrap: 'wrap',
@@ -413,7 +401,7 @@ export function StationDetail() {
                         }}>
                           <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, transparent, #c4a882)' }} />
                           <span style={{ fontSize: 11, color: '#a08b73', letterSpacing: 6 }}>
-                            DATA VISUALIZATION
+                            HERITAGE DASHBOARD
                           </span>
                           <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, #c4a882, transparent)' }} />
                         </div>
@@ -422,57 +410,13 @@ export function StationDetail() {
                           letterSpacing: 4, margin: 0,
                           fontFamily: 'var(--font-serif, serif)',
                         }}>
-                          {selectedStation.name} · 数据可视化
+                          {selectedStation.name} · 风物志
                         </h2>
-                      </div>
-
-                      <div
-                        style={{
-                          display: 'flex',
-                          gap: 6,
-                          padding: 6,
-                          borderRadius: 14,
-                          background: 'rgba(255,255,255,0.72)',
-                          border: '1px solid rgba(196,168,130,0.24)',
-                          boxShadow: '0 8px 24px rgba(91, 71, 47, 0.08)',
-                        }}
-                      >
-                        {[
-                          { key: 'heritage', label: '风物志' },
-                          { key: 'video', label: '影像志' },
-                        ].map((item) => {
-                          const isActive = activeVisualizationTab === item.key;
-
-                          return (
-                            <button
-                              key={item.key}
-                              type="button"
-                              onClick={() => setActiveVisualizationTab(item.key as VisualizationTabKey)}
-                              style={{
-                                border: 'none',
-                                cursor: 'pointer',
-                                padding: '10px 18px',
-                                borderRadius: 10,
-                                fontSize: 13,
-                                fontWeight: 700,
-                                letterSpacing: 1,
-                                color: isActive ? '#fff' : '#8b7355',
-                                background: isActive
-                                  ? 'linear-gradient(135deg, #8b7355, #6b5842)'
-                                  : 'transparent',
-                                boxShadow: isActive ? '0 6px 16px rgba(107,88,66,0.24)' : 'none',
-                                transition: 'all 0.2s ease',
-                              }}
-                            >
-                              {item.label}
-                            </button>
-                          );
-                        })}
                       </div>
                     </div>
                   </div>
                   <div style={{ flex: 1, minHeight: 0 }}>
-                    {activeVisualizationTab === 'heritage' && climate && detail && (
+                    {climate && detail && (
                       <HeritageDashboard
                         station={selectedStation}
                         climate={climate}
@@ -481,7 +425,7 @@ export function StationDetail() {
                         decorations={decorations || []}
                       />
                     )}
-                    {activeVisualizationTab === 'heritage' && (!climate || !detail) && (
+                    {(!climate || !detail) && (
                       <div
                         style={{
                           marginTop: 40,
@@ -496,79 +440,41 @@ export function StationDetail() {
                         当前驿站尚未接入完整的民居大屏数据。
                       </div>
                     )}
-                    {activeVisualizationTab === 'video' && (
-                      <VideoChronicle station={selectedStation} />
-                    )}
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {/* ── Tab 4: 影像志 ── */}
+          {activeTab === 'video' && (
+            <div key="video-wrap" style={{
+              position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+              overflow: 'hidden',
+              background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0eb 30%, #f0ece6 100%)',
+            }}>
+              <motion.div
+                style={{ height: '100%' }}
+                custom={direction}
+                initial={{ opacity: 0, x: direction > 0 ? 60 : -60 }}
+                animate={{ opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } }}
+                exit={{ opacity: 0, x: direction > 0 ? -60 : 60, transition: { duration: 0.2 } }}
+              >
+                <div style={{ maxWidth: 1540, height: '100%', margin: '0 auto', padding: '10px 18px 8px', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+                  <div style={{ flex: 1, minHeight: 0 }}>
+                    <VideoChronicle
+                      station={selectedStation}
+                      climate={climate}
+                      detail={detail}
+                      heritage={heritage || []}
+                      decorations={decorations || []}
+                    />
                   </div>
                 </div>
               </motion.div>
             </div>
           )}
         </AnimatePresence>
-      </div>
-
-      {/* ═══ 底部导航栏 (Row 3) ═══ */}
-      <div style={{
-        display: 'flex', justifyContent: 'center', alignItems: 'center',
-        gap: 16, padding: '0 24px',
-        borderTop: '1px solid #e8e0d8',
-        background: 'rgba(255,255,255,0.95)',
-        backdropFilter: 'blur(12px)',
-      }}>
-        <button
-          onClick={goPrev}
-          disabled={curTabIdx === 0}
-          style={{
-            padding: '8px 20px',
-            border: '1px solid #e0d6cc',
-            borderRadius: 10,
-            background: curTabIdx === 0 ? '#f5f0eb' : '#fff',
-            color: curTabIdx === 0 ? '#c4b89c' : '#5c4a3a',
-            cursor: curTabIdx === 0 ? 'default' : 'pointer',
-            fontSize: 13,
-            fontWeight: 600,
-            transition: 'all 0.2s',
-          }}
-        >
-          ← 上一页
-        </button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => handleTabChange(tab.key)}
-              style={{
-                width: activeTab === tab.key ? 24 : 8,
-                height: 8,
-                borderRadius: 4,
-                border: 'none',
-                cursor: 'pointer',
-                background: activeTab === tab.key ? '#8b7355' : '#d4c5b0',
-                transition: 'all 0.3s ease',
-              }}
-            />
-          ))}
-          <span style={{ fontSize: 11, color: '#a08b73', marginLeft: 4 }}>
-            {curTabIdx + 1} / {TABS.length}
-          </span>
-        </div>
-        <button
-          onClick={goNext}
-          disabled={curTabIdx === TABS.length - 1}
-          style={{
-            padding: '8px 20px',
-            border: '1px solid #e0d6cc',
-            borderRadius: 10,
-            background: curTabIdx === TABS.length - 1 ? '#f5f0eb' : '#fff',
-            color: curTabIdx === TABS.length - 1 ? '#c4b89c' : '#5c4a3a',
-            cursor: curTabIdx === TABS.length - 1 ? 'default' : 'pointer',
-            fontSize: 13,
-            fontWeight: 600,
-            transition: 'all 0.2s',
-          }}
-        >
-          下一页 →
-        </button>
       </div>
     </div>
   );

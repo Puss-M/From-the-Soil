@@ -1,19 +1,109 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import type { Station } from '@/types';
+import type { WorldClimData } from '@/data/climateDetails';
+import type { StationDetailData } from '@/data/stationDetails';
+import type { HeritageInfo } from '@/data/heritageData';
+import type { DecorationItem } from '@/data/decorationData';
 
 interface Props {
   station: Station;
+  climate?: WorldClimData;
+  detail?: StationDetailData;
+  heritage: HeritageInfo[];
+  decorations: DecorationItem[];
 }
 
 export function VideoChronicle({ station }: Props) {
+  const isBeijingSiheyuan = station.id === 'beijing';
+  const frameRef = useRef<HTMLDivElement | null>(null);
+  const [frameScale, setFrameScale] = useState(1);
+
+  useEffect(() => {
+    if (!isBeijingSiheyuan) {
+      return;
+    }
+
+    const frame = frameRef.current;
+    if (!frame) {
+      return;
+    }
+
+    const BASE_WIDTH = 1920;
+    const BASE_HEIGHT = 1080;
+
+    const updateScale = () => {
+      const { width, height } = frame.getBoundingClientRect();
+      if (!width || !height) {
+        return;
+      }
+
+      setFrameScale(Math.min(width / BASE_WIDTH, height / BASE_HEIGHT));
+    };
+
+    updateScale();
+
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(frame);
+    window.addEventListener('resize', updateScale);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', updateScale);
+    };
+  }, [isBeijingSiheyuan]);
+
+  if (isBeijingSiheyuan) {
+    return (
+      <div
+        ref={frameRef}
+        style={{
+          position: 'relative',
+          height: '100%',
+          minHeight: 0,
+          borderRadius: 20,
+          overflow: 'hidden',
+          border: '1px solid rgba(196,168,130,0.28)',
+          background: '#06132b',
+          boxShadow: '0 18px 40px rgba(91, 71, 47, 0.12)',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            width: 1920,
+            height: 1080,
+            transform: `translate(-50%, -50%) scale(${frameScale})`,
+            transformOrigin: 'center center',
+          }}
+        >
+          <iframe
+            src="/legacy/siheyuan-dashboard/index.html"
+            title="北京四合院影像志数据大屏"
+            scrolling="no"
+            style={{
+              width: '100%',
+              height: '100%',
+              border: 'none',
+              display: 'block',
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
         position: 'relative',
-        minHeight: 'calc(100vh - 170px)',
-        padding: '12px 0 40px',
+        height: '100%',
+        minHeight: 0,
         color: '#443621',
+        overflow: 'hidden',
       }}
     >
       <div
@@ -25,75 +115,33 @@ export function VideoChronicle({ station }: Props) {
         }}
       />
 
-      <div style={{ position: 'relative', zIndex: 1 }}>
+      <div style={{ position: 'relative', zIndex: 1, height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
         <div style={{ textAlign: 'center', marginBottom: 18 }}>
           <div style={{ fontSize: 12, color: '#2e90b7', letterSpacing: 6, marginBottom: 8 }}>VIDEO CHRONICLE</div>
           <h2 style={{ margin: 0, fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#1e7e96', fontWeight: 800 }}>
             {station.name.replace(/驿$/, '')} · 影像志
           </h2>
           <div style={{ marginTop: 8, color: '#5a7d78', fontSize: 13, letterSpacing: 2 }}>
-            视频信息模块预留位
+            当前仅北京四合院接入 4C 原始大屏
           </div>
         </div>
 
         <div
           style={{
+            flex: 1,
+            minHeight: 0,
             display: 'grid',
-            gridTemplateColumns: '1.2fr 0.8fr',
-            gap: 16,
+            placeItems: 'center',
+            background: 'rgba(255,255,255,0.56)',
+            border: '1px solid rgba(72, 193, 202, 0.28)',
+            borderRadius: 20,
+            color: '#5a7d78',
+            fontSize: 16,
+            textAlign: 'center',
+            padding: 32,
           }}
         >
-          <section
-            style={{
-              minHeight: 520,
-              background: 'rgba(235, 250, 247, 0.38)',
-              border: '1px solid rgba(72, 193, 202, 0.42)',
-              boxShadow: 'inset 0 0 0 1px rgba(72, 193, 202, 0.14)',
-              padding: 22,
-            }}
-          >
-            <div style={{ fontSize: 13, color: '#14738d', fontWeight: 700, marginBottom: 12 }}>影像主屏</div>
-            <div
-              style={{
-                height: 380,
-                display: 'grid',
-                placeItems: 'center',
-                background:
-                  'linear-gradient(135deg, rgba(34, 107, 124, 0.9), rgba(80, 141, 125, 0.85)), radial-gradient(circle at center, rgba(255,255,255,0.16), transparent 42%)',
-                color: '#eefcff',
-                fontSize: 28,
-                fontWeight: 700,
-                letterSpacing: 4,
-              }}
-            >
-              视频数据待接入
-            </div>
-            <div style={{ marginTop: 18, fontSize: 14, lineHeight: 1.9, color: '#48635e' }}>
-              这里将用于展示 {station.name.replace(/驿$/, '')} 相关视频的播放数据、评论情感、词云、代表视频卡片等内容。
-            </div>
-          </section>
-
-          <div style={{ display: 'grid', gap: 16 }}>
-            {[
-              ['拟接入数据', '播放量 / 点赞量 / 评论量 / 弹幕 / 情感分析'],
-              ['推荐图表', '视频卡片、评论环图、词云、热视频榜、24小时分布'],
-              ['当前状态', '尚无视频源文件，本页先保留结构与视觉位置'],
-            ].map(([title, content]) => (
-              <section
-                key={title}
-                style={{
-                  minHeight: 160,
-                  background: 'rgba(235, 250, 247, 0.38)',
-                  border: '1px solid rgba(72, 193, 202, 0.42)',
-                  boxShadow: 'inset 0 0 0 1px rgba(72, 193, 202, 0.14)',
-                  padding: 20,
-                }}
-              >
-                <div style={{ fontSize: 13, color: '#14738d', fontWeight: 700, marginBottom: 12 }}>{title}</div>
-                <div style={{ fontSize: 14, lineHeight: 1.9, color: '#48635e' }}>{content}</div>
-              </section>
-            ))}
-          </div>
+          该民居的影像志大屏尚未单独制作。
         </div>
       </div>
     </div>
