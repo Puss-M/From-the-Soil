@@ -21,9 +21,13 @@ interface Props {
 }
 
 const BASE_WIDTH = 1660;
-const BASE_HEIGHT = 934;
-const panelBorder = '1px solid rgba(180, 137, 66, 0.42)';
-const panelInset = 'inset 0 0 0 1px rgba(255, 248, 228, 0.2)';
+const BASE_HEIGHT = 900; // Reduced base height to fit better in viewports
+const inkText = '#5b4631';
+const mutedInk = '#8d7356';
+const goldInk = '#b1833c';
+const cyanInk = '#5d8d85';
+const panelWash =
+  'linear-gradient(180deg, rgba(255,252,246,0.3), rgba(241,230,200,0.14)), radial-gradient(circle at 50% 0%, rgba(184,138,59,0.14), transparent 44%)';
 
 function DashboardPanel({
   title,
@@ -38,73 +42,47 @@ function DashboardPanel({
     <section
       style={{
         position: 'relative',
-        border: panelBorder,
-        boxShadow: panelInset,
-        background:
-          'linear-gradient(180deg, rgba(245, 211, 139, 0.18), rgba(255, 248, 233, 0.08)), rgba(255, 248, 230, 0.18)',
+        background: panelWash,
         overflow: 'hidden',
+        color: inkText,
+        borderRadius: 4,
+        boxShadow: 'inset 0 0 40px rgba(184,138,59,0.05)',
         ...style,
       }}
     >
-      <div
-        style={{
-          position: 'absolute',
-          top: 14,
-          left: 14,
-          width: 14,
-          height: 14,
-          borderTop: '3px solid rgba(181, 137, 60, 0.56)',
-          borderLeft: '3px solid rgba(181, 137, 60, 0.56)',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          top: 14,
-          right: 14,
-          width: 14,
-          height: 14,
-          borderTop: '3px solid rgba(181, 137, 60, 0.56)',
-          borderRight: '3px solid rgba(181, 137, 60, 0.56)',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 14,
-          left: 14,
-          width: 14,
-          height: 14,
-          borderBottom: '3px solid rgba(181, 137, 60, 0.56)',
-          borderLeft: '3px solid rgba(181, 137, 60, 0.56)',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 14,
-          right: 14,
-          width: 14,
-          height: 14,
-          borderBottom: '3px solid rgba(181, 137, 60, 0.56)',
-          borderRight: '3px solid rgba(181, 137, 60, 0.56)',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          top: -28,
-          left: 0,
-          fontSize: 20,
-          lineHeight: 1,
-          color: '#7a4e17',
-          fontWeight: 700,
-          letterSpacing: 1,
-        }}
-      >
-        {title}
+      {/* Decorative Borders */}
+      <div style={{ position: 'absolute', inset: '4px', border: '1px solid rgba(184,138,59,0.1)', pointerEvents: 'none' }} />
+      
+      {title ? (
+        <div
+          style={{
+            position: 'absolute',
+            top: 6, // Moved up slightly
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            minWidth: 200,
+            color: goldInk,
+            fontFamily: '"KaiTi", "STKaiti", serif',
+            fontSize: 16, // Slightly smaller font
+            lineHeight: 1,
+            fontWeight: 700,
+            letterSpacing: 1,
+            zIndex: 10,
+            textShadow: '0 0 8px rgba(255,255,255,0.8)',
+          }}
+        >
+          <span style={{ width: 30, height: 1, background: 'linear-gradient(90deg, transparent, rgba(177,131,60,0.6))' }} />
+          {title}
+          <span style={{ width: 30, height: 1, background: 'linear-gradient(90deg, rgba(177,131,60,0.6), transparent)' }} />
+        </div>
+      ) : null}
+      <div style={{ position: 'relative', height: '100%', paddingTop: title ? 28 : 0 }}>
+        {children}
       </div>
-      {children}
     </section>
   );
 }
@@ -226,88 +204,18 @@ function PlaqueFlourish({
           transform: 'skewX(-30deg)',
         }}
       />
-      <div
-        style={{
-          position: 'absolute',
-          left: 42,
-          top: 6,
-          width: 7,
-          height: 7,
-          borderRadius: '50%',
-          background: 'rgba(202,170,111,0.9)',
-          boxShadow: '0 0 10px rgba(202,170,111,0.28)',
-        }}
-      />
-    </div>
-  );
-}
-
-function HeritageFlowChart({
-  items,
-}: {
-  items: Array<{ label: string; value: string }>;
-}) {
-  const leftLabels = items.map((item) => item.label);
-  const rightLabels = items.map((item) => item.value);
-  const colors = ['#73c9d2', '#e08371', '#d7ba69', '#9d7bc5', '#8aa3c4'];
-
-  return (
-    <div style={{ position: 'relative', height: '100%' }}>
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background:
-            'linear-gradient(180deg, rgba(255,255,255,0.06), rgba(98,70,29,0.02)), url("/beijing-siheyuan/bg.jpg") center center / cover no-repeat',
-          opacity: 0.18,
-          pointerEvents: 'none',
-        }}
-      />
-      <svg viewBox="0 0 460 180" preserveAspectRatio="none" style={{ width: '100%', height: '100%', display: 'block' }}>
-        {leftLabels.map((label, index) => {
-          const y = 20 + index * 30;
-          const thickness = 18 + index * 4;
-          const color = colors[index % colors.length];
-
-          return (
-            <g key={label}>
-              <path
-                d={`M 62 ${y + 8} C 152 ${y - 10}, 260 ${y + 16}, 388 ${y + 6} L 388 ${y + 6 + thickness} C 258 ${y + 28 + thickness * 0.35}, 152 ${y + 10 + thickness}, 62 ${y + 24} Z`}
-                fill={color}
-                fillOpacity="0.46"
-                stroke="rgba(255,248,228,0.45)"
-                strokeWidth="1"
-              />
-              <path
-                d={`M 62 ${y + 8} C 152 ${y - 10}, 260 ${y + 16}, 388 ${y + 6}`}
-                fill="none"
-                stroke="rgba(255,255,255,0.18)"
-                strokeWidth="3"
-              />
-              <rect x="20" y={y + 2} width="36" height={24} rx="2" fill={color} fillOpacity="0.82" />
-              <rect x="394" y={y + 2} width="36" height={24} rx="2" fill={color} fillOpacity="0.68" />
-            </g>
-          );
-        })}
-      </svg>
-      <div style={{ position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: '92px 1fr 130px', pointerEvents: 'none' }}>
-        <div style={{ paddingTop: 18 }}>
-          {leftLabels.map((label) => (
-            <div key={label} style={{ height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: '#fff5e9', textShadow: '0 1px 2px rgba(89,60,21,0.38)' }}>
-              {label}
-            </div>
-          ))}
-        </div>
-        <div />
-        <div style={{ paddingTop: 18 }}>
-          {rightLabels.map((label, index) => (
-            <div key={`${label}-${index}`} style={{ height: 30, display: 'flex', alignItems: 'center', justifyContent: 'flex-start', fontSize: 11, fontWeight: 700, color: '#fff5e9', textShadow: '0 1px 2px rgba(89,60,21,0.38)' }}>
-              {label}
-            </div>
-          ))}
-        </div>
+        <div
+          style={{
+            position: 'absolute',
+            left: 42,
+            top: 6,
+            width: 7,
+            height: 7,
+            borderRadius: '50%',
+            background: 'rgba(177,131,60,0.9)',
+          }}
+        />
       </div>
-    </div>
   );
 }
 
@@ -344,26 +252,26 @@ function Gauge({
           },
         },
         progress: { show: false },
-        axisTick: { distance: -14, splitNumber: 4, lineStyle: { color: '#fff3d6', width: 1 } },
-        splitLine: { distance: -16, length: 8, lineStyle: { color: '#fff7e8', width: 1.5 } },
+        axisTick: { distance: -14, splitNumber: 4, lineStyle: { color: 'rgba(177,131,60,0.36)', width: 1 } },
+        splitLine: { distance: -16, length: 8, lineStyle: { color: 'rgba(177,131,60,0.5)', width: 1.2 } },
         axisLabel: { show: false },
         pointer: {
           icon: 'path://M4 0 L0 50 L8 50 Z',
           width: 10,
           length: '54%',
           offsetCenter: [0, '-2%'],
-          itemStyle: { color: '#bb8352' },
+          itemStyle: { color: goldInk },
         },
         anchor: {
           show: true,
           showAbove: true,
           size: 9,
-          itemStyle: { color: '#d4b07a' },
+          itemStyle: { color: goldInk },
         },
         detail: {
           valueAnimation: false,
           offsetCenter: [0, '35%'],
-          color: '#b07f4a',
+          color: goldInk,
           fontSize: 16,
           fontWeight: 800,
           formatter: () => display,
@@ -375,7 +283,7 @@ function Gauge({
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <div style={{ fontSize: 12, color: '#fff5e9', fontWeight: 700, marginBottom: 2 }}>{label}</div>
+      <div style={{ fontSize: 12, color: inkText, fontWeight: 700, marginBottom: 2 }}>{label}</div>
       <ReactECharts option={option} style={{ height: 104 }} />
     </div>
   );
@@ -385,6 +293,7 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
   const [geoLoaded, setGeoLoaded] = useState(false);
   const frameRef = useRef<HTMLDivElement | null>(null);
   const [frameScale, setFrameScale] = useState(1);
+  const [isCompactViewport, setIsCompactViewport] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -421,7 +330,11 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
         return;
       }
 
-      setFrameScale(Math.min(width / BASE_WIDTH, height / BASE_HEIGHT));
+      // Less aggressive threshold so normal laptops scale instead of clipping.
+      const compact = width < 1024 || height < 600;
+      setIsCompactViewport(compact);
+      // Give a tiny padding (20px) to prevent bottom edge clipping
+      setFrameScale(compact ? 1 : Math.min(1, (width - 20) / BASE_WIDTH, (height - 20) / BASE_HEIGHT));
     };
 
     updateScale();
@@ -443,6 +356,7 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
 
   const climateSeasonOption = useMemo(() => ({
     backgroundColor: 'transparent',
+    textStyle: { fontFamily: '"Noto Sans SC", "Microsoft YaHei", sans-serif' },
     animationDuration: 500,
     grid: { left: 42, right: 38, top: 28, bottom: 40 },
     tooltip: { trigger: 'axis' as const },
@@ -451,13 +365,13 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
       bottom: 2,
       itemWidth: 18,
       itemHeight: 10,
-      textStyle: { color: '#fff6e8', fontSize: 11 },
+      textStyle: { color: mutedInk, fontSize: 11 },
     },
     xAxis: {
       type: 'category' as const,
       data: MONTHS,
-      axisLine: { lineStyle: { color: 'rgba(255,255,255,0.8)' } },
-      axisLabel: { color: '#fff4df', fontSize: 10 },
+      axisLine: { lineStyle: { color: 'rgba(177,131,60,0.46)' } },
+      axisLabel: { color: mutedInk, fontSize: 10 },
       axisTick: { show: false },
     },
     yAxis: [
@@ -465,16 +379,16 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
         type: 'value' as const,
         min: 0,
         max: Math.max(180, Math.ceil(Math.max(...dashboard.monthlyPrecipitation) / 30) * 30),
-        axisLine: { show: true, lineStyle: { color: 'rgba(255,255,255,0.8)' } },
-        axisLabel: { color: '#fff4df', fontSize: 10 },
-        splitLine: { lineStyle: { color: 'rgba(255,255,255,0.14)' } },
+        axisLine: { show: true, lineStyle: { color: 'rgba(177,131,60,0.38)' } },
+        axisLabel: { color: mutedInk, fontSize: 10 },
+        splitLine: { show: false },
       },
       {
         type: 'value' as const,
-        min: -30,
-        max: 30,
-        axisLine: { show: true, lineStyle: { color: 'rgba(255,255,255,0.8)' } },
-        axisLabel: { color: '#fff4df', fontSize: 10 },
+        min: -35,
+        max: 35,
+        axisLine: { show: true, lineStyle: { color: 'rgba(93,141,133,0.38)' } },
+        axisLabel: { color: mutedInk, fontSize: 10 },
         splitLine: { show: false },
       },
     ],
@@ -486,15 +400,12 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
         barWidth: 16,
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: '#79d8da' },
-            { offset: 0.55, color: '#55c2c3' },
-            { offset: 1, color: '#3d9fa5' },
+            { offset: 0, color: '#8fc0ba' },
+            { offset: 0.55, color: '#6ea49c' },
+            { offset: 1, color: '#4f8179' },
           ]),
           borderRadius: [12, 12, 3, 3],
-          shadowBlur: 16,
-          shadowColor: 'rgba(73,183,182,0.28)',
         },
-        emphasis: { itemStyle: { shadowBlur: 20 } },
         z: 3,
       },
       {
@@ -504,8 +415,8 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
         smooth: true,
         data: dashboard.monthlyTemperature,
         symbolSize: 5,
-        lineStyle: { color: '#bf8254', width: 2.4, shadowBlur: 6, shadowColor: 'rgba(191,130,84,0.28)' },
-        itemStyle: { color: '#fff8ec', borderColor: '#bf8254', borderWidth: 1.5 },
+        lineStyle: { color: goldInk, width: 2.4 },
+        itemStyle: { color: '#f7f1e3', borderColor: goldInk, borderWidth: 1.5 },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: 'rgba(191,130,84,0.16)' },
@@ -519,12 +430,13 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
 
   const materialOption = useMemo(() => ({
     backgroundColor: 'transparent',
+    textStyle: { fontFamily: '"Noto Sans SC", "Microsoft YaHei", sans-serif' },
     tooltip: { trigger: 'item' as const },
     legend: {
       bottom: 0,
       itemWidth: 18,
       itemHeight: 10,
-      textStyle: { color: '#fff6e8', fontSize: 11 },
+      textStyle: { color: mutedInk, fontSize: 11 },
     },
     series: [
       {
@@ -535,25 +447,8 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
         z: 0,
         label: { show: false },
         labelLine: { show: false },
-        itemStyle: {
-          color: 'rgba(96, 66, 24, 0.22)',
-          shadowBlur: 18,
-          shadowColor: 'rgba(82, 56, 18, 0.14)',
-        },
-        data: dashboard.materialDistribution.map((item) => ({ value: item.value })),
-      },
-      {
-        type: 'pie',
-        radius: ['35%', '64%'],
-        center: ['50%', '48%'],
-        silent: true,
-        z: 1,
-        label: { show: false },
-        labelLine: { show: false },
-        itemStyle: {
-          color: 'rgba(102, 66, 18, 0.12)',
-          shadowBlur: 24,
-          shadowColor: 'rgba(91, 61, 18, 0.16)',
+          itemStyle: {
+          color: 'rgba(111, 84, 48, 0.18)',
         },
         data: dashboard.materialDistribution.map((item) => ({ value: item.value })),
       },
@@ -573,20 +468,20 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
           itemStyle: {
             color: [
               new echarts.graphic.LinearGradient(0, 0, 1, 1, [
-                { offset: 0, color: '#84dbe1' },
-                { offset: 1, color: '#4db8be' },
+                { offset: 0, color: '#9fc7c2' },
+                { offset: 1, color: '#5d8d85' },
               ]),
               new echarts.graphic.LinearGradient(0, 0, 1, 1, [
-                { offset: 0, color: '#97adff' },
-                { offset: 1, color: '#5b7de6' },
+                { offset: 0, color: '#d7bb89' },
+                { offset: 1, color: '#b1833c' },
               ]),
               new echarts.graphic.LinearGradient(0, 0, 1, 1, [
-                { offset: 0, color: '#e0c8ff' },
-                { offset: 1, color: '#b48ce8' },
+                { offset: 0, color: '#c8d6cf' },
+                { offset: 1, color: '#7b9b90' },
               ]),
               new echarts.graphic.LinearGradient(0, 0, 1, 1, [
-                { offset: 0, color: '#f59aa8' },
-                { offset: 1, color: '#db6879' },
+                { offset: 0, color: '#c8a887' },
+                { offset: 1, color: '#8b6846' },
               ]),
             ][index % 4],
           },
@@ -603,9 +498,9 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
         labelLine: { show: false },
         itemStyle: {
           color: new echarts.graphic.RadialGradient(0.45, 0.35, 0.8, [
-            { offset: 0, color: 'rgba(255,255,255,0.58)' },
-            { offset: 0.4, color: 'rgba(188,139,74,0.22)' },
-            { offset: 1, color: 'rgba(126,86,31,0.06)' },
+            { offset: 0, color: 'rgba(255,255,255,0.48)' },
+            { offset: 0.4, color: 'rgba(177,131,60,0.18)' },
+            { offset: 1, color: 'rgba(126,86,31,0.04)' },
           ]),
         },
         data: [{ value: 1 }],
@@ -615,20 +510,21 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
 
   const radarOption = useMemo(() => ({
     backgroundColor: 'transparent',
+    textStyle: { fontFamily: '"Noto Sans SC", "Microsoft YaHei", sans-serif' },
     radar: {
       radius: '72%',
       splitNumber: 5,
       indicator: [
         { name: '防火', max: 100 },
         { name: '防水', max: 100 },
-        { name: '防恶劣天气', max: 100 },
-        { name: '防匪', max: 100 },
-        { name: '防盗', max: 100 },
+        { name: '防风沙', max: 100 },
+        { name: '防御性', max: 100 },
+        { name: '文化适应', max: 100 },
       ],
-      axisName: { color: '#7a5e36', fontSize: 12, fontWeight: 700 },
-      splitLine: { lineStyle: { color: 'rgba(255, 245, 225, 0.7)' } },
-      splitArea: { areaStyle: { color: ['rgba(255,255,255,0.02)'] } },
-      axisLine: { lineStyle: { color: 'rgba(255,245,225,0.55)' } },
+      axisName: { color: inkText, fontSize: 12, fontWeight: 700 },
+      splitLine: { lineStyle: { color: 'rgba(177,131,60,0.24)' } },
+      splitArea: { areaStyle: { color: ['rgba(255,255,255,0)', 'rgba(184,138,59,0.04)'] } },
+      axisLine: { lineStyle: { color: 'rgba(93,141,133,0.22)' } },
     },
     series: [
       {
@@ -636,9 +532,9 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
         data: [
           {
             value: dashboard.radarValues,
-            areaStyle: { color: 'rgba(182, 121, 67, 0.16)' },
-            lineStyle: { color: '#c8905a', width: 2.5 },
-            itemStyle: { color: '#c8905a' },
+            areaStyle: { color: 'rgba(177,131,60,0.16)' },
+            lineStyle: { color: goldInk, width: 2.5 },
+            itemStyle: { color: goldInk },
           },
         ],
       },
@@ -647,6 +543,7 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
 
   const mapOption = useMemo(() => ({
     backgroundColor: 'transparent',
+    textStyle: { fontFamily: '"Noto Sans SC", "Microsoft YaHei", sans-serif' },
     tooltip: { trigger: 'item' as const, formatter: '{b}' },
     geo: {
       map: 'china-dashboard',
@@ -656,14 +553,12 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
       layoutCenter: ['49%', '53%'],
       layoutSize: '92%',
       itemStyle: {
-        areaColor: '#e4ac41',
-        borderColor: 'rgba(255,255,255,0.9)',
+        areaColor: '#d8c39a',
+        borderColor: 'rgba(255,252,244,0.72)',
         borderWidth: 1.1,
-        shadowBlur: 18,
-        shadowColor: 'rgba(255,255,255,0.54)',
       },
       emphasis: {
-        itemStyle: { areaColor: '#ebb856' },
+        itemStyle: { areaColor: '#caa76b' },
       },
     },
     series: [
@@ -673,61 +568,126 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
         symbolSize: 22,
         data: [{ name: dashboard.mapPoint.name, value: [...dashboard.mapPoint.coords, 1] }],
         itemStyle: {
-          color: '#fff8ec',
-          borderColor: '#caa56a',
-          borderWidth: 5,
-          shadowBlur: 20,
-          shadowColor: 'rgba(224, 185, 112, 0.65)',
+          color: '#f8f1df',
+          borderColor: goldInk,
+          borderWidth: 4,
         },
       },
     ],
   }), [dashboard.mapPoint]);
 
-  const wordPalette = ['#0fa5dd', '#8b2fd6', '#df2630', '#d48e15', '#18a3a0', '#1d8cd3'];
-  const fixedWordLayout = [
-    { left: '50%', top: '56%', scale: 0.88 },
-    { left: '35%', top: '66%', scale: 0.8 },
-    { left: '20%', top: '76%', scale: 0.82 },
-    { left: '55%', top: '18%', scale: 0.76 },
-    { left: '66%', top: '40%', scale: 0.7 },
-    { left: '66%', top: '74%', scale: 0.74 },
-    { left: '28%', top: '26%', scale: 0.66 },
-    { left: '14%', top: '64%', scale: 0.64 },
-    { left: '74%', top: '66%', scale: 0.62 },
-    { left: '75%', top: '24%', scale: 0.62 },
-    { left: '10%', top: '46%', scale: 0.6 },
-    { left: '43%', top: '24%', scale: 0.66 },
-    { left: '70%', top: '54%', scale: 0.58 },
-    { left: '59%', top: '81%', scale: 0.58 },
-    { left: '18%', top: '18%', scale: 0.56 },
-    { left: '40%', top: '84%', scale: 0.54 },
-  ] as const;
+  const sankeyOption = useMemo(() => ({
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'item', triggerOn: 'mousemove' },
+    series: [
+      {
+        type: 'sankey',
+        data: dashboard.sankeyData.nodes,
+        links: dashboard.sankeyData.links,
+        top: '15%',
+        bottom: '10%',
+        left: '2%',
+        right: '28%', // Increased further for labels
+        nodeGap: 8,
+        emphasis: { focus: 'adjacent' },
+        lineStyle: { color: 'gradient', curveness: 0.5, opacity: 0.3 },
+        itemStyle: { borderWidth: 1, borderColor: goldInk, borderRadius: 2 },
+        label: {
+          position: 'right',
+          distance: 6,
+          color: inkText,
+          fontSize: 10,
+          fontWeight: 600,
+          fontFamily: '"Noto Sans SC", sans-serif',
+        },
+      },
+    ],
+  }), [dashboard.sankeyData]);
+
+  const wordCloudOption = useMemo(() => {
+    // Improved layout: Use a 4x4 or 5x3 grid to place words to avoid overlaps
+    const rows = 4;
+    const cols = 4;
+    const data = dashboard.words.slice(0, 16).map((w, idx) => {
+      const r = Math.floor(idx / cols);
+      const c = idx % cols;
+      // Map to -45 to 45 range with some jitter, keeping inner items slightly tighter
+      const x = (c - (cols - 1) / 2) * 22 + (Math.random() - 0.5) * 6;
+      const y = (r - (rows - 1) / 2) * -18 + (Math.random() - 0.5) * 6;
+      
+      return {
+        name: w.text,
+        value: [x, y, w.weight],
+        itemStyle: {
+          color: [
+            '#0fa5dd', '#8b2fd6', '#df2630', '#d48e15', '#18a3a0', '#1d8cd3'
+          ][idx % 6]
+        }
+      };
+    });
+
+    return {
+      backgroundColor: 'transparent',
+      tooltip: { show: true, formatter: '{b}' },
+      xAxis: { show: false, min: -55, max: 55 },
+      yAxis: { show: false, min: -50, max: 50 },
+      series: [{
+        type: 'scatter',
+        data: data,
+        symbolSize: 0,
+        label: {
+          show: true,
+          formatter: '{b}',
+          fontSize: (params: any) => Math.max(12, params.value[2] * 0.7),
+          fontWeight: 'bold',
+          fontFamily: '"Noto Sans SC", sans-serif',
+          textShadowBlur: 4,
+          textShadowColor: 'rgba(255,255,255,0.6)',
+        },
+        emphasis: {
+          label: {
+            fontSize: (params: any) => params.value[2] + 2,
+            shadowBlur: 10,
+            shadowColor: 'rgba(0,0,0,0.3)',
+            fontWeight: '900'
+          }
+        }
+      }]
+    };
+  }, [dashboard.words]);
 
   return (
     <div
       ref={frameRef}
       style={{
         position: 'relative',
+        width: '100%',
         height: '100%',
         minHeight: 0,
-        overflow: 'hidden',
+        overflow: 'hidden', // Disable scrolling, force scaling
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '10px',
+        boxSizing: 'border-box',
       }}
     >
       <div
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          width: BASE_WIDTH,
-          height: BASE_HEIGHT,
-          transform: `scale(${frameScale})`,
-          transformOrigin: 'top center',
-          margin: '0 auto',
-          color: '#fff7ea',
-          background:
-            'linear-gradient(180deg, rgba(249,241,214,0.92), rgba(239,218,162,0.72)), url("/beijing-siheyuan/bg.jpg") center top / cover no-repeat',
-          boxShadow: 'inset 0 0 0 1px rgba(179, 135, 67, 0.35)',
-        }}
-      >
+      style={{
+        position: 'relative',
+        zIndex: 1,
+        width: BASE_WIDTH,
+        height: BASE_HEIGHT,
+        transform: `scale(${frameScale})`,
+        transformOrigin: 'center center',
+        flexShrink: 0,
+        color: inkText,
+        background:
+          'linear-gradient(180deg, rgba(250,246,236,0.96), rgba(236,223,193,0.82)), url("/beijing-siheyuan/bg.jpg") center top / cover no-repeat',
+        boxShadow: '0 20px 50px rgba(0,0,0,0.15)',
+        borderRadius: 8,
+      }}
+    >
         <div
           style={{
             position: 'absolute',
@@ -761,30 +721,10 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
           style={{
             position: 'absolute',
             inset: 0,
-            background:
-              'radial-gradient(circle at 10% 16%, rgba(255,255,255,0.35), transparent 22%), radial-gradient(circle at 82% 18%, rgba(255,255,255,0.2), transparent 18%), radial-gradient(circle at 30% 72%, rgba(111, 63, 17, 0.08), transparent 20%)',
-            pointerEvents: 'none',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
             opacity: 0.32,
             pointerEvents: 'none',
             background:
               'radial-gradient(ellipse at 24% 56%, rgba(85, 57, 20, 0.34) 0%, rgba(85, 57, 20, 0.16) 18%, transparent 34%), radial-gradient(ellipse at 78% 70%, rgba(65, 44, 14, 0.22) 0%, rgba(65, 44, 14, 0.12) 20%, transparent 34%), radial-gradient(ellipse at 62% 44%, rgba(106, 78, 32, 0.18) 0%, transparent 26%)',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            opacity: 0.16,
-            pointerEvents: 'none',
-            background:
-              'repeating-linear-gradient(0deg, rgba(142,108,52,0.06) 0 2px, transparent 2px 24px), repeating-linear-gradient(90deg, rgba(142,108,52,0.03) 0 1px, transparent 1px 28px)',
-            mixBlendMode: 'multiply',
           }}
         />
         <div
@@ -800,21 +740,21 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
           <BambooBranch style={{ right: 0, bottom: 2, width: 138, height: 336 }} flip />
         </div>
 
-        <div style={{ position: 'absolute', left: 10, top: 34, width: 500, height: 230 }}>
-          <DashboardPanel title="温雨双折图" style={{ height: '100%' }}>
-            <ReactECharts option={climateSeasonOption} style={{ height: '100%', paddingTop: 10 }} />
+        <div style={{ position: 'absolute', left: 10, top: 20, width: 500, height: 210 }}>
+          <DashboardPanel title="气候环境监测" style={{ height: '100%' }}>
+            <ReactECharts option={climateSeasonOption} style={{ height: '100%', paddingTop: 6 }} />
           </DashboardPanel>
         </div>
 
-        <div style={{ position: 'absolute', left: 10, top: 284, width: 500, height: 320 }}>
-          <DashboardPanel title="建材环形图" style={{ height: '100%' }}>
-            <ReactECharts option={materialOption} style={{ height: '100%', paddingTop: 26 }} />
+        <div style={{ position: 'absolute', left: 10, top: 246, width: 500, height: 300 }}>
+          <DashboardPanel title="营建材料构成" style={{ height: '100%' }}>
+            <ReactECharts option={materialOption} style={{ height: '100%', paddingTop: 20 }} />
           </DashboardPanel>
         </div>
 
-        <div style={{ position: 'absolute', left: 10, top: 612, width: 500, height: 216 }}>
-          <DashboardPanel title="构造桑基图" style={{ height: '100%', padding: '22px 18px 14px' }}>
-            <HeritageFlowChart items={dashboard.summary} />
+        <div style={{ position: 'absolute', left: 10, top: 562, width: 500, height: 200 }}>
+          <DashboardPanel title="构造关联桑基图" style={{ height: '100%' }}>
+            <ReactECharts option={sankeyOption} style={{ height: '100%', padding: '6px' }} />
           </DashboardPanel>
         </div>
 
@@ -822,21 +762,17 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
           style={{
             position: 'absolute',
             left: 628,
-            top: 4,
+            top: 2,
             width: 376,
-            height: 62,
+            height: 54,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#b76800',
-            fontSize: 36,
+            color: inkText,
+            fontSize: 32,
             fontWeight: 900,
-            background:
-              'linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,246,225,0.06))',
-            boxShadow: 'inset 0 0 0 1px rgba(205,182,132,0.5), 0 1px 8px rgba(176,141,84,0.08)',
-            border: '1px solid rgba(212,191,146,0.28)',
             letterSpacing: 2,
-            textShadow: '0 1px 0 rgba(255,250,235,0.9)',
+            fontFamily: '"KaiTi", "STKaiti", serif',
           }}
         >
           <PlaqueFlourish side="left" />
@@ -844,49 +780,49 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
           <PlaqueFlourish side="right" />
         </div>
 
-        <div style={{ position: 'absolute', left: 548, top: 88, width: 548, height: 170 }}>
-          <DashboardPanel title="分布地域数据" style={{ height: '100%', padding: '18px 18px 14px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, height: '100%' }}>
-              {dashboard.metrics.map((metric) => (
-                <div
-                  key={metric.label}
-                  style={{
-                    border: '1px solid rgba(60, 212, 220, 0.24)',
-                    background: 'rgba(240, 194, 103, 0.08)',
-                    display: 'grid',
-                    placeItems: 'center',
-                    textAlign: 'center',
-                  }}
-                >
-                  <div style={{ fontSize: 22, color: '#0f8eff', fontWeight: 700, marginBottom: 6 }}>{metric.value}</div>
-                  <div style={{ fontSize: 15, color: '#fff6ea', fontWeight: 600 }}>{metric.label}</div>
-                </div>
-              ))}
+        <div style={{ position: 'absolute', left: 548, top: 64, width: 548, height: 160 }}>
+          <DashboardPanel title="核心分布指标" style={{ height: '100%', padding: '12px 18px 10px' }}>
+            <div style={{ height: '100%', border: '1px solid rgba(139,104,70,0.24)', background: 'rgba(255,252,246,0.64)' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+                <thead>
+                  <tr style={{ background: 'rgba(184,138,59,0.12)' }}>
+                    <th style={{ width: '50%', padding: '6px 12px', borderBottom: '1px solid rgba(139,104,70,0.2)', color: inkText, textAlign: 'left', fontSize: 11 }}>指标项</th>
+                    <th style={{ padding: '6px 12px', borderBottom: '1px solid rgba(139,104,70,0.2)', color: inkText, textAlign: 'right', fontSize: 11 }}>测算数值</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dashboard.metrics.map((metric, idx) => (
+                    <tr key={metric.label} style={{ background: idx % 2 === 0 ? 'rgba(255,255,255,0.28)' : 'transparent' }}>
+                      <td style={{ padding: '6px 12px', borderBottom: '1px solid rgba(139,104,70,0.12)', fontSize: 12, color: mutedInk, fontWeight: 600 }}>{metric.label}</td>
+                      <td style={{ padding: '6px 12px', borderBottom: '1px solid rgba(139,104,70,0.12)', textAlign: 'right', fontSize: 13, color: cyanInk, fontWeight: 800, fontFamily: 'monospace' }}>{metric.value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </DashboardPanel>
         </div>
 
-        <div style={{ position: 'absolute', left: 548, top: 276, width: 548, height: 410 }}>
+        <div style={{ position: 'absolute', left: 548, top: 240, width: 548, height: 380 }}>
           <div style={{ position: 'absolute', inset: '10px 8px 12px 8px', background: 'url("/beijing-siheyuan/bg.jpg") center center / cover no-repeat', opacity: 0.14, pointerEvents: 'none', mixBlendMode: 'multiply' }} />
           <InkMountain style={{ left: 18, bottom: 76, width: 510, height: 156 }} opacity={0.14} />
-          <div style={{ position: 'absolute', top: -30, left: 0, fontSize: 20, color: '#7a4e17', fontWeight: 700 }}>分布图</div>
           {geoLoaded ? (
             <ReactECharts option={mapOption} style={{ height: '100%' }} />
           ) : (
-            <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: '#7a6040' }}>地图加载中...</div>
+            <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: '#7a6040' }}>地理坐标加载中...</div>
           )}
         </div>
 
-        <div style={{ position: 'absolute', left: 550, top: 664, width: 548, height: 162 }}>
-          <DashboardPanel title="" style={{ height: '100%', padding: '10px 18px 8px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 2, color: '#7a4e17', fontWeight: 700 }}>
-              <span style={{ fontSize: 18 }}>保护状况</span>
-              <span style={{ fontSize: 14 }}>{dashboard.preserveDate}</span>
+        <div style={{ position: 'absolute', left: 550, top: 636, width: 548, height: 150 }}>
+          <DashboardPanel title="遗存保护评估" style={{ height: '100%', padding: '8px 18px 6px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 2, color: goldInk, fontWeight: 700 }}>
+              <span style={{ fontSize: 16 }}>当前保护状态</span>
+              <span style={{ fontSize: 12 }}>{dashboard.preserveDate} 更新</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12 }}>
-              <div style={{ padding: '10px 0 0 4px', minWidth: 128 }}>
-                <div style={{ fontSize: 24, color: '#de4444', fontWeight: 900 }}>{dashboard.preserveRange}</div>
-                <div style={{ marginTop: 24, fontSize: 16, color: '#fff8ec', fontWeight: 700 }}>{dashboard.preserveCount}</div>
+              <div style={{ padding: '6px 0 0 4px', minWidth: 128 }}>
+                <div style={{ fontSize: 22, color: '#b45b4e', fontWeight: 900 }}>{dashboard.preserveRange}</div>
+                <div style={{ marginTop: 18, fontSize: 14, color: inkText, fontWeight: 700 }}>非遗载体: {dashboard.preserveCount}</div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 2, flex: 1 }}>
                 {dashboard.gauges.map((gauge) => (
@@ -903,70 +839,31 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
           </DashboardPanel>
         </div>
 
-        <div style={{ position: 'absolute', left: 1110, top: 34, width: 540, height: 270 }}>
-          <DashboardPanel title="" style={{ height: '100%', padding: '24px 18px 20px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '210px 1fr', gap: 16, height: '100%' }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#7a4e17', fontWeight: 700, marginBottom: 4, fontSize: 20 }}>
-                  <span>分类</span>
-                  <span style={{ fontSize: 20 }}>防御指数</span>
-                </div>
-                <div style={{ position: 'relative', width: 170, height: 170, margin: '18px auto 0' }}>
-                  {[
-                    { color: '#7f476e', left: 54, top: 0 },
-                    { color: '#e1645c', left: 2, top: 42 },
-                    { color: '#58b9ca', left: 106, top: 42 },
-                    { color: '#d1b050', left: 54, top: 88 },
-                  ].map((petal, index) => (
-                    <div
-                      key={petal.color}
-                      style={{
-                        position: 'absolute',
-                        left: petal.left,
-                        top: petal.top,
-                        width: 72,
-                        height: 72,
-                        background: petal.color,
-                        opacity: 0.92,
-                        borderRadius: index === 0 ? '50% 50% 46% 46%' : index === 3 ? '46% 46% 55% 55%' : '50%',
-                        filter: 'drop-shadow(0 8px 18px rgba(0,0,0,0.18))',
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <ReactECharts option={radarOption} style={{ height: 212 }} />
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: -8 }}>
-                  <span style={{ background: 'rgba(174, 111, 73, 0.76)', padding: '4px 14px', borderRadius: 6, fontSize: 12 }}>
-                    {dashboard.title}
-                  </span>
-                </div>
-              </div>
-            </div>
+        <div style={{ position: 'absolute', left: 1110, top: 20, width: 540, height: 250 }}>
+          <DashboardPanel title="民居防御与适应指数" style={{ height: '100%', padding: '20px 18px 16px' }}>
+             <ReactECharts option={radarOption} style={{ height: '100%' }} />
           </DashboardPanel>
         </div>
 
-        <div style={{ position: 'absolute', left: 1110, top: 338, width: 540, height: 146 }}>
-          <DashboardPanel title="历史进程图" style={{ height: '100%', padding: '14px 18px 10px' }}>
+        <div style={{ position: 'absolute', left: 1110, top: 286, width: 540, height: 130 }}>
+          <DashboardPanel title="历史进程溯源" style={{ height: '100%', padding: '10px 18px 8px' }}>
             <div style={{ position: 'relative', height: '100%' }}>
               <div
                 style={{
                   position: 'absolute',
                   left: 22,
                   right: 22,
-                  bottom: 24,
-                  height: 7,
+                  bottom: 20,
+                  height: 6,
                   background: 'linear-gradient(90deg, #43c1c9 0 36%, #cb8a55 36% 69%, #d64969 69% 100%)',
                 }}
               />
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, paddingTop: 2 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, paddingTop: 2 }}>
                 {dashboard.heritageTimeline.map((item, index) => (
-                  <div key={item.era} style={{ position: 'relative', textAlign: 'center', color: '#fff6ea' }}>
-                    <div style={{ minHeight: 50, fontSize: 11, lineHeight: 1.45, fontWeight: 700, whiteSpace: 'pre-line' }}>{item.text}</div>
-                    <div style={{ color: ['#34baba', '#d29554', '#d34e65'][index], fontSize: 17, fontWeight: 900 }}>{item.era}</div>
-                    <div style={{ width: 20, height: 3, margin: '6px auto 0', background: ['#34baba', '#d29554', '#d34e65'][index] }} />
+                  <div key={item.era} style={{ position: 'relative', textAlign: 'center', color: inkText }}>
+                    <div style={{ minHeight: 40, fontSize: 10, lineHeight: 1.4, fontWeight: 700, whiteSpace: 'pre-line' }}>{item.text}</div>
+                    <div style={{ color: ['#34baba', '#d29554', '#d34e65'][index], fontSize: 15, fontWeight: 900 }}>{item.era}</div>
+                    <div style={{ width: 16, height: 3, margin: '4px auto 0', background: ['#34baba', '#d29554', '#d34e65'][index] }} />
                   </div>
                 ))}
               </div>
@@ -974,33 +871,12 @@ export function HeritageDashboard({ station, climate, detail, heritage, decorati
           </DashboardPanel>
         </div>
 
-        <div style={{ position: 'absolute', left: 1110, top: 506, width: 540, height: 336 }}>
-          <DashboardPanel title="分布词云图" style={{ height: '100%', padding: '12px 18px 14px' }}>
+        <div style={{ position: 'absolute', left: 1110, top: 432, width: 540, height: 330 }}>
+          <DashboardPanel title="文化关键词云" style={{ height: '100%', padding: '10px 18px 12px' }}>
             <div style={{ position: 'absolute', inset: '12px 14px', background: 'url("/beijing-siheyuan/bg.jpg") center center / cover no-repeat', opacity: 0.1, pointerEvents: 'none', mixBlendMode: 'multiply' }} />
             <InkMountain style={{ left: 18, bottom: 54, width: 500, height: 128 }} opacity={0.14} />
             <BambooBranch style={{ right: -8, bottom: -6, width: 102, height: 250 }} flip />
-            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-              {dashboard.words.map((word, index) => (
-                <span
-                  key={`${word.text}-${index}`}
-                  style={{
-                    position: 'absolute',
-                    left: fixedWordLayout[index]?.left ?? `${6 + (index * 16) % 70}%`,
-                    top: fixedWordLayout[index]?.top ?? `${8 + (index * 12) % 72}%`,
-                    fontSize: Math.max(15, Math.round(word.weight * (fixedWordLayout[index]?.scale ?? 0.72))),
-                    lineHeight: 1,
-                    color: wordPalette[index % wordPalette.length],
-                    fontWeight: word.weight > 30 ? 900 : 700,
-                    opacity: 0.92,
-                    transform: index % 5 === 0 ? 'rotate(-3deg)' : index % 4 === 0 ? 'rotate(2deg)' : 'none',
-                    whiteSpace: 'nowrap',
-                    textShadow: '0 1px 2px rgba(255,250,235,0.45)',
-                  }}
-                >
-                  {word.text}
-                </span>
-              ))}
-            </div>
+            <ReactECharts option={wordCloudOption} style={{ height: '100%' }} />
           </DashboardPanel>
         </div>
       </div>

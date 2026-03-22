@@ -62,26 +62,6 @@ export const stations: Station[] = [
     region: '闽西',
     modelPath: '/models/土楼.glb',
   },
-  // 山西平遥
-  {
-    id: 'pingyao',
-    name: '平遥驿',
-    nameEn: 'Pingyao',
-    position: [3, 1.2, 3],
-    coordinates: [112.18, 37.19],
-    climate: {
-      rainfall: 450,
-      humidity: 55,
-      temperature: 10,
-      altitude: 800,
-      sunlight: 0.75,
-      defense: 5,
-    },
-    buildingGene: '窑洞式',
-    description: '厚墙平顶，抵御风沙',
-    region: '晋中',
-    modelPath: '/models/窑洞.glb',
-  },
   // 陕北窑洞
   {
     id: 'yanan',
@@ -301,67 +281,6 @@ export const stations: Station[] = [
     description: '土坯平顶，内设天窗通风',
     region: '东疆',
     modelPath: '/models/阿以旺.glb',
-  },
-
-  // 杭州（苏式民居2）
-  {
-    id: 'hangzhou',
-    name: '杭州驿',
-    nameEn: 'Hangzhou',
-    position: [-5, 0.3, 3],
-    coordinates: [120.15, 30.27],
-    climate: {
-      rainfall: 1400,
-      humidity: 78,
-      temperature: 17,
-      altitude: 10,
-      sunlight: 0.55,
-      defense: 1,
-    },
-    buildingGene: '抬梁式',
-    description: '西湖风韵，园林雅居',
-    region: '江南',
-    modelPath: '/models/苏式民居2.glb',
-  },
-  // 婺源（徽派民居2）
-  {
-    id: 'wuyuan',
-    name: '婺源驿',
-    nameEn: 'Wuyuan',
-    position: [-2, 0.9, 0],
-    coordinates: [117.86, 29.25],
-    climate: {
-      rainfall: 1600,
-      humidity: 80,
-      temperature: 16,
-      altitude: 250,
-      sunlight: 0.5,
-      defense: 3,
-    },
-    buildingGene: '砖雕马头墙',
-    description: '油菜花田，白墙黛阁',
-    region: '赣北',
-    modelPath: '/models/徽派民居2.glb',
-  },
-  // 无锡（苏式民居3）
-  {
-    id: 'wuxi',
-    name: '无锡驿',
-    nameEn: 'Wuxi',
-    position: [-4, 0.3, 5],
-    coordinates: [120.31, 31.49],
-    climate: {
-      rainfall: 1100,
-      humidity: 80,
-      temperature: 16,
-      altitude: 8,
-      sunlight: 0.55,
-      defense: 1,
-    },
-    buildingGene: '抬梁式',
-    description: '太湖之滨，水乡人家',
-    region: '江南',
-    modelPath: '/models/苏式民居3.glb',
   },
 ];
 

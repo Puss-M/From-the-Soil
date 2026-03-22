@@ -21,6 +21,12 @@ export interface DashboardGauge {
   display: string;
 }
 
+export interface SankeyLink {
+  source: string;
+  target: string;
+  value: number;
+}
+
 export interface HeritageDashboardData {
   title: string;
   subtitle: string;
@@ -38,7 +44,10 @@ export interface HeritageDashboardData {
   };
   words: DashboardWord[];
   heritageTimeline: Array<{ era: string; text: string }>;
-  summary: Array<{ label: string; value: string }>;
+  sankeyData: {
+    nodes: Array<{ name: string }>;
+    links: SankeyLink[];
+  };
   gauges: DashboardGauge[];
   preserveRange: string;
   preserveDate: string;
@@ -47,72 +56,18 @@ export interface HeritageDashboardData {
 
 const MONTHS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
 
-const BEIJING_RAW_DASHBOARD = {
-  metrics: [
-    { label: '年平均气温', value: '12.4868' },
-    { label: '年降水量', value: '574' },
-    { label: '年平均水蒸气压', value: '1.0141' },
-    { label: '经度', value: '39.9042' },
-    { label: '纬度', value: '116.3976' },
-    { label: '海拔', value: '50.7628' },
-  ],
-  monthlyTemperature: [0, 2, 8, 16, 22, 27, 28, 27, 22, 15, 8, 2],
-  monthlyPrecipitation: [4, 5, 8, 20, 35, 78, 175, 152, 58, 27, 9, 4],
-  materialDistribution: [
-    { name: '白灰', value: 28 },
-    { name: '青灰', value: 34 },
-    { name: '大理石', value: 16 },
-    { name: '耐火土', value: 22 },
-  ],
-  radarValues: [64, 82, 76, 88, 71],
-  words: [
-    { text: '北京四合院', weight: 44 },
-    { text: '西城区', weight: 40 },
-    { text: '东城区', weight: 36 },
-    { text: '砖雕', weight: 28 },
-    { text: '木雕', weight: 26 },
-    { text: '抱鼓石', weight: 24 },
-    { text: '青灰', weight: 22 },
-    { text: '白灰', weight: 20 },
-    { text: '耐火土', weight: 20 },
-    { text: '影壁', weight: 18 },
-    { text: '门簪', weight: 18 },
-    { text: '吉祥祈福', weight: 26 },
-    { text: '台基抬高', weight: 20 },
-    { text: '灰土垫层', weight: 20 },
-    { text: '昌平区', weight: 18 },
-    { text: '海淀区', weight: 18 },
-  ],
-  heritageTimeline: [
-    { era: '商周', text: '院落雏形\n简单围合结构' },
-    { era: '汉唐', text: '布局规整\n融入礼制观念' },
-    { era: '明清', text: '形制多样\n高墙封闭\n院落进排布局固定' },
-  ],
-  summary: [
-    { label: '冬季寒冷', value: '火炕、火墙和厚墙保温' },
-    { label: '防潮抗碱胀', value: '灰土垫层与台基抬高' },
-    { label: '风速高', value: '四面合围以减弱寒风侵袭' },
-    { label: '台基抬高防潮', value: '白灰勾缝与耐火土夯实' },
-    { label: '厅堂之间', value: '正房坐北朝南，厢房围合' },
-  ],
-  gauges: [
-    { label: '现存四合院数量', value: 73, display: '923座', color: '#c78d52' },
-    { label: '保护四合院占比', value: 48, display: '48%', color: '#d8a03a' },
-    { label: '完整格局占比', value: 23, display: '23%', color: '#8aa88a' },
-  ],
-  preserveRange: '4000-5000',
-  preserveDate: '2026-03-09',
-  preserveCount: '923座',
-} as const;
-
 export { MONTHS };
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function normalize(value: number, max: number) {
-  return Number(((value / max) * 100).toFixed(1));
+function sanitizeText(text: string) {
+  return text
+    .replace(/\uFFFD/g, '')
+    .replace(/[．]/g, '。')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function safeSlice(text: string, size: number) {
@@ -120,7 +75,7 @@ function safeSlice(text: string, size: number) {
 }
 
 function splitTokens(text: string) {
-  return text
+  return sanitizeText(text)
     .split(/[\s\n\r\t、，,。；：:（）()\/·“”"'‘’\-]+/)
     .map((token) => token.trim())
     .filter(Boolean);
@@ -227,6 +182,8 @@ function tokenize(text: string) {
     '构件', '作用', '结构', '空间', '文化', '地区', '整体', '设计', '通过',
     '具有', '其中', '部分', '造型', '功能', '材料', '防潮', '防御', '建筑材料',
     '用于', '民俗', '图案', '纹样', '布局', '营造', '工艺', '构造', '家族',
+    '表现', '一种', '由于', '主要是', '进行', '分布', '因此', '这种', '以及',
+    '不仅', '具备', '具有', '对于', '也是', '可以', '实现', '整体', '所谓',
   ]);
 
   return splitTokens(text).filter((token) => token.length >= 2 && token.length <= 8 && !stopWords.has(token));
@@ -254,72 +211,80 @@ function buildWordCloud(detail: StationDetailData, heritage: HeritageInfo[], dec
     .slice(0, 16);
 }
 
-function buildTimeline(heritage: HeritageInfo[], detail: StationDetailData, stationId: string) {
-  if (stationId === 'beijing') {
-    return BEIJING_RAW_DASHBOARD.heritageTimeline.map((item) => ({ ...item }));
-  }
-
+function buildTimeline(heritage: HeritageInfo[], detail: StationDetailData) {
   const fallback = ['营造源流', '空间演化', '当代保护'];
-  const content = heritage.length > 0
-    ? heritage.slice(0, 3).map((item) => safeSlice(`${item.projectName} ${item.region}`, 18))
-    : [
-        safeSlice(detail.classification, 18),
-        safeSlice(detail.materials, 18),
-        safeSlice(detail.moistureProof, 18),
-      ];
+  
+  // Use distinct sources for each era to avoid repetition
+  const content = [
+    safeSlice(sanitizeText(detail.materials), 24),      // 营造源流 -> focus on materials/technique
+    safeSlice(sanitizeText(detail.classification), 24), // 空间演化 -> focus on structure/class
+    heritage.length > 0 
+      ? safeSlice(sanitizeText(heritage[0].projectName), 24) 
+      : safeSlice(sanitizeText(detail.moistureProof), 24), // 当代保护 -> focus on heritage items
+  ];
 
   return fallback.map((era, index) => ({
     era,
-    text: content[index] || content[content.length - 1],
+    text: content[index],
   }));
 }
 
-function buildSummary(detail: StationDetailData) {
-  return [
-    { label: '冬季寒冷', value: safeSlice(detail.heating, 26) },
-    { label: '防潮抗碱胀', value: safeSlice(detail.moistureProof, 26) },
-    { label: '风速高', value: safeSlice(detail.defense, 26) },
-    { label: '台基抬高防潮', value: safeSlice(detail.materials, 26) },
-    { label: '厅堂之间', value: safeSlice(detail.classification, 26) },
+function buildRadarValues(detail: StationDetailData, climate: WorldClimData, heritage: HeritageInfo[], decorations: DecorationItem[]) {
+  const text = [detail.defense, detail.materials, detail.moistureProof, detail.heating].join(' ');
+  
+  // 防火: 根据材料判断 (砖石结构得分高)
+  const fireScore = (text.includes('砖') || text.includes('石') || text.includes('火墙') || text.includes('镬耳')) ? 85 : 45;
+  
+  // 防水/潮: 根据防潮描述判断
+  const waterScore = (text.includes('排水') || text.includes('抬高') || text.includes('石材') || text.includes('防潮')) ? 82 : 55;
+  
+  // 防恶劣天气 (风/雪/沙): 根据防御和气候判断
+  const weatherScore = (detail.defense.includes('气候') || detail.defense.includes('风') || detail.defense.includes('沙') || climate.precipSeasonality > 80) ? 88 : 65;
+  
+  // 防匪/盗: 根据防御描述判断
+  const securityScore = (detail.defense.includes('匪') || detail.defense.includes('盗') || detail.defense.includes('封闭') || detail.defense.includes('厚重')) ? 86 : 35;
+  
+  // 综合适应性/文化价值: 根据非遗项和装饰丰富度
+  const heritageScore = clamp(heritage.length * 12 + decorations.length * 4 + 45, 40, 95);
+
+  return [fireScore, waterScore, weatherScore, securityScore, heritageScore];
+}
+
+function buildSankeyData(detail: StationDetailData, title: string) {
+  const categories = [
+    { label: '分类', value: detail.classification },
+    { label: '防御', value: detail.defense },
+    { label: '材料', value: detail.materials },
+    { label: '调节', value: detail.heating + ' ' + detail.moistureProof },
+    { label: '文化', value: detail.folklore },
   ];
+
+  const nodes = [{ name: title }];
+  const links: SankeyLink[] = [];
+
+  categories.forEach((cat) => {
+    const nodeName = cat.label;
+    const valueText = safeSlice(sanitizeText(cat.value), 12);
+    nodes.push({ name: nodeName, label: { position: 'left' } } as any);
+    nodes.push({ name: valueText, label: { position: 'right' } } as any);
+    links.push({ source: title, target: nodeName, value: 20 });
+    links.push({ source: nodeName, target: valueText, value: 20 });
+  });
+
+  const uniqueNodesMap = new Map();
+  nodes.forEach(n => {
+    if (!uniqueNodesMap.has(n.name)) {
+      uniqueNodesMap.set(n.name, n);
+    }
+  });
+  const uniqueNodes = Array.from(uniqueNodesMap.values());
+
+  return { nodes: uniqueNodes, links };
 }
 
-function buildMonthlyTemperature(climate: WorldClimData, stationId: string) {
-  if (stationId === 'beijing') {
-    return [...BEIJING_RAW_DASHBOARD.monthlyTemperature];
-  }
-
-  return distributeMonthlyTemperature(climate);
-}
-
-function buildMonthlyPrecipitation(climate: WorldClimData, stationId: string) {
-  if (stationId === 'beijing') {
-    return [...BEIJING_RAW_DASHBOARD.monthlyPrecipitation];
-  }
-
-  return distributeMonthlyPrecipitation(climate);
-}
-
-function buildWords(
-  detail: StationDetailData,
-  heritage: HeritageInfo[],
-  decorations: DecorationItem[],
-  stationId: string
-) {
-  if (stationId === 'beijing') {
-    return BEIJING_RAW_DASHBOARD.words.map((item) => ({ ...item }));
-  }
-
-  return buildWordCloud(detail, heritage, decorations);
-}
-
-function buildGauges(heritage: HeritageInfo[], decorations: DecorationItem[], stationId: string): DashboardGauge[] {
-  if (stationId === 'beijing') {
-    return BEIJING_RAW_DASHBOARD.gauges.map((item) => ({ ...item }));
-  }
-
+function buildGauges(heritage: HeritageInfo[], decorations: DecorationItem[]): DashboardGauge[] {
   return [
-    { label: '现存建筑热度', value: clamp(heritage.length * 18 + 30, 20, 96), display: `${heritage.length || 1}项`, color: '#d58b54' },
+    { label: '现存建筑热度', value: clamp(heritage.length * 18 + 30, 20, 96), display: `${Math.max(heritage.length, 1)}项`, color: '#d58b54' },
     { label: '保护占比', value: clamp(heritage.length * 16 + 24, 18, 92), display: `${clamp(heritage.length * 16 + 24, 18, 92)}%`, color: '#d8a03a' },
     { label: '完整格局占比', value: clamp(decorations.length * 2 + 18, 16, 88), display: `${clamp(decorations.length * 2 + 18, 16, 88)}%`, color: '#39b9c8' },
   ];
@@ -334,50 +299,36 @@ export function buildHeritageDashboardData(args: {
 }): HeritageDashboardData {
   const { station, climate, detail, heritage, decorations } = args;
   const stationLabel = station.id === 'beijing' ? '北京四合院' : station.name.replace(/驿$/, '');
-  const isBeijing = station.id === 'beijing';
+  const recordCount = Math.max(heritage.length, 1);
 
   return {
     title: stationLabel,
     subtitle: `${station.region} · ${station.nameEn}`,
     location: climate.location,
     climateType: climate.climateType,
-    metrics: isBeijing
-      ? BEIJING_RAW_DASHBOARD.metrics.map((item) => ({ ...item }))
-      : [
-          { label: '年平均气温', value: climate.annualMeanTemp.toFixed(4) },
-          { label: '年降水量', value: `${Math.round(climate.annualPrecipitation)}` },
-          { label: '年平均水蒸气压', value: climate.annualMeanVaporPressure.toFixed(4) },
-          { label: '经度', value: climate.latitude.toFixed(4) },
-          { label: '纬度', value: climate.longitude.toFixed(4) },
-          { label: '海拔', value: climate.altitude.toFixed(4) },
-        ],
-    monthlyTemperature: buildMonthlyTemperature(climate, station.id),
-    monthlyPrecipitation: buildMonthlyPrecipitation(climate, station.id),
-    materialDistribution: isBeijing
-      ? BEIJING_RAW_DASHBOARD.materialDistribution.map((item) => ({ ...item }))
-      : buildMaterialDistribution(detail, station.id),
+    metrics: [
+      { label: '年均温度', value: `${climate.annualMeanTemp.toFixed(1)} ℃` },
+      { label: '年降水量', value: `${Math.round(climate.annualPrecipitation)} mm` },
+      { label: '均水气压', value: `${climate.annualMeanVaporPressure.toFixed(2)} kPa` },
+      { label: '海拔', value: `${climate.altitude.toFixed(0)} m` },
+      { label: '坐标', value: `${climate.longitude.toFixed(1)}E/${climate.latitude.toFixed(1)}N` },
+      { label: '区域', value: station.region },
+    ],
+    monthlyTemperature: distributeMonthlyTemperature(climate),
+    monthlyPrecipitation: distributeMonthlyPrecipitation(climate),
+    materialDistribution: buildMaterialDistribution(detail, station.id),
     categoryDistribution: countByCategory(decorations),
-    radarValues: isBeijing
-      ? [...BEIJING_RAW_DASHBOARD.radarValues]
-      : [
-          normalize(climate.annualPrecipitation, 2000),
-          normalize(climate.precipSeasonality, 140),
-          normalize(climate.tempAnnualRange, 50),
-          normalize(detail.defense.includes('强') ? 88 : detail.defense.includes('局部') ? 58 : 24, 100),
-          normalize(heritage.length * 28 + decorations.length * 2, 100),
-        ],
+    radarValues: buildRadarValues(detail, climate, heritage, decorations),
     mapPoint: {
       name: station.name,
       coords: [station.coordinates[0], station.coordinates[1]],
     },
-    words: buildWords(detail, heritage, decorations, station.id),
-    heritageTimeline: buildTimeline(heritage, detail, station.id),
-    summary: isBeijing
-      ? BEIJING_RAW_DASHBOARD.summary.map((item) => ({ ...item }))
-      : buildSummary(detail),
-    gauges: buildGauges(heritage, decorations, station.id),
-    preserveRange: isBeijing ? BEIJING_RAW_DASHBOARD.preserveRange : `${Math.max(heritage.length * 200, 600)}-${Math.max(heritage.length * 260, 1200)}`,
-    preserveDate: isBeijing ? BEIJING_RAW_DASHBOARD.preserveDate : '2026-03-14',
-    preserveCount: isBeijing ? BEIJING_RAW_DASHBOARD.preserveCount : `${Math.max(heritage.length * 2, 1)}项`,
+    words: buildWordCloud(detail, heritage, decorations),
+    heritageTimeline: buildTimeline(heritage, detail),
+    sankeyData: buildSankeyData(detail, stationLabel),
+    gauges: buildGauges(heritage, decorations),
+    preserveRange: `${Math.max(recordCount * 160, 600)}-${Math.max(recordCount * 260, 1200)}`,
+    preserveDate: new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Shanghai' }).format(new Date()),
+    preserveCount: `${recordCount}项`,
   };
 }

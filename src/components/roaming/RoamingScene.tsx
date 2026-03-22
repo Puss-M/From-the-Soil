@@ -42,14 +42,14 @@ function RoamingContent() {
     <>
       <PerspectiveCamera makeDefault position={[8, 5, 8]} fov={50} />
       <OrbitControls enablePan enableZoom enableRotate minDistance={3} maxDistance={20} target={[0, 1, 0]} />
-      <ambientLight intensity={0.6} color="#f8fafc" />
-      <directionalLight position={[10, 15, 10]} intensity={1.2} castShadow color="#fff7ed" shadow-mapSize={[2048, 2048]} />
-      <pointLight position={[-5, 5, -5]} intensity={0.5} color="#38bdf8" />
+      <ambientLight intensity={0.62} color="#fff8ea" />
+      <directionalLight position={[10, 15, 10]} intensity={1.2} castShadow color="#f3e5cb" shadow-mapSize={[2048, 2048]} />
+      <pointLight position={[-5, 5, -5]} intensity={0.42} color="#b88a3b" />
       <Environment preset="apartment" blur={0.8} />
       <ClimateEffects />
-      <Grid position={[0, -0.01, 0]} args={[30, 30]} cellSize={1} cellThickness={0.5} cellColor="#cbd5e1"
-        sectionSize={5} sectionThickness={1} sectionColor="#6366f1" fadeDistance={40} fadeStrength={1} infiniteGrid />
-      <ContactShadows position={[0, -0.01, 0]} opacity={0.6} scale={20} blur={2.5} far={5} color="#94a3b8" />
+      <Grid position={[0, -0.01, 0]} args={[30, 30]} cellSize={1} cellThickness={0.5} cellColor="#d8cab1"
+        sectionSize={5} sectionThickness={1} sectionColor="#8b6846" fadeDistance={40} fadeStrength={1} infiniteGrid />
+      <ContactShadows position={[0, -0.01, 0]} opacity={0.6} scale={20} blur={2.5} far={5} color="#b39a72" />
       <MorphingHouse position={[0, 0, 0]} />
       {collectibleItems.map((item, index) => (
         <InteractiveElement key={item.id}
@@ -68,12 +68,12 @@ function RoamingContent() {
 
 // ─── Glass style ─────────────────────────────────────────────
 const glass = {
-  background: 'rgba(255, 255, 255, 0.7)',
-  backdropFilter: 'blur(12px)',
-  WebkitBackdropFilter: 'blur(12px)',
-  border: '1px solid rgba(255, 255, 255, 0.3)',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
-  borderRadius: 14,
+  background: 'rgba(255, 250, 240, 0.8)',
+  backdropFilter: 'blur(14px)',
+  WebkitBackdropFilter: 'blur(14px)',
+  border: '1px solid rgba(139, 104, 70, 0.25)',
+  boxShadow: '0 12px 32px rgba(91, 70, 44, 0.14)',
+  borderRadius: 16,
 } as const;
 
 // ─── Main Component ─────────────────────────────────────────
@@ -102,7 +102,7 @@ export function RoamingScene({ onBack }: RoamingSceneProps) {
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
         <Canvas shadows style={{
           width: '100%', height: '100%',
-          background: 'linear-gradient(160deg, #f0f9ff 0%, #f8fafc 40%, #f5f3ff 100%)',
+          background: 'linear-gradient(165deg, #f7f0e3 0%, #efe3c6 40%, #e4cfab 100%)',
         }}>
           <Suspense fallback={null}>
             <RoamingContent />
@@ -120,15 +120,15 @@ export function RoamingScene({ onBack }: RoamingSceneProps) {
           textAlign: 'center',
         }}>
           <h2 style={{
-            fontSize: '1.4rem', fontWeight: 700, color: '#1e293b',
+            fontSize: '1.4rem', fontWeight: 700, color: 'var(--paper-ink)',
             letterSpacing: '0.15em', fontFamily: 'var(--font-serif)',
-            textShadow: '0 1px 8px rgba(255,255,255,0.6)',
+            textShadow: '0 1px 10px rgba(255,252,246,0.75)',
           }}>
             {endStation?.name || '民居漫游'}
           </h2>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 2 }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6366f1', display: 'inline-block' }} />
-            <span style={{ color: '#6366f1', fontSize: 12, fontFamily: 'var(--font-mono)' }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--paper-gold)', display: 'inline-block' }} />
+            <span style={{ color: 'var(--paper-brown)', fontSize: 12, fontFamily: 'var(--font-mono)' }}>
               {endStation?.buildingGene || 'ARCHITECTURAL EXPLORATION'}
             </span>
           </div>
@@ -136,16 +136,16 @@ export function RoamingScene({ onBack }: RoamingSceneProps) {
 
         {/* ── 左上: 导航按钮 ─────────────────────────── */}
         <div style={{ position: 'absolute', top: 20, left: 20, display: 'flex', gap: 8, pointerEvents: 'auto' }}>
-          <button onClick={handleBack} style={{
+          <button className="guofeng-button" onClick={handleBack} style={{
             ...glass, padding: '8px 16px', borderRadius: 50,
-            color: '#475569', fontSize: 13, fontWeight: 500, cursor: 'pointer',
+            color: 'var(--paper-ink)', fontSize: 13, fontWeight: 500, cursor: 'pointer',
             transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 6,
           }}>
             <span>←</span> 返回地图
           </button>
-          <button onClick={toggleViewMode} style={{
+          <button className="guofeng-button" onClick={toggleViewMode} style={{
             ...glass, padding: '8px 16px', borderRadius: 50,
-            color: '#6366f1', fontSize: 13, fontWeight: 500, cursor: 'pointer',
+            color: 'var(--paper-brown)', fontSize: 13, fontWeight: 500, cursor: 'pointer',
             transition: 'all 0.2s',
           }}>
             {viewMode === 'tourist' ? '🎯 游客视角' : '🌍 鸟瞰视角'}
@@ -164,33 +164,33 @@ export function RoamingScene({ onBack }: RoamingSceneProps) {
             pointerEvents: 'auto',
           }}>
             <div style={{ ...glass, padding: 14 }}>
-              <div style={{ fontSize: 9, color: '#6366f1', letterSpacing: 3, fontWeight: 600, marginBottom: 8 }}>
+              <div style={{ fontSize: 9, color: 'var(--paper-brown)', letterSpacing: 3, fontWeight: 600, marginBottom: 8 }}>
                 STATION INFO
               </div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 6, fontFamily: 'var(--font-serif)' }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--paper-ink)', marginBottom: 6, fontFamily: 'var(--font-serif)' }}>
                 {endStation.name}
               </div>
-              <div style={{ fontSize: 11, color: '#64748b', marginBottom: 8, lineHeight: 1.5 }}>
+              <div style={{ fontSize: 11, color: 'var(--paper-muted)', marginBottom: 8, lineHeight: 1.5 }}>
                 {endStation.description}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 11 }}>
                 {[
-                  { icon: '🌧️', label: '降雨量', val: `${endStation.climate.rainfall}mm`, color: '#0ea5e9' },
-                  { icon: '☀️', label: '日照', val: `${(endStation.climate.sunlight * 100).toFixed(0)}%`, color: '#f59e0b' },
-                  { icon: '⛰️', label: '海拔', val: `${endStation.climate.altitude}m`, color: '#10b981' },
-                  { icon: '🛡️', label: '防御', val: `Lv.${endStation.climate.defense}`, color: '#ef4444' },
+                  { icon: '🌧️', label: '降雨量', val: `${endStation.climate.rainfall}mm`, color: '#5b8d86' },
+                  { icon: '☀️', label: '日照', val: `${(endStation.climate.sunlight * 100).toFixed(0)}%`, color: '#b88a3b' },
+                  { icon: '⛰️', label: '海拔', val: `${endStation.climate.altitude}m`, color: '#8b6846' },
+                  { icon: '🛡️', label: '防御', val: `Lv.${endStation.climate.defense}`, color: '#7a5a3f' },
                 ].map(({ icon, label, val, color }) => (
-                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8' }}>
+                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--paper-muted)' }}>
                     <span>{icon} {label}</span>
                     <span style={{ color, fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{val}</span>
                   </div>
                 ))}
               </div>
-              <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', marginTop: 8, paddingTop: 6 }}>
-                <div style={{ fontSize: 11, color: '#64748b', fontFamily: 'var(--font-mono)' }}>
+              <div style={{ borderTop: '1px solid rgba(91, 70, 44, 0.12)', marginTop: 8, paddingTop: 6 }}>
+                <div style={{ fontSize: 11, color: 'var(--paper-muted)', fontFamily: 'var(--font-mono)' }}>
                   {endStation.coordinates[0].toFixed(2)}°E, {endStation.coordinates[1].toFixed(2)}°N
                 </div>
-                <div style={{ fontSize: 11, color: '#6366f1', marginTop: 2, fontWeight: 500 }}>
+                <div style={{ fontSize: 11, color: 'var(--paper-brown)', marginTop: 2, fontWeight: 500 }}>
                   {endStation.region}
                 </div>
               </div>

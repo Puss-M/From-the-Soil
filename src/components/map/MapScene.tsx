@@ -168,20 +168,20 @@ export function MapScene() {
 
   function getRegionColor(region: string): string {
     const colors: Record<string, string> = {
-      '江南': '#2563eb', '皖南': '#7c3aed', '闽西': '#dc2626',
-      '晋中': '#d97706', '陕北': '#b45309', '滇西': '#059669',
-      '藏区': '#6366f1', '南疆': '#e11d48', '京畿': '#ea580c',
-      '湘西': '#16a34a', '胶东': '#0891b2', '滇南': '#10b981',
-      '蒙古': '#0d9488', '岭南': '#f43f5e', '东疆': '#f59e0b',
-      '中原': '#8b5cf6', '赣北': '#a855f7',
+      '江南': '#5b8d86', '皖南': '#7f6f52', '闽西': '#8b4a3a',
+      '晋中': '#9b7442', '陕北': '#8b6846', '滇西': '#5f7f6a',
+      '藏区': '#6d6376', '南疆': '#98624f', '京畿': '#8a6a4d',
+      '湘西': '#6a8465', '胶东': '#6b7f8c', '滇南': '#638974',
+      '蒙古': '#76806a', '岭南': '#9a6d5f', '东疆': '#b88a3b',
+      '中原': '#7e6b59', '赣北': '#766355',
     };
-    return colors[region] || '#6366f1';
+    return colors[region] || '#8b6846';
   }
 
   return (
     <div
       className="relative w-full h-full overflow-hidden"
-      style={{ backgroundColor: '#faf7f2' /* Light parchment background */ }}
+      style={{ backgroundColor: '#f8f3e8' }}
     >
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
         {geoLoaded ? (
@@ -201,25 +201,21 @@ export function MapScene() {
       </div>
 
       {/* 左上角标题 */}
-      <div style={{ position: 'fixed', top: 24, left: 32, zIndex: 20 }}>
+      <div className="guofeng-glass-strong" style={{ position: 'fixed', top: 20, left: 22, zIndex: 20, padding: '10px 14px' }}>
         <h1 style={{
-          fontSize: '1.8rem', fontWeight: 800, color: '#3a2a1a',
-          letterSpacing: '0.15em', marginBottom: 4, fontFamily: 'var(--font-serif)',
+          fontSize: '1.5rem', fontWeight: 800, color: '#3a2a1a',
+          letterSpacing: '0.12em', marginBottom: 3, fontFamily: 'var(--font-serif)',
         }}>
           千里江山
         </h1>
-        <p style={{ fontSize: '0.8rem', color: '#8c221c', fontWeight: 500 }}>
+        <p style={{ fontSize: '0.74rem', color: '#8b6846', fontWeight: 500 }}>
           从土而生 · 建筑方言 · Architectural Dialects
         </p>
       </div>
 
       {/* 左下角图例 */}
       <div style={{ position: 'fixed', bottom: 20, left: 32, zIndex: 20 }}>
-        <div style={{
-          background: 'rgba(250,247,242,0.95)', backdropFilter: 'blur(8px)',
-          borderRadius: 4, padding: '10px 16px',
-          boxShadow: '0 4px 24px rgba(92, 74, 58, 0.08)', border: '1px solid #e8e0d8',
-        }}>
+        <div className="guofeng-glass-strong" style={{ padding: '10px 16px' }}>
           <div style={{ fontSize: 10, color: '#8a7d73', letterSpacing: 2, marginBottom: 4, fontWeight: 600 }}>
             地域图例
           </div>
@@ -236,11 +232,7 @@ export function MapScene() {
 
       {/* 右下角驿站计数 */}
       <div style={{ position: 'fixed', bottom: 20, right: 24, zIndex: 20 }}>
-        <div style={{
-          background: 'rgba(250,247,242,0.95)', backdropFilter: 'blur(8px)',
-          borderRadius: 4, padding: '6px 14px',
-          boxShadow: '0 4px 24px rgba(92, 74, 58, 0.08)', border: '1px solid #e8e0d8',
-        }}>
+        <div className="guofeng-glass-strong" style={{ padding: '6px 14px' }}>
           <span style={{ fontSize: 11, color: '#8a7d73' }}>共 {stations.length} 个驿站 · 点击探索详情</span>
         </div>
       </div>
@@ -248,15 +240,14 @@ export function MapScene() {
       {/* 悬停信息卡 */}
       {hoveredData && (
         <div style={{
-          position: 'fixed', right: 300, top: 24,
+          position: 'fixed', right: 24, top: 86,
           zIndex: 50, pointerEvents: 'none',
         }}>
-          <div style={{
-            background: 'rgba(250,247,242,0.96)', backdropFilter: 'blur(16px)',
-            borderRadius: 4, padding: '14px 20px',
-            boxShadow: '0 8px 32px rgba(92, 74, 58, 0.12)',
-            border: `2px solid ${getRegionColor(hoveredData.region)}20`,
+          <div className="guofeng-glass-strong" style={{
+            padding: '14px 20px',
+            border: `1px solid ${getRegionColor(hoveredData.region)}66`,
             minWidth: 240,
+            maxWidth: 360,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
               <div style={{ width: 10, height: 10, borderRadius: '50%', background: getRegionColor(hoveredData.region) }} />
