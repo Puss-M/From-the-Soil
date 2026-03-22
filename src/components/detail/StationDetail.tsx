@@ -13,10 +13,12 @@ import { HeritageDashboard } from './HeritageDashboard';
 import { VideoChronicle } from './VideoChronicle';
 import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 /* ── Tab 定义 ──────────────────────────────── */
 const TABS = [
   { key: 'model',  label: '3D 模型',   icon: '🏛️', subtitle: 'Architectural Model' },
+  { key: 'model2d', label: '2D 模型', icon: '🧭', subtitle: '2D Interactive Model' },
   { key: 'info',   label: '建筑档案',  icon: '📜', subtitle: 'Architecture Profile' },
   { key: 'heritage', label: '风物志', icon: '🏺', subtitle: 'Heritage Dashboard' },
   { key: 'video', label: '影像志', icon: '🎬', subtitle: 'Video Chronicle' },
@@ -26,15 +28,20 @@ type TabKey = (typeof TABS)[number]['key'];
 /* ── 主组件 ────────────────────────────────── */
 export function StationDetail() {
   const { selectedStation, setPhase } = useStore();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabKey>('model');
   const [direction, setDirection] = useState(0);
 
   const handleTabChange = useCallback((newTab: TabKey) => {
+    if (newTab === 'model2d') {
+      router.push('/siheyuan');
+      return;
+    }
     const oldIdx = TABS.findIndex((t) => t.key === activeTab);
     const newIdx = TABS.findIndex((t) => t.key === newTab);
     setDirection(newIdx > oldIdx ? 1 : -1);
     setActiveTab(newTab);
-  }, [activeTab]);
+  }, [activeTab, router]);
 
   if (!selectedStation) {
     return (
@@ -56,41 +63,51 @@ export function StationDetail() {
       top: 0, left: 0, right: 0, bottom: 0,
       display: 'grid',
       gridTemplateRows: '72px 1fr',
-      background: '#faf8f5',
+      background: '#f7f1e3',
     }}>
+      <style>{`
+        @media (max-width: 1024px) {
+          .detail-topbar {
+            height: auto !important;
+            min-height: 72px;
+            padding: 10px 12px !important;
+            flex-wrap: wrap;
+            gap: 10px;
+          }
+          .detail-tab-group {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+          }
+          .detail-tab-button {
+            padding: 10px 14px !important;
+            font-size: 13px !important;
+          }
+        }
+      `}</style>
       {/* ═══ 顶部导航栏 (Row 1) ═══ */}
-      <div style={{
+      <div className="detail-topbar" style={{
         display: 'flex', alignItems: 'center',
         padding: '0 24px',
-        borderBottom: '1px solid #e8e0d8',
-        background: 'rgba(255,255,255,0.92)',
-        backdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(139, 104, 70, 0.24)',
+        background: 'rgba(255,250,240,0.86)',
+        backdropFilter: 'blur(16px)',
         zIndex: 50,
       }}>
         {/* 返回按钮 */}
         <button
+          className="guofeng-button"
           onClick={() => setPhase('map')}
           style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '8px 16px',
-            background: 'transparent',
-            border: '1px solid #e0d6cc',
-            borderRadius: 10,
+            borderRadius: 999,
             cursor: 'pointer',
             fontSize: 15,
             fontWeight: 600,
-            color: '#5c4a3a',
-            transition: 'all 0.2s',
+            color: 'var(--paper-ink)',
             marginRight: 24,
             flexShrink: 0,
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#f5f0eb';
-            e.currentTarget.style.borderColor = '#c4a882';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'transparent';
-            e.currentTarget.style.borderColor = '#e0d6cc';
           }}
         >
           ← 返回地图
@@ -117,9 +134,9 @@ export function StationDetail() {
         </div>
 
         {/* Tab 按钮组 */}
-        <div style={{
+        <div className="detail-tab-group" style={{
           display: 'flex', gap: 4,
-          background: '#f0ebe4',
+          background: 'rgba(239,227,198,0.58)',
           borderRadius: 12,
           padding: 4,
           flexShrink: 0,
@@ -129,6 +146,7 @@ export function StationDetail() {
             return (
               <button
                 key={tab.key}
+                className="detail-tab-button"
                 onClick={() => handleTabChange(tab.key)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 6,
@@ -140,16 +158,16 @@ export function StationDetail() {
                   fontWeight: isActive ? 700 : 500,
                   color: isActive ? '#fff' : '#8b7355',
                   background: isActive
-                    ? 'linear-gradient(135deg, #8b7355, #6b5842)'
+                    ? 'linear-gradient(135deg, #8b6846, #5b4631)'
                     : 'transparent',
                   boxShadow: isActive
-                    ? '0 2px 8px rgba(107,88,66,0.3)'
+                    ? '0 6px 16px rgba(91,70,44,0.24)'
                     : 'none',
                   transition: 'all 0.25s ease',
                   letterSpacing: 1,
                 }}
                 onMouseEnter={(e) => {
-                  if (!isActive) e.currentTarget.style.background = 'rgba(139,115,85,0.12)';
+                  if (!isActive) e.currentTarget.style.background = 'rgba(139,104,70,0.14)';
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive) e.currentTarget.style.background = 'transparent';
@@ -188,9 +206,9 @@ export function StationDetail() {
                   
                   <div style={{
                     marginTop: 32,
-                    background: '#fff',
+                    background: 'rgba(255, 252, 246, 0.9)',
                     borderRadius: 16,
-                    border: '1px solid #e8e0d8',
+                    border: '1px solid rgba(139, 104, 70, 0.2)',
                     boxShadow: '0 8px 32px rgba(92, 74, 58, 0.08)',
                     overflow: 'hidden',
                     display: 'flex',
@@ -203,7 +221,7 @@ export function StationDetail() {
                     <div style={{
                       padding: '16px 24px',
                       borderBottom: '1px solid #f0ebe4',
-                      background: '#faf8f5',
+                      background: 'rgba(243,232,205,0.42)',
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -277,7 +295,7 @@ export function StationDetail() {
 
                           <div style={{
                             padding: '8px 14px',
-                            background: 'rgba(255,255,255,0.7)',
+                          background: 'rgba(255,252,246,0.72)',
                             border: '1px solid rgba(196,168,130,0.24)',
                             borderRadius: 999,
                             color: '#8b7355',
@@ -290,7 +308,7 @@ export function StationDetail() {
 
                         <div style={{
                           height: 600,
-                          background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(250,245,238,0.98) 100%)',
+                          background: 'linear-gradient(180deg, rgba(255,252,246,0.95) 0%, rgba(243,232,205,0.88) 100%)',
                           borderRadius: 20,
                           border: '1px solid #e8e0d8',
                           boxShadow: '0 12px 36px rgba(92, 74, 58, 0.08)',
@@ -315,8 +333,8 @@ export function StationDetail() {
                       </h3>
                       {heritage.map((h, i) => (
                         <div key={i} style={{
-                          background: '#fff',
-                          border: '1px solid #e8e0d8',
+                          background: 'rgba(255,252,246,0.92)',
+                          border: '1px solid rgba(139, 104, 70, 0.2)',
                           borderRadius: 16,
                           padding: '24px 28px',
                           marginBottom: 16,
@@ -352,9 +370,9 @@ export function StationDetail() {
                               fontSize: 13.5, color: '#5c4a3a', lineHeight: 2,
                               maxHeight: 240, overflow: 'auto',
                               padding: '12px 16px',
-                              background: '#faf8f5',
+                              background: 'rgba(243,232,205,0.42)',
                               borderRadius: 10,
-                              border: '1px solid #f0ebe4',
+                              border: '1px solid rgba(139, 104, 70, 0.16)',
                             }}>
                               {h.description}
                             </div>
@@ -372,7 +390,7 @@ export function StationDetail() {
           {activeTab === 'heritage' && (
             <div key="heritage-wrap" style={{
               position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-              overflow: 'hidden',
+              overflow: 'auto',
               background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0eb 30%, #f0ece6 100%)',
             }}>
               <motion.div
@@ -382,39 +400,7 @@ export function StationDetail() {
                 animate={{ opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } }}
                 exit={{ opacity: 0, x: direction > 0 ? -60 : 60, transition: { duration: 0.2 } }}
               >
-                <div style={{ maxWidth: 1540, height: '100%', margin: '0 auto', padding: '10px 18px 8px', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-                  <div style={{ textAlign: 'center', marginBottom: 10, flexShrink: 0 }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 20,
-                        marginBottom: 12,
-                        flexWrap: 'wrap',
-                      }}
-                    >
-                      <div>
-                        <div style={{
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          gap: 16, marginBottom: 12,
-                        }}>
-                          <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, transparent, #c4a882)' }} />
-                          <span style={{ fontSize: 11, color: '#a08b73', letterSpacing: 6 }}>
-                            HERITAGE DASHBOARD
-                          </span>
-                          <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, #c4a882, transparent)' }} />
-                        </div>
-                        <h2 style={{
-                          fontSize: '1.8rem', fontWeight: 800, color: '#3a2a1a',
-                          letterSpacing: 4, margin: 0,
-                          fontFamily: 'var(--font-serif, serif)',
-                        }}>
-                          {selectedStation.name} · 风物志
-                        </h2>
-                      </div>
-                    </div>
-                  </div>
+                <div style={{ width: '100%', height: '100%', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
                   <div style={{ flex: 1, minHeight: 0 }}>
                     {climate && detail && (
                       <HeritageDashboard
@@ -450,7 +436,7 @@ export function StationDetail() {
           {activeTab === 'video' && (
             <div key="video-wrap" style={{
               position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-              overflow: 'hidden',
+              overflow: 'auto',
               background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0eb 30%, #f0ece6 100%)',
             }}>
               <motion.div
