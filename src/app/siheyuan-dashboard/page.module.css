@@ -1,0 +1,455 @@
+/* 1:1 port of 北京四合院/css/comon0.css */
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #d9d9d9;
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+  position: relative;
+  margin: 0;
+  display: grid;
+  grid-template-rows: 72px 1fr;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  border-bottom: 1px solid rgba(139, 104, 70, 0.24);
+  background: rgba(255, 250, 240, 0.9);
+  backdrop-filter: blur(16px);
+  z-index: 50;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--paper-ink);
+  flex-shrink: 0;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #3a2a1a;
+  font-family: var(--font-serif), "Noto Serif SC", serif;
+  letter-spacing: 3px;
+  white-space: nowrap;
+}
+
+.pageSubtitle {
+  font-size: 14px;
+  color: #a08b73;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.navGroup {
+  display: flex;
+  gap: 4px;
+  background: rgba(239, 227, 198, 0.58);
+  border-radius: 12px;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 22px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: #8b7355;
+  background: transparent;
+  transition: all 0.25s ease;
+  letter-spacing: 1px;
+}
+
+.navButton:hover {
+  background: rgba(139, 104, 70, 0.14);
+}
+
+.navButtonActive {
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #8b6846, #5b4631);
+  box-shadow: 0 6px 16px rgba(91, 70, 44, 0.24);
+}
+
+.navButtonActive:hover {
+  background: linear-gradient(135deg, #8b6846, #5b4631);
+}
+
+.viewport {
+  position: relative;
+  overflow: hidden;
+}
+
+.screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: left top;
+  overflow: hidden;
+  background: #efe2b7;
+}
+
+/* 背景层 - 宣纸+水墨感 */
+.bgLayer {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(244, 228, 188, 0.35), rgba(244, 228, 188, 0.35)),
+    url('/风物志背景.jpeg') center/cover no-repeat;
+  opacity: 0.96;
+  filter: saturate(1.05) brightness(0.98) contrast(1.02);
+  z-index: 1;
+}
+
+/* 主舞台 */
+.mainStage {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 1880px;
+  height: 1040px;
+  z-index: 10;
+}
+.mainStage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(248, 239, 213, 0.12);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.stageHint {
+  position: absolute;
+  left: 55px;
+  top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 35;
+}
+
+.stageHintLabel {
+  font-size: 12px;
+  letter-spacing: 0.26em;
+  color: rgba(138, 90, 31, 0.82);
+}
+
+.stageHintText {
+  color: #8b7355;
+  font-size: 13px;
+}
+
+/* 面板通用样式 - 比赛大屏级发光 */
+.panel {
+  position: absolute;
+  border: 2px solid rgba(92, 223, 215, 0.95);
+  background: rgba(224, 183, 104, 0.06);
+  backdrop-filter: blur(3px);
+  box-shadow:
+    0 0 26px rgba(92, 223, 215, 0.18),
+    inset 0 0 0 1px rgba(92, 223, 215, 0.22);
+  border-radius: 0;
+}
+
+/* 角标装饰 */
+.panel::before,
+.panel::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: #61ddd3;
+  border-style: solid;
+  z-index: 2;
+}
+.panel::before {
+  left: 8px;
+  top: 8px;
+  border-width: 3px 0 0 3px;
+}
+.panel::after {
+  right: 8px;
+  top: 8px;
+  border-width: 3px 3px 0 0;
+}
+
+.panelTitle {
+  position: absolute;
+  left: 14px;
+  top: -34px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #8a5a1f;
+  background: transparent;
+  padding: 0;
+  border-left: none;
+  text-shadow: none;
+}
+
+.chart {
+  position: absolute;
+  inset: 12px;
+}
+
+/* 雷达图区专用布局 */
+.chartCategory {
+  position: absolute;
+  left: 18px;
+  top: 24px;
+  width: 40%;
+  height: calc(100% - 34px);
+}
+.chartRadar {
+  position: absolute;
+  right: 18px;
+  top: 8px;
+  width: 46%;
+  height: calc(100% - 12px);
+}
+
+/* 标题牌匾 - 视觉居中 */
+.titleBoard {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  transform: translateX(-50%);
+  width: 470px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  font-family: "STKaiti", "KaiTi", "华文楷体", serif;
+  font-size: 46px;
+  font-weight: 700;
+  color: #a96d17;
+  letter-spacing: 1px;
+  padding: 0;
+  border: 1px solid rgba(212, 197, 163, 0.9);
+  background: linear-gradient(180deg, rgba(245, 232, 199, 0.24), rgba(244, 232, 200, 0.14));
+  box-shadow:
+    0 4px 16px rgba(140, 93, 29, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  text-shadow: none;
+  z-index: 15;
+}
+
+/* 精确坐标定位表 */
+.panelLine      { left: 55px;   top: 48px;   width: 390px; height: 220px; }
+.panelMetrics   { left: 475px;  top: 114px;  width: 600px; height: 160px; }
+.panelRadar     { left: 1105px; top: 48px;   width: 720px; height: 220px; }
+.panelPie       { left: 55px;   top: 298px;  width: 390px; height: 240px; }
+.panelMap       { left: 475px;  top: 298px;  width: 600px; height: 420px; }
+.panelHistory   { left: 1105px; top: 298px;  width: 720px; height: 170px; }
+.panelSankey    { left: 55px;   top: 568px;  width: 390px; height: 314px; }
+.panelGauge     { left: 475px;  top: 748px;  width: 600px; height: 134px; }
+.panelWordcloud { left: 1105px; top: 498px;  width: 720px; height: 384px; }
+
+/* 指标网格样式 */
+.metricGrid {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 16px;
+  bottom: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 8px;
+}
+.metricItem {
+  border: 1px solid rgba(88, 214, 205, 0.4);
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.metricItem:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+}
+.metricItem::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(88, 214, 205, 0.5), transparent);
+}
+.metricValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2da9ff;
+  line-height: 1.1;
+  text-shadow: 0 0 10px rgba(45, 169, 255, 0.3);
+}
+.metricLabel {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #9a6a2e;
+  font-weight: 600;
+}
+
+/* 历史轴样式 */
+.historyBox {
+  position: absolute;
+  inset: 20px 20px 16px 20px;
+}
+.historyNotes {
+  display: flex;
+  justify-content: space-between;
+  color: #8a6336;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 22px;
+}
+.historyAxis {
+  margin-top: 12px;
+  height: 10px;
+  display: flex;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.seg { flex: 1; }
+.segA { composes: seg; background: linear-gradient(90deg, #34c0d5, #52b9c7); }
+.segB { composes: seg; background: linear-gradient(90deg, #52b9c7, #d3a657); }
+.segC { composes: seg; background: linear-gradient(90deg, #d3a657, #db5477); }
+.historyLabels {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-around;
+  font-family: "STKaiti", "KaiTi", "华文楷体", serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* 保持状况/仪表盘样式 */
+.panelGauge {
+  display: flex;
+  align-items: stretch;
+  padding: 12px 14px 12px;
+}
+/* 覆盖 panel 的 ::before 不显示 */
+.panelGauge::before {
+  content: none !important;
+}
+.gaugeLeft {
+  width: 200px;
+  position: relative;
+  padding: 2px 8px 0 8px;
+}
+.gaugeTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #8a5a1f;
+  line-height: 1.2;
+  text-shadow: none;
+}
+.gaugeDate {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 12px;
+  color: #b08a56;
+}
+.gaugeBig {
+  margin-top: 40px;
+  font-size: 34px;
+  font-weight: 800;
+  color: #e95267;
+  line-height: 1.05;
+  text-shadow: 0 0 18px rgba(233, 82, 103, 0.35);
+}
+.gaugeSub {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #9c7440;
+  line-height: 1.2;
+}
+.gaugeRight {
+  flex: 1;
+  display: flex;
+  gap: 6px;
+}
+.gaugeItem {
+  position: relative;
+  flex: 1;
+  height: 110px;
+  inset: auto;
+}
+
+.backButton:focus-visible,
+.navButton:focus-visible {
+  outline: 2px solid rgba(92, 223, 215, 0.95);
+  outline-offset: 2px;
+}
+
+/* 图表容器过渡 */
+.chart {
+  transition: opacity 0.3s ease;
+}
+
+/* 分类/雷达子标题 */
+.radarSubTitle {
+  position: absolute;
+  top: -30px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #8c5d1d;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.18);
+}
+
+@media (max-width: 1024px) {
+  .topbar {
+    height: auto;
+    min-height: 72px;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+  }
+
+  .navGroup {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .navButton {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}

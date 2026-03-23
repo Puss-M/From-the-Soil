@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>风物志大屏模板</title>
+<script type="text/javascript" src="../beijing-dashboard/js/jquery.js"></script>
+<link rel="stylesheet" href="../beijing-dashboard/css/comon0.css">
+</head>
+<body>
+  <div id="app">
+    <div id="screen" class="screen">
+      <div class="bg-layer"></div>
+      <div class="share-btn" title="设置"></div>
+
+      <section class="main-stage">
+        <div class="panel panel-line" id="panel-line">
+          <div class="panel-title">温雨双折图</div>
+          <div class="chart" id="chart-line"></div>
+        </div>
+
+        <div class="title-board" id="screen-title">风物志</div>
+
+        <div class="panel panel-metrics" id="panel-metrics">
+          <div class="metric-grid" id="metric-grid"></div>
+        </div>
+
+        <div class="panel panel-radar" id="panel-radar">
+          <div class="chart-category" id="chart-category"></div>
+          <div class="chart-radar" id="chart-radar"></div>
+        </div>
+
+        <div class="panel panel-pie" id="panel-pie">
+          <div class="panel-title">建材环形图</div>
+          <div class="chart" id="chart-pie"></div>
+        </div>
+
+        <div class="panel panel-map" id="panel-map">
+          <div class="panel-title">分布图</div>
+          <div class="chart" id="chart-map"></div>
+        </div>
+
+        <div class="panel panel-history" id="panel-history">
+          <div class="panel-title">历史进程图</div>
+          <div class="history-box">
+            <div class="history-notes" id="history-notes"></div>
+            <div class="history-axis">
+              <span class="seg seg-a"></span>
+              <span class="seg seg-b"></span>
+              <span class="seg seg-c"></span>
+            </div>
+            <div class="history-labels" id="history-labels"></div>
+          </div>
+        </div>
+
+        <div class="panel panel-sankey" id="panel-sankey">
+          <div class="panel-title">构造桑基图</div>
+          <div class="chart" id="chart-sankey"></div>
+        </div>
+
+        <div class="panel panel-gauge" id="panel-gauge">
+          <div class="gauge-left">
+            <div class="gauge-title">保护状况</div>
+            <div class="gauge-date" id="currentDate"></div>
+            <div class="gauge-big" id="preserve-range"></div>
+            <div class="gauge-sub" id="preserve-count"></div>
+          </div>
+          <div class="gauge-right">
+            <div class="chart gauge-item" id="chart-g1"></div>
+            <div class="chart gauge-item" id="chart-g2"></div>
+            <div class="chart gauge-item" id="chart-g3"></div>
+          </div>
+        </div>
+
+        <div class="panel panel-wordcloud" id="panel-wordcloud">
+          <div class="panel-title">分布词云图</div>
+          <div class="chart" id="chart-wordcloud"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="../beijing-dashboard/js/echarts.min.js"></script>
+  <script src="../beijing-dashboard/js/echarts-wordcloud.min.js"></script>
+  <script src="../beijing-dashboard/js/china.js"></script>
+  <script src="js/template.js"></script>
+</body>
+</html>

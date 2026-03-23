@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>风物志静态入口</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: "Microsoft YaHei", sans-serif;
+      background:
+        linear-gradient(rgba(244, 228, 188, 0.66), rgba(244, 228, 188, 0.66)),
+        url('/beijing-dashboard/images/bg.jpg') center/cover no-repeat;
+      color: #6f4b1f;
+      padding: 40px 32px 60px;
+    }
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: "STKaiti", "KaiTi", serif;
+      font-size: 42px;
+      text-align: center;
+      margin-bottom: 14px;
+      color: #a46a17;
+    }
+    .sub {
+      text-align: center;
+      margin-bottom: 36px;
+      color: #8a5a1f;
+      font-size: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      padding: 20px 22px;
+      border: 1px solid rgba(88, 214, 205, 0.7);
+      background: rgba(255, 248, 230, 0.42);
+      box-shadow: 0 0 18px rgba(88, 214, 205, 0.08);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(88, 214, 205, 0.16);
+    }
+    .name {
+      font-size: 26px;
+      font-family: "STKaiti", "KaiTi", serif;
+      margin-bottom: 8px;
+    }
+    .meta {
+      font-size: 14px;
+      color: #8b6738;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>风物志静态入口</h1>
+    <div class="sub">全部走静态页面，北京为原始静态页，其他民居为静态模板页</div>
+    <div class="grid">
+      <a class="card" href="/beijing-dashboard/index.html">
+        <div class="name">北京四合院</div>
+        <div class="meta">原始静态页</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=huizhou">
+        <div class="name">徽派民居</div>
+        <div class="meta">皖南</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=suzhou">
+        <div class="name">苏州民居</div>
+        <div class="meta">江南</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=fujian">
+        <div class="name">客家土楼</div>
+        <div class="meta">闽西</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=xilingol">
+        <div class="name">蒙古包</div>
+        <div class="meta">蒙古</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=yanan">
+        <div class="name">窑洞</div>
+        <div class="meta">陕北</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=fenghuang">
+        <div class="name">湘西吊脚楼</div>
+        <div class="meta">湘西</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=lhasa">
+        <div class="name">藏族碉房</div>
+        <div class="meta">藏区</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=weihai">
+        <div class="name">海草房</div>
+        <div class="meta">胶东</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=kashgar">
+        <div class="name">高台民居</div>
+        <div class="meta">南疆</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=turpan">
+        <div class="name">阿以旺</div>
+        <div class="meta">东疆</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=guangzhou">
+        <div class="name">镬耳屋</div>
+        <div class="meta">岭南</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=dali">
+        <div class="name">土掌房</div>
+        <div class="meta">滇西</div>
+      </a>
+      <a class="card" href="/folk-dashboard/index.html?stationId=xishuangbanna">
+        <div class="name">竹楼</div>
+        <div class="meta">滇南</div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

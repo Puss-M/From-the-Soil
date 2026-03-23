@@ -9,7 +9,6 @@ import { ArchitectureKnowledgeGraph } from './ArchitectureKnowledgeGraph';
 import { StationHeader } from './StationHeader';
 import { InfoCards } from './InfoCards';
 import { ModelViewer } from './ModelViewer';
-import { HeritageDashboard } from './HeritageDashboard';
 import { VideoChronicle } from './VideoChronicle';
 import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -31,17 +30,28 @@ export function StationDetail() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabKey>('model');
   const [direction, setDirection] = useState(0);
+  const sid = selectedStation?.id ?? '';
+  const getHeritageUrl = useCallback((stationId: string) => {
+    if (stationId === 'beijing') {
+      return '/siheyuan-dashboard';
+    }
+    return `/folk-dashboard/index.html?stationId=${stationId}`;
+  }, []);
 
   const handleTabChange = useCallback((newTab: TabKey) => {
     if (newTab === 'model2d') {
       router.push('/siheyuan');
       return;
     }
+    if (newTab === 'heritage') {
+      window.location.href = getHeritageUrl(sid);
+      return;
+    }
     const oldIdx = TABS.findIndex((t) => t.key === activeTab);
     const newIdx = TABS.findIndex((t) => t.key === newTab);
     setDirection(newIdx > oldIdx ? 1 : -1);
     setActiveTab(newTab);
-  }, [activeTab, router]);
+  }, [activeTab, getHeritageUrl, router, sid]);
 
   if (!selectedStation) {
     return (
@@ -50,8 +60,6 @@ export function StationDetail() {
       </div>
     );
   }
-
-  const sid = selectedStation.id;
   const detail = stationDetails[sid];
   const climate = climateDetails[sid];
   const heritage = heritageData[sid];
@@ -390,7 +398,7 @@ export function StationDetail() {
           {activeTab === 'heritage' && (
             <div key="heritage-wrap" style={{
               position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-              overflow: 'auto',
+              overflow: 'hidden',
               background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0eb 30%, #f0ece6 100%)',
             }}>
               <motion.div
@@ -402,29 +410,30 @@ export function StationDetail() {
               >
                 <div style={{ width: '100%', height: '100%', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
                   <div style={{ flex: 1, minHeight: 0 }}>
-                    {climate && detail && (
-                      <HeritageDashboard
-                        station={selectedStation}
-                        climate={climate}
-                        detail={detail}
-                        heritage={heritage || []}
-                        decorations={decorations || []}
-                      />
-                    )}
-                    {(!climate || !detail) && (
-                      <div
+                    {sid === 'beijing' ? (
+                      <iframe
+                        src="/siheyuan-dashboard"
+                        title={`${selectedStation.name}风物志大屏`}
                         style={{
-                          marginTop: 40,
-                          padding: '48px 32px',
-                          border: '1px solid #e8e0d8',
-                          borderRadius: 20,
-                          background: 'rgba(255,255,255,0.75)',
-                          textAlign: 'center',
-                          color: '#7c6a56',
+                          width: '100%',
+                          height: '100%',
+                          border: 'none',
+                          display: 'block',
+                          background: 'transparent',
                         }}
-                      >
-                        当前驿站尚未接入完整的民居大屏数据。
-                      </div>
+                      />
+                    ) : (
+                      <iframe
+                        src={`/bigscreen/${sid}`}
+                        title={`${selectedStation.name}风物志大屏`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          border: 'none',
+                          display: 'block',
+                          background: 'transparent',
+                        }}
+                      />
                     )}
                   </div>
                 </div>

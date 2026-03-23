@@ -71,13 +71,22 @@ export default function SiheyuanPage() {
     <main className={styles.page}>
       <section className={styles.canvasPanel}>
         <header className={styles.header}>
-          <button
-            type="button"
-            className={`${styles.backButton} guofeng-button`}
-            onClick={() => router.back()}
-          >
-            ← 返回
-          </button>
+          <div className={styles.headerActions}>
+            <button
+              type="button"
+              className={`${styles.backButton} guofeng-button`}
+              onClick={() => router.back()}
+            >
+              ← 返回
+            </button>
+            <button
+              type="button"
+              className={`${styles.dashboardButton} guofeng-button`}
+              onClick={() => router.push('/siheyuan-dashboard')}
+            >
+              进入数据大屏
+            </button>
+          </div>
           <p className={styles.tag}>建筑装饰交互页</p>
           <h1 className={styles.title}>四合院装饰解析</h1>
           <p className={styles.tip}>点击建筑中的圆点，右侧将展示对应构件说明。</p>

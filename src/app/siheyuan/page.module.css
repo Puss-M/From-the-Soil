@@ -24,8 +24,23 @@
   padding: 18px 22px 10px;
 }
 
-.backButton {
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.backButton {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dashboardButton {
   padding: 8px 14px;
   border-radius: 999px;
   font-size: 14px;

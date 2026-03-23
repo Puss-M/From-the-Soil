@@ -81,7 +81,7 @@ export function VideoChronicle({ station }: Props) {
           }}
         >
           <iframe
-            src="/legacy/siheyuan-dashboard/index.html"
+            src="/siheyuan-dashboard"
             title="北京四合院影像志数据大屏"
             scrolling="no"
             style={{

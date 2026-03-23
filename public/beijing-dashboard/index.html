@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>北京四合院大屏 - 1:1复刻版</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/comon0.css">
+</head>
+<body>
+  <div style="position:fixed;left:18px;top:18px;z-index:9999;display:flex;gap:10px;">
+    <button onclick="history.back()" style="border:none;border-radius:999px;padding:10px 18px;background:rgba(70,45,20,.68);color:#fff7e8;font-size:14px;cursor:pointer;backdrop-filter:blur(4px);">返回</button>
+    <button onclick="window.location.href='/folk-dashboard/portal.html'" style="border:none;border-radius:999px;padding:10px 18px;background:rgba(70,45,20,.5);color:#fff7e8;font-size:14px;cursor:pointer;backdrop-filter:blur(4px);">入口</button>
+  </div>
+  <div id="app">
+    <div id="screen" class="screen">
+      <div class="bg-layer"></div>
+      
+      <!-- 分享按钮 -->
+      <div class="share-btn" title="设置"></div>
+
+      <section class="main-stage">
+        <!-- 温雨双折图 -->
+        <div class="panel panel-line" id="panel-line">
+          <div class="panel-title">温雨双折图</div>
+          <div class="chart" id="chart-line"></div>
+        </div>
+
+        <!-- 标题牌匾 -->
+        <div class="title-board">北京四合院</div>
+
+        <!-- 核心指标指标区 -->
+        <div class="panel panel-metrics" id="panel-metrics">
+          <div class="metric-grid">
+            <div class="metric-item"><div class="metric-value">12.4868</div><div class="metric-label">年平均气温</div></div>
+            <div class="metric-item"><div class="metric-value">574</div><div class="metric-label">年降水量</div></div>
+            <div class="metric-item"><div class="metric-value">1.0141</div><div class="metric-label">年平均水蒸气压</div></div>
+            <div class="metric-item"><div class="metric-value">39.9042</div><div class="metric-label">经度</div></div>
+            <div class="metric-item"><div class="metric-value">116.3976</div><div class="metric-label">纬度</div></div>
+            <div class="metric-item"><div class="metric-value">50.7628</div><div class="metric-label">海拔</div></div>
+          </div>
+        </div>
+
+        <!-- 分类与雷达图 -->
+        <div class="panel panel-radar" id="panel-radar">
+          <div class="chart-category" id="chart-category"></div>
+          <div class="chart-radar" id="chart-radar"></div>
+        </div>
+
+        <!-- 建材环形图 -->
+        <div class="panel panel-pie" id="panel-pie">
+          <div class="panel-title">建材环形图</div>
+          <div class="chart" id="chart-pie"></div>
+        </div>
+
+        <!-- 地图分布图 -->
+        <div class="panel panel-map" id="panel-map">
+          <div class="panel-title">分布图</div>
+          <div class="chart" id="chart-map"></div>
+        </div>
+
+        <!-- 历史进程图 -->
+        <div class="panel panel-history" id="panel-history">
+          <div class="panel-title">历史进程图</div>
+          <div class="history-box">
+            <div class="history-notes">
+              <div>院落雏形<br/>简单围合结构</div>
+              <div>布局规整<br/>融入礼制观念</div>
+              <div>形制多样<br/>高墙封闭</div>
+            </div>
+            <div class="history-axis">
+              <span class="seg seg-a"></span>
+              <span class="seg seg-b"></span>
+              <span class="seg seg-c"></span>
+            </div>
+            <div class="history-labels">
+              <span>商周</span>
+              <span>汉唐</span>
+              <span>明清</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 构造桑基图 -->
+        <div class="panel panel-sankey" id="panel-sankey">
+          <div class="panel-title">构造桑基图</div>
+          <div class="chart" id="chart-sankey"></div>
+        </div>
+
+        <!-- 保持状况/数量 -->
+        <div class="panel panel-gauge" id="panel-gauge">
+          <div class="gauge-left">
+            <div class="gauge-title">保护状况</div>
+            <div class="gauge-date" id="currentDate">2026-03-23</div>
+            <div class="gauge-big">4000-5000</div>
+            <div class="gauge-sub">现存四合院数量</div>
+          </div>
+          <div class="gauge-right">
+            <div class="chart gauge-item" id="chart-g1"></div>
+            <div class="chart gauge-item" id="chart-g2"></div>
+            <div class="chart gauge-item" id="chart-g3"></div>
+          </div>
+        </div>
+
+        <!-- 分布词云图 -->
+        <div class="panel panel-wordcloud" id="panel-wordcloud">
+          <div class="panel-title">分布词云图</div>
+          <div class="chart" id="chart-wordcloud"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2/dist/echarts-wordcloud.min.js"></script>
+  <script src="js/china.js"></script>
+  <script src="js/js.js"></script>
+  <script>
+    // 时间更新
+    function updateTime() {
+      const dt = new Date();
+      const y=dt.getFullYear(), mt=dt.getMonth()+1, day=dt.getDate();
+      const h=dt.getHours(), m=dt.getMinutes(), s=dt.getSeconds();
+      document.getElementById("showTime").innerHTML = `${y}年${mt}月${day}日 ${h}:${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+      document.getElementById("currentDate").innerHTML = `${y}-${mt < 10 ? '0'+mt : mt}-${day < 10 ? '0'+day : day}`;
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // 屏幕适配 - 真正居中版本
+    function fitScreen() {
+      const baseWidth = 1920;
+      const baseHeight = 1080;
+      const scaleX = window.innerWidth / baseWidth;
+      const scaleY = window.innerHeight / baseHeight;
+      const scale = Math.min(scaleX, scaleY);
+      
+      const screen = document.getElementById('screen');
+      const realWidth = baseWidth * scale;
+      const realHeight = baseHeight * scale;
+      
+      screen.style.transform = `scale(${scale})`;
+      screen.style.transformOrigin = 'left top';
+      screen.style.left = `${(window.innerWidth - realWidth) / 2}px`;
+      screen.style.top = `${(window.innerHeight - realHeight) / 2}px`;
+    }
+    window.addEventListener('resize', fitScreen);
+    fitScreen();
+  </script>
+</body>
+</html>
