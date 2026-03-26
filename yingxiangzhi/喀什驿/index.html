@@ -1,0 +1,260 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>index</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/comon0.css">
+</head>
+	<script>
+	$(window).load(function(){  
+             $(".loading").fadeOut()
+            })  
+			
+/****/
+$(document).ready(function(){
+	var whei=$(window).width()
+	$("html").css({fontSize:whei/20})
+	$(window).resize(function(){
+		var whei=$(window).width()
+	 $("html").css({fontSize:whei/20})
+});
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script> 
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script> 
+	<script language="JavaScript" src="js/js.js"></script> 
+<body>
+<div class="canvas" style="opacity: .2">
+	<iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
+	</div>
+<div class="loading">
+  <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+</div>
+<div class="head">
+  <h1>高台民居</h1>
+  <div class="weather"><!--<img src="picture/weather.png"><span>多云转小雨</span>--><span id="showTime"></span></div>
+	
+	<script>
+var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+		var y=dt.getFullYear();
+		var mt=dt.getMonth()+1;
+		var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行     
+    } 
+
+</script>
+	
+	
+</div>
+<div class="mainbox">
+  <ul class="clearfix">
+    <li>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频基础信息</div>
+        <div class="video-info-container">
+          <div class="video-image-container">
+            <img src="http://i2.hdslb.com/bfs/archive/c952d6bdd3619f8b59ec16412b7d22baac84dcea.jpg" alt="视频封面" class="video-cover">
+          </div>
+          <div class="video-text-container">
+            <div class="video-info-item">时长 02:27 / 播放量 951</div>
+            <div class="video-info-item">发布时间 2020-12-15 19:05:08</div>
+          </div>
+        </div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频类型占比</div>
+        <div class="allnav" id="echart2"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">评论时段趋势：24小时分布</div>
+        <div class="allnav" id="echart7"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+    <li>
+      <!-- 顶部三个数据卡片 -->
+      <div class="middle-section">
+        <div class="data-cards-container">
+          <div class="data-card">
+            <div class="card-title">播放数据</div>
+            <div class="card-content">
+              <div class="card-value">201.01万</div>
+              <div class="card-label">总播放量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">互动数据</div>
+            <div class="card-content">
+              <div class="card-value">8.88万</div>
+              <div class="card-label">总点赞量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">评论数据</div>
+            <div class="card-content">
+              <div class="card-value">2379</div>
+              <div class="card-label">总评论量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+        </div>
+
+        <!-- B站视频嵌入 -->
+        <div class="video-container">
+          <div class="video-title">视频内容</div>
+          <div class="video-iframe-wrapper">
+            <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=203141177&bvid=BV1Ea411c7q4&cid=266545440&p=1" 
+                    frameborder="0"
+                    allowfullscreen="true"
+                    allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope; clipboard-write; encrypted-media; web-share"
+                    class="bilibili-video"
+                    id="bilibili-player"
+                    title="B站高台民居视频"
+                    loading="lazy"
+                    style="cursor: pointer !important; pointer-events: auto !important; z-index: 10000;">
+            </iframe>
+          </div>
+          <div class="video-footer"></div>
+        </div>
+
+        <!-- 热评滚动条 -->
+        <div class="hot-comments-container">
+          <div class="comments-title">热评滚动</div>
+          <div class="comments-scroll-wrapper">
+            <div class="comments-scroll-content">
+              <div class="comment-item">
+                <div class="comment-text">在高温又多雨的地方，骑楼是一种对行人特别友好的建筑形式，遮阳挡雨</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这个分类简直神了，一般大家旅游能碰到的也就是这个范围了，老姜用心了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">有一说一，土楼也是一种土木结构的建筑，在里面待着是真的舒服，大夏天里完全没有热的感觉</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">总有人要以自己半辈子的见识去怀疑人家当地好几代人寻思出来的东西</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">我是专业做文物古建筑修缮的责任工程师，up 主讲的很通俗易懂，很棒。我们这行业的确太冷门了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">南宁、北海、梧州，很多骑楼。实体产品才赋予骑楼永恒而持续的生命力，网红经济反而千篇一律</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">上海的金陵东路骑楼从外滩连续到人广，现在拆得不剩几栋了，太可惜</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">广州老城区随便一条街都是骑楼，充满岭南特色</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这种骑楼特别适合华南地区，遮风挡雨，尤其是夏季这种突来的暴雨</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">我去喀什古城早晨，里面人正聚集升国旗，人与人之间的信任特别动人</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">真的太感谢了，之前慕课听很久没懂，这次一下子就明白了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">不错啊，考中国工艺美术史的建筑部分，感觉考点都覆盖了，挺清楚的</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">每个地域的建筑肯定都是根据当地的环境建造的，充满古人智慧</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">超喜欢这些人文民俗！宝藏 up 加油加油</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">非常期待，感觉是我看过的最好建筑纪录片，接地气，又有人情味</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">第一季就非常喜欢，很期待第二季内容</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这个系列太有意义了！传承传统建筑文化</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">非常喜欢！！！感谢你们的制作！传播传统文化</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这视频非常好，感谢分享传统民居知识</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">爱看，UP 加油！做出更多优质内容</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">期待下一个作品！继续讲传统民居</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">哇，百看不厌的优质视频；收藏收藏</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这个地方学建筑、艺术、历史的去看看感受会特别好</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">中国 56 个民族是一家，传统建筑各有魅力</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">期待继续更新，想看更多地方民居</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">前山西省导游前来学习，内容干货满满</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">在没有机械的年代，徒手挖出一个地坑院，那可是相当大的工程呀</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">喜欢，好东西，可以用在教学上吗？正好上地域文化和城乡景观</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这一季比第一季更进一步了，关注保护和传承面临的问题</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">AI 课代表总结：视频深度解析中国五大传统民居智慧脉络，彰显古人因材制宜、天人合一的营造哲学</div>
+              </div>
+            </div>
+          </div>
+          <div class="comments-footer"></div>
+        </div>
+      </div>
+    </li>
+    <li>
+          <div class="boxall" style="height:3.4rem">
+        <div class="alltitle">评论情感</div>
+        <div class="allnav" id="echart4"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3rem">
+        <div class="alltitle">评论词云</div>
+        <div class="allnav" id="echart5"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">知网相关主题发表论文数</div>
+        <div class="allnav" id="echart8"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="back"></div>
+
+
+<script type="text/javascript" src="js/china.js"></script> 
+<script type="text/javascript" src="js/area_echarts.js"></script> 
+</body>
+</html>

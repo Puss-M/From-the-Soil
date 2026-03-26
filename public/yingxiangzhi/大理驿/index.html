@@ -1,0 +1,260 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>index</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/comon0.css">
+</head>
+	<script>
+	$(window).load(function(){  
+             $(".loading").fadeOut()
+            })  
+			
+/****/
+$(document).ready(function(){
+	var whei=$(window).width()
+	$("html").css({fontSize:whei/20})
+	$(window).resize(function(){
+		var whei=$(window).width()
+	 $("html").css({fontSize:whei/20})
+});
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script> 
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script> 
+	<script language="JavaScript" src="js/js.js"></script> 
+<body>
+<div class="canvas" style="opacity: .2">
+	<iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
+	</div>
+<div class="loading">
+  <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+</div>
+<div class="head">
+  <h1>彝族土掌房</h1>
+  <div class="weather"><!--<img src="picture/weather.png"><span>多云转小雨</span>--><span id="showTime"></span></div>
+	
+	<script>
+var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+		var y=dt.getFullYear();
+		var mt=dt.getMonth()+1;
+		var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行     
+    } 
+
+</script>
+	
+	
+</div>
+<div class="mainbox">
+  <ul class="clearfix">
+    <li>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频基础信息</div>
+        <div class="video-info-container">
+          <div class="video-image-container">
+            <img src="http://i0.hdslb.com/bfs/archive/1ff2d5c55e5bdc8d95f7cf533565c91a137833e1.jpg" alt="视频封面" class="video-cover">
+          </div>
+          <div class="video-text-container">
+            <div class="video-info-item">时长03:31 /播放量 3287</div>
+            <div class="video-info-item">发布时间2024-05-14 08:00:00</div>
+          </div>
+        </div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频类型占比</div>
+        <div class="allnav" id="echart2"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">评论时段趋势：24小时分布</div>
+        <div class="allnav" id="echart7"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+    <li>
+      <!-- 顶部三个数据卡片 -->
+      <div class="middle-section">
+        <div class="data-cards-container">
+          <div class="data-card">
+            <div class="card-title">播放数据</div>
+            <div class="card-content">
+              <div class="card-value">995.48万</div>
+              <div class="card-label">总播放量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">互动数据</div>
+            <div class="card-content">
+              <div class="card-value">33.15万</div>
+              <div class="card-label">总点赞量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">评论数据</div>
+            <div class="card-content">
+              <div class="card-value">21226</div>
+              <div class="card-label">总评论量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+        </div>
+
+        <!-- B站视频嵌入 -->
+        <div class="video-container">
+          <div class="video-title">视频内容</div>
+          <div class="video-iframe-wrapper">
+            <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=1854251605&bvid=BV1gs421N7cP&cid=1534911891&p=1" 
+                    frameborder="0" 
+                    allowfullscreen="true"
+                    allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope; clipboard-write; encrypted-media; web-share"
+                    class="bilibili-video"
+                    id="bilibili-player"
+                    title="B站土掌房视频"
+                    loading="lazy"
+                    style="cursor: pointer !important; pointer-events: auto !important; z-index: 10000;">
+            </iframe>
+          </div>
+          <div class="video-footer"></div>
+        </div>
+
+        <!-- 热评滚动条 -->
+        <div class="hot-comments-container">
+          <div class="comments-title">热评滚动</div>
+          <div class="comments-scroll-wrapper">
+            <div class="comments-scroll-content">
+              <div class="comment-item">
+                <div class="comment-text">最爱土掌房！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">哇好像我们这边的房子 [星星眼]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">我老家的一个景点是土掌房 [doge] 听提到了红河，我确定是我老家了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">很整齐的房子看起来很舒服，适合旅游度假放松心情</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">喜欢早期的村落和建筑，不像现在统一的水泥房子。。。总想小时候的样子，地是泥的但是很紧实楼板是木头的有木头香。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">24 年去过了，建水苍台村，村子一边可以看到红河，村子入口那边梯田挺好看的。村口还有几个年轻人 搞了个咖啡店，县城进去是开车走了差不多两个小时。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">依地形而建，比中部省份强多了，</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">环境真不错 我想以后退休了回广西乡下找个小村养老 [OK]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这多美啊，像一副油画</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">很有油画的氛围感</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这里的人看起来都好有生命力，不像城市里的人充满压力、疲惫、迷茫、空洞</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">谢谢 up 主把美姑拍地这么有生命力，在外漂泊久了真的会无比想念这样小小的、温暖的、有人情味的 "蜗牛壳"，不止是美姑，凉山许多地方都有各自独特的风韵，真诚希望各位朋友都可以亲自来感受凉山的丰富与魅力！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">农耕文明传承下来的最真挚美好的歌曲，小时候不懂为什么美术馆的画大多都是农民或是农耕文明的痕迹，长大后才发现，这样的乡土气息才是最纯洁最诚恳的艺术</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">风景绝佳。要是建筑统一成石头风格就好了。万恶的瓷砖。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">好干净！比我老家的农村干净多了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">作为成都人，打破我对凉山州的刻有印象了，太他妈漂亮了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">很感动，感觉像看到曾经老家的房子了。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">特别像我家以前的老房子 [笑哭]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">原来这叫 "一颗印" 啊，我看我老家那边有很多这样的房子</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">02 年去云南的时候还见过这种房子，现在确实没见到过了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">老家还有这样的房子 不过一年比一年少</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这种炉子贵州不是很多，我们那每家都有啊</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">贵州确实适合隐居，夏天超级凉快，根本不用空调。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">敢想敢做，有勇气！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">人间还是温暖的</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">(/∇＼) 一期不落，看完了，感觉自己被治愈了 </div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">很喜欢小白的视频，人文气息和自然环境结合的很完美，还有最重要的温文儒雅的解说，虽然 B 站粉丝不多，但是小白希望能被更多人看到 [脱单 doge]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">小白这些个走的区域很有特色！很多人就是那些个国道，来来回回，不能说没意义，只是看过太多人传播，就 …… 小白很赞！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">喜欢小白，去陌生人家里做客不胆怯，而且很有礼数，除了不同的风景人情还学到了做人的道理</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">真心祝愿大凉山发展越来越好，各族群众安居乐业，生活蒸蒸日上</div>
+              </div>
+            </div>
+          </div>
+          <div class="comments-footer"></div>
+        </div>
+      </div>
+    </li>
+    <li>
+          <div class="boxall" style="height:3.4rem">
+        <div class="alltitle">评论情感</div>
+        <div class="allnav" id="echart4"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3rem">
+        <div class="alltitle">评论词云</div>
+        <div class="allnav" id="echart5"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">知网相关主题发表论文数</div>
+        <div class="allnav" id="echart8"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="back"></div>
+
+
+<script type="text/javascript" src="js/china.js"></script> 
+<script type="text/javascript" src="js/area_echarts.js"></script> 
+</body>
+</html>

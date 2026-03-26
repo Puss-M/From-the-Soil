@@ -15,13 +15,32 @@ interface Props {
   decorations: DecorationItem[];
 }
 
+// 驿站ID到文件夹名称的映射
+const stationIdToFolderMap: Record<string, string> = {
+  'beijing': '北京驿',
+  'suzhou': '苏州驿',
+  'huizhou': '徽州驿',
+  'fujian': '永定驿',
+  'yanan': '延安驿',
+  'dali': '大理驿',
+  'lhasa': '拉萨驿',
+  'kashgar': '喀什驿',
+  'fenghuang': '凤凰驿',
+  'weihai': '威海驿',
+  'xishuangbanna': '版纳驿',
+  'xilingol': '草原驿',
+  'guangzhou': '广州驿',
+  'turpan': '吐鲁番驿',
+};
+
 export function VideoChronicle({ station }: Props) {
-  const isBeijingSiheyuan = station.id === 'beijing';
   const frameRef = useRef<HTMLDivElement | null>(null);
   const [frameScale, setFrameScale] = useState(1);
+  const folderName = stationIdToFolderMap[station.id];
+  const hasVideoChronicle = folderName !== undefined;
 
   useEffect(() => {
-    if (!isBeijingSiheyuan) {
+    if (!hasVideoChronicle) {
       return;
     }
 
@@ -52,9 +71,11 @@ export function VideoChronicle({ station }: Props) {
       observer.disconnect();
       window.removeEventListener('resize', updateScale);
     };
-  }, [isBeijingSiheyuan]);
+  }, [hasVideoChronicle]);
 
-  if (isBeijingSiheyuan) {
+  if (hasVideoChronicle) {
+    const videoSrc = `/yingxiangzhi/${folderName}/index.html`;
+    
     return (
       <div
         ref={frameRef}
@@ -81,8 +102,8 @@ export function VideoChronicle({ station }: Props) {
           }}
         >
           <iframe
-            src="/siheyuan-dashboard"
-            title="北京四合院影像志数据大屏"
+            src={videoSrc}
+            title={`${station.name}影像志数据大屏`}
             scrolling="no"
             style={{
               width: '100%',
@@ -122,7 +143,7 @@ export function VideoChronicle({ station }: Props) {
             {station.name.replace(/驿$/, '')} · 影像志
           </h2>
           <div style={{ marginTop: 8, color: '#5a7d78', fontSize: 13, letterSpacing: 2 }}>
-            当前仅北京四合院接入 4C 原始大屏
+            影像志大屏正在开发中
           </div>
         </div>
 
