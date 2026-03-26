@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>风物志数据大屏 - 中国传统民居可视化</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Serif SC", sans-serif;
+      background: #f7f1e3;
+      position: relative;
+    }
+
+    /* 水墨背景 */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url('/背景.jpeg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.95;
+      z-index: -2;
+    }
+
+    /* 渐变遮罩 - 暖色调叠加 */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 50% 30%, rgba(247, 241, 227, 0.3), transparent 70%),
+        radial-gradient(ellipse at 20% 80%, rgba(139, 90, 43, 0.08), transparent 60%),
+        linear-gradient(180deg, rgba(247, 241, 227, 0.4), rgba(237, 230, 213, 0.3));
+      z-index: -1;
+    }
+
+    /* 大屏容器 - 1920×1080 */
+    #screen {
+      position: absolute;
+      width: 1920px;
+      height: 1080px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transform-origin: center center;
+    }
+
+    /* 主标题 */
+    .main-header {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 100;
+    }
+
+    .main-title {
+      font-size: 56px;
+      font-weight: 900;
+      color: #3a3028;
+      font-family: "STKaiti", "KaiTi", serif;
+      letter-spacing: 16px;
+      text-shadow: 
+        0 2px 8px rgba(255, 255, 255, 0.8),
+        0 1px 2px rgba(58, 48, 40, 0.3);
+      margin-bottom: 8px;
+      background: linear-gradient(180deg, #5a4a3a 0%, #8b5a2b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .main-subtitle {
+      font-size: 18px;
+      color: rgba(139, 90, 43, 0.8);
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      font-family: Georgia, serif;
+      text-shadow: 0 1px 3px rgba(255, 255, 255, 0.6);
+    }
+
+    /* 装饰线 */
+    .decorative-line {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(139, 90, 43, 0.4), transparent);
+      box-shadow: 0 1px 3px rgba(139, 90, 43, 0.3);
+    }
+
+    .line-top {
+      top: 110px;
+      left: 10%;
+      right: 10%;
+    }
+
+    .line-bottom {
+      bottom: 20px;
+      left: 10%;
+      right: 10%;
+    }
+
+    /* 图表容器基础样式 */
+    .chart-panel {
+      position: absolute;
+      background: rgba(255, 253, 248, 0.75);
+      border: 1px solid rgba(139, 90, 43, 0.25);
+      border-radius: 12px;
+      box-shadow: 
+        inset 0 0 40px rgba(255, 255, 255, 0.4),
+        0 4px 20px rgba(58, 48, 40, 0.15),
+        0 1px 3px rgba(139, 90, 43, 0.1);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+    }
+
+    .chart-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at top, rgba(91, 141, 134, 0.08), transparent 50%),
+        linear-gradient(180deg, rgba(184, 138, 59, 0.05), transparent);
+      pointer-events: none;
+    }
+
+    .panel-title {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #d4a968;
+      font-family: "STKaiti", "KaiTi", serif;
+      letter-spacing: 3px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+      z-index: 10;
+    }
+
+    .panel-title::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, #d4a968, transparent);
+      box-shadow: 0 0 8px rgba(212, 169, 104, 0.6);
+    }
+
+    /* 数据卡片 */
+    .data-cards {
+      position: absolute;
+      top: 140px;
+      left: 60px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .data-card {
+      width: 180px;
+      height: 100px;
+      background: rgba(15, 20, 40, 0.6);
+      border: 1px solid rgba(91, 141, 134, 0.3);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(91, 141, 134, 0.2);
+      backdrop-filter: blur(8px);
+    }
+
+    .data-value {
+      font-size: 36px;
+      font-weight: 900;
+      color: #5fc3d0;
+      font-family: "Arial Black", sans-serif;
+      text-shadow: 0 0 20px rgba(95, 195, 208, 0.8), 0 2px 4px rgba(0, 0, 0, 0.8);
+      margin-bottom: 8px;
+    }
+
+    .data-label {
+      font-size: 14px;
+      color: rgba(91, 141, 134, 0.9);
+      letter-spacing: 2px;
+    }
+
+    /* 图表内容区域 */
+    .chart-content {
+      position: absolute;
+      top: 50px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    /* 中央地图强调 */
+    #map-panel {
+      box-shadow: 
+        0 0 60px rgba(184, 138, 59, 0.4),
+        inset 0 0 80px rgba(0, 0, 0, 0.4),
+        0 12px 48px rgba(0, 0, 0, 0.6);
+      border: 2px solid rgba(184, 138, 59, 0.5);
+    }
+
+    /* 词云特殊样式 */
+    .word-item {
+      position: absolute;
+      font-family: "STKaiti", "KaiTi", serif;
+      font-weight: 900;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9), 0 0 20px currentColor;
+      cursor: default;
+      transition: all 0.3s ease;
+    }
+
+    .word-item:hover {
+      transform: scale(1.2);
+      filter: brightness(1.3);
+    }
+
+    /* 发光效果 */
+    .glow-cyan {
+      box-shadow: 0 0 40px rgba(91, 141, 134, 0.6);
+    }
+
+    .glow-gold {
+      box-shadow: 0 0 40px rgba(184, 138, 59, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div id="screen">
+    <!-- 主标题 -->
+    <div class="main-header">
+      <div class="main-title">中国传统民居风物志</div>
+      <div class="main-subtitle">Chinese Traditional Dwelling Data Screen</div>
+    </div>
+
+    <!-- 装饰线 -->
+    <div class="decorative-line line-top"></div>
+    <div class="decorative-line line-bottom"></div>
+
+    <!-- 数据卡片 -->
+    <div class="data-cards">
+      <div class="data-card">
+        <div class="data-value" id="card-value-1">2156</div>
+        <div class="data-label">传统民居总数</div>
+      </div>
+      <div class="data-card">
+        <div class="data-value" id="card-value-2">34</div>
+        <div class="data-label">省份覆盖</div>
+      </div>
+      <div class="data-card">
+        <div class="data-value" id="card-value-3">156</div>
+        <div class="data-label">非遗项目</div>
+      </div>
+    </div>
+
+    <!-- 左上：气候趋势 -->
+    <div class="chart-panel" style="left: 60px; top: 260px; width: 520px; height: 340px;">
+      <div class="panel-title">气候趋势分析</div>
+      <div class="chart-content">
+        <div id="chart-climate" style="width: 100%; height: 100%;"></div>
+      </div>
+    </div>
+
+    <!-- 左下：建材分布 -->
+    <div class="chart-panel" style="left: 60px; top: 620px; width: 520px; height: 420px;">
+      <div class="panel-title">建材构成分布</div>
+      <div class="chart-content">
+        <div id="chart-material" style="width: 100%; height: 100%;"></div>
+      </div>
+    </div>
+
+    <!-- 中央：地图 -->
+    <div class="chart-panel glow-gold" id="map-panel" style="left: 600px; top: 140px; width: 720px; height: 580px;">
+      <div class="panel-title">地理分布地图</div>
+      <div class="chart-content">
+        <div id="chart-map" style="width: 100%; height: 100%;"></div>
+      </div>
+    </div>
+
+    <!-- 中下：词云 -->
+    <div class="chart-panel" style="left: 600px; top: 740px; width: 720px; height: 300px;">
+      <div class="panel-title">地域特色词云</div>
+      <div class="chart-content">
+        <div id="word-cloud" style="width: 100%; height: 100%; position: relative;"></div>
+      </div>
+    </div>
+
+    <!-- 右上：防御雷达 -->
+    <div class="chart-panel glow-cyan" style="left: 1340px; top: 140px; width: 520px; height: 380px;">
+      <div class="panel-title">防御性能指标</div>
+      <div class="chart-content">
+        <div id="chart-radar" style="width: 100%; height: 100%;"></div>
+      </div>
+    </div>
+
+    <!-- 右中：历史进程 -->
+    <div class="chart-panel" style="left: 1340px; top: 540px; width: 520px; height: 240px;">
+      <div class="panel-title">历史进程演变</div>
+      <div class="chart-content">
+        <div id="chart-history" style="width: 100%; height: 100%;"></div>
+      </div>
+    </div>
+
+    <!-- 右下：保护状况 -->
+    <div class="chart-panel" style="left: 1340px; top: 800px; width: 520px; height: 240px;">
+      <div class="panel-title">保护状况统计</div>
+      <div class="chart-content">
+        <div id="chart-protection" style="width: 100%; height: 100%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 自适应缩放
+    function scaleScreen() {
+      const screen = document.getElementById('screen');
+      const scaleX = window.innerWidth / 1920;
+      const scaleY = window.innerHeight / 1080;
+      const scale = Math.min(scaleX, scaleY);
+      screen.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    window.addEventListener('resize', scaleScreen);
+    window.addEventListener('load', scaleScreen);
+
+    // 模拟数据
+    const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+    const precipitation = [3, 5, 8, 20, 35, 78, 175, 168, 55, 20, 8, 2];
+    const temperature = [-4, -1, 6, 14, 20, 25, 26, 25, 20, 13, 4, -2];
+
+    // 通用ECharts主题色
+    const themeColors = {
+      cyan: '#5fc3d0',
+      gold: '#d4a968',
+      orange: '#e89a3c',
+      green: '#7bc67e',
+      purple: '#9d7dc8'
+    };
+
+    // 气候趋势图
+    const climateChart = echarts.init(document.getElementById('chart-climate'));
+    climateChart.setOption({
+      backgroundColor: 'transparent',
+      grid: { left: 60, right: 40, top: 40, bottom: 50 },
+      tooltip: { 
+        trigger: 'axis',
+        backgroundColor: 'rgba(15, 20, 40, 0.95)',
+        borderColor: themeColors.gold,
+        textStyle: { color: '#d4a968' }
+      },
+      legend: {
+        top: 10,
+        right: 40,
+        textStyle: { color: '#8b9eb5', fontSize: 13 },
+        data: ['降水量', '温度']
+      },
+      xAxis: {
+        type: 'category',
+        data: months,
+        axisLine: { lineStyle: { color: 'rgba(139, 158, 181, 0.3)' } },
+        axisTick: { show: false },
+        axisLabel: { color: '#8b9eb5', fontSize: 12 }
+      },
+      yAxis: [
+        {
+          type: 'value',
+          name: 'mm',
+          nameTextStyle: { color: '#8b9eb5' },
+          splitLine: { lineStyle: { color: 'rgba(139, 158, 181, 0.1)' } },
+          axisLine: { show: false },
+          axisLabel: { color: '#8b9eb5', fontSize: 12 }
+        },
+        {
+          type: 'value',
+          name: '℃',
+          nameTextStyle: { color: '#8b9eb5' },
+          splitLine: { show: false },
+          axisLine: { show: false },
+          axisLabel: { color: '#8b9eb5', fontSize: 12 }
+        }
+      ],
+      series: [
+        {
+          name: '降水量',
+          type: 'bar',
+          yAxisIndex: 0,
+          data: precipitation,
+          barWidth: 20,
+          itemStyle: {
+            color: {
+              type: 'linear',
+              x: 0, y: 0, x2: 0, y2: 1,
+              colorStops: [
+                { offset: 0, color: themeColors.cyan },
+                { offset: 1, color: 'rgba(95, 195, 208, 0.3)' }
+              ]
+            },
+            borderRadius: [4, 4, 0, 0]
+          }
+        },
+        {
+          name: '温度',
+          type: 'line',
+          yAxisIndex: 1,
+          smooth: true,
+          data: temperature,
+          symbolSize: 8,
+          lineStyle: { color: themeColors.gold, width: 3 },
+          itemStyle: { color: themeColors.gold, borderWidth: 2, borderColor: '#1a2035' },
+          areaStyle: {
+            color: {
+              type: 'linear',
+              x: 0, y: 0, x2: 0, y2: 1,
+              colorStops: [
+                { offset: 0, color: 'rgba(212, 169, 104, 0.4)' },
+                { offset: 1, color: 'rgba(212, 169, 104, 0.05)' }
+              ]
+            }
+          }
+        }
+      ]
+    });
+
+    // 建材分布饼图
+    const materialChart = echarts.init(document.getElementById('chart-material'));
+    materialChart.setOption({
+      backgroundColor: 'transparent',
+      tooltip: { 
+        trigger: 'item',
+        backgroundColor: 'rgba(15, 20, 40, 0.95)',
+        borderColor: themeColors.gold,
+        textStyle: { color: '#d4a968' }
+      },
+      legend: {
+        bottom: 20,
+        left: 'center',
+        textStyle: { color: '#8b9eb5', fontSize: 13 },
+        itemGap: 20
+      },
+      series: [{
+        type: 'pie',
+        radius: ['45%', '75%'],
+        center: ['50%', '45%'],
+        roseType: 'area',
+        itemStyle: {
+          borderColor: '#0f1428',
+          borderWidth: 3,
+          shadowBlur: 20,
+          shadowColor: 'rgba(0, 0, 0, 0.5)'
+        },
+        label: {
+          color: '#d4a968',
+          fontSize: 14,
+          fontWeight: 700
+        },
+        labelLine: {
+          lineStyle: { color: 'rgba(212, 169, 104, 0.5)' }
+        },
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 30,
+            shadowColor: 'rgba(0, 0, 0, 0.7)'
+          },
+          label: {
+            fontSize: 16,
+            fontWeight: 900
+          },
+          scale: true,
+          scaleSize: 12
+        },
+        data: [
+          { name: '木材', value: 35, itemStyle: { color: themeColors.green } },
+          { name: '砖石', value: 30, itemStyle: { color: themeColors.orange } },
+          { name: '瓦当', value: 20, itemStyle: { color: themeColors.purple } },
+          { name: '其他', value: 15, itemStyle: { color: themeColors.cyan } }
+        ]
+      }]
+    });
+
+    // 防御雷达图
+    const radarChart = echarts.init(document.getElementById('chart-radar'));
+    radarChart.setOption({
+      backgroundColor: 'transparent',
+      radar: {
+        center: ['50%', '55%'],
+        radius: '65%',
+        splitNumber: 4,
+        indicator: [
+          { name: '抗震性', max: 100 },
+          { name: '防水性', max: 100 },
+          { name: '防火性', max: 100 },
+          { name: '耐久性', max: 100 },
+          { name: '保温性', max: 100 }
+        ],
+        axisName: { 
+          color: '#d4a968', 
+          fontSize: 15, 
+          fontWeight: 700,
+          fontFamily: '"STKaiti", "KaiTi", serif'
+        },
+        splitLine: { lineStyle: { color: 'rgba(139, 158, 181, 0.2)' } },
+        splitArea: { 
+          areaStyle: { 
+            color: [
+              'rgba(91, 141, 134, 0.05)',
+              'rgba(15, 20, 40, 0.3)'
+            ]
+          } 
+        },
+        axisLine: { lineStyle: { color: 'rgba(139, 158, 181, 0.3)' } }
+      },
+      series: [{
+        type: 'radar',
+        symbol: 'circle',
+        symbolSize: 10,
+        data: [{
+          value: [85, 70, 65, 90, 75],
+          name: '综合指标',
+          lineStyle: { 
+            color: themeColors.cyan, 
+            width: 3,
+            shadowBlur: 20,
+            shadowColor: 'rgba(95, 195, 208, 0.8)'
+          },
+          itemStyle: { 
+            color: themeColors.cyan,
+            borderWidth: 3,
+            borderColor: '#1a2035',
+            shadowBlur: 15,
+            shadowColor: 'rgba(95, 195, 208, 0.8)'
+          },
+          areaStyle: { 
+            color: {
+              type: 'radial',
+              x: 0.5, y: 0.5, r: 1,
+              colorStops: [
+                { offset: 0, color: 'rgba(95, 195, 208, 0.5)' },
+                { offset: 1, color: 'rgba(95, 195, 208, 0.1)' }
+              ]
+            }
+          }
+        }]
+      }]
+    });
+
+    // 地图
+    fetch('/china.json')
+      .then(res => res.json())
+      .then(data => {
+        echarts.registerMap('china', data);
+        
+        const mapChart = echarts.init(document.getElementById('chart-map'));
+        mapChart.setOption({
+          backgroundColor: 'transparent',
+          tooltip: { 
+            trigger: 'item', 
+            formatter: '{b}',
+            backgroundColor: 'rgba(15, 20, 40, 0.95)',
+            borderColor: themeColors.gold,
+            textStyle: { color: '#d4a968' }
+          },
+          geo: {
+            map: 'china',
+            roam: false,
+            itemStyle: {
+              areaColor: {
+                type: 'linear',
+                x: 0, y: 0, x2: 0, y2: 1,
+                colorStops: [
+                  { offset: 0, color: 'rgba(212, 169, 104, 0.4)' },
+                  { offset: 1, color: 'rgba(184, 138, 59, 0.2)' }
+                ]
+              },
+              borderColor: 'rgba(212, 169, 104, 0.8)',
+              borderWidth: 1.5,
+              shadowColor: 'rgba(184, 138, 59, 0.5)',
+              shadowBlur: 20
+            },
+            emphasis: {
+              itemStyle: { 
+                areaColor: 'rgba(212, 169, 104, 0.6)',
+                shadowBlur: 30
+              }
+            }
+          },
+          series: [
+            {
+              type: 'effectScatter',
+              coordinateSystem: 'geo',
+              symbolSize: 25,
+              rippleEffect: {
+                brushType: 'stroke',
+                color: themeColors.cyan,
+                period: 4,
+                scale: 4
+              },
+              data: [
+                { name: '北京', value: [116.4074, 39.9042, 100] }
+              ],
+              itemStyle: {
+                color: '#fff',
+                borderColor: themeColors.cyan,
+                borderWidth: 4,
+                shadowColor: 'rgba(95, 195, 208, 1)',
+                shadowBlur: 30
+              }
+            }
+          ]
+        });
+      });
+
+    // 词云
+    const wordCloudContainer = document.getElementById('word-cloud');
+    const words = [
+      { text: '四合院', x: 20, y: 25, size: 42, color: themeColors.gold },
+      { text: '京派建筑', x: 50, y: 35, size: 32, color: themeColors.cyan },
+      { text: '传统民居', x: 30, y: 60, size: 36, color: themeColors.orange },
+      { text: '庭院文化', x: 70, y: 50, size: 28, color: themeColors.green },
+      { text: '砖木结构', x: 60, y: 75, size: 24, color: themeColors.purple },
+      { text: '风水', x: 15, y: 80, size: 26, color: themeColors.cyan },
+      { text: '对称美学', x: 80, y: 25, size: 22, color: themeColors.gold }
+    ];
+
+    words.forEach(word => {
+      const span = document.createElement('span');
+      span.className = 'word-item';
+      span.textContent = word.text;
+      span.style.left = word.x + '%';
+      span.style.top = word.y + '%';
+      span.style.transform = 'translate(-50%, -50%)';
+      span.style.fontSize = word.size + 'px';
+      span.style.color = word.color;
+      wordCloudContainer.appendChild(span);
+    });
+
+    // 历史进程
+    const historyChart = echarts.init(document.getElementById('chart-history'));
+    historyChart.setOption({
+      backgroundColor: 'transparent',
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(15, 20, 40, 0.95)',
+        borderColor: themeColors.gold,
+        textStyle: { color: '#d4a968' }
+      },
+      xAxis: {
+        type: 'category',
+        data: ['明清', '民国', '建国后', '改革开放', '现代'],
+        axisLine: { lineStyle: { color: 'rgba(139, 158, 181, 0.3)' } },
+        axisTick: { show: false },
+        axisLabel: { color: '#8b9eb5', fontSize: 13, fontWeight: 700 }
+      },
+      yAxis: {
+        type: 'value',
+        splitLine: { lineStyle: { color: 'rgba(139, 158, 181, 0.1)' } },
+        axisLine: { show: false },
+        axisLabel: { color: '#8b9eb5', fontSize: 12 }
+      },
+      series: [{
+        type: 'line',
+        smooth: true,
+        data: [50, 45, 60, 75, 90],
+        lineStyle: { 
+          color: themeColors.gold, 
+          width: 4,
+          shadowBlur: 15,
+          shadowColor: 'rgba(212, 169, 104, 0.6)'
+        },
+        itemStyle: { 
+          color: themeColors.gold,
+          borderWidth: 3,
+          borderColor: '#1a2035',
+          shadowBlur: 12,
+          shadowColor: 'rgba(212, 169, 104, 0.8)'
+        },
+        symbolSize: 12,
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [
+              { offset: 0, color: 'rgba(212, 169, 104, 0.4)' },
+              { offset: 1, color: 'rgba(212, 169, 104, 0.05)' }
+            ]
+          }
+        }
+      }]
+    });
+
+    // 保护状况
+    const protectionChart = echarts.init(document.getElementById('chart-protection'));
+    protectionChart.setOption({
+      backgroundColor: 'transparent',
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(15, 20, 40, 0.95)',
+        borderColor: themeColors.gold,
+        textStyle: { color: '#d4a968' }
+      },
+      grid: { left: 60, right: 40, top: 30, bottom: 40 },
+      xAxis: {
+        type: 'category',
+        data: ['完整', '较完整', '部分保存', '残损'],
+        axisLine: { lineStyle: { color: 'rgba(139, 158, 181, 0.3)' } },
+        axisTick: { show: false },
+        axisLabel: { color: '#8b9eb5', fontSize: 12 }
+      },
+      yAxis: {
+        type: 'value',
+        splitLine: { lineStyle: { color: 'rgba(139, 158, 181, 0.1)' } },
+        axisLine: { show: false },
+        axisLabel: { color: '#8b9eb5', fontSize: 12 }
+      },
+      series: [{
+        type: 'bar',
+        data: [856, 654, 432, 214],
+        barWidth: 35,
+        itemStyle: {
+          color: {
+            type: 'linear',
+            x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [
+              { offset: 0, color: themeColors.green },
+              { offset: 1, color: 'rgba(123, 198, 126, 0.3)' }
+            ]
+          },
+          borderRadius: [4, 4, 0, 0],
+          shadowBlur: 15,
+          shadowColor: 'rgba(123, 198, 126, 0.5)'
+        },
+        label: {
+          show: true,
+          position: 'top',
+          color: '#7bc67e',
+          fontSize: 14,
+          fontWeight: 700
+        }
+      }]
+    });
+
+    // 数据卡片数字跳动动画
+    function animateNumber(id, target) {
+      const element = document.getElementById(id);
+      let current = 0;
+      const step = target / 50;
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        element.textContent = Math.floor(current);
+      }, 30);
+    }
+
+    window.addEventListener('load', () => {
+      animateNumber('card-value-1', 2156);
+      animateNumber('card-value-2', 34);
+      animateNumber('card-value-3', 156);
+    });
+
+    // 响应式调整
+    window.addEventListener('resize', () => {
+      climateChart.resize();
+      materialChart.resize();
+      radarChart.resize();
+      historyChart.resize();
+      protectionChart.resize();
+      scaleScreen();
+    });
+  </script>
+</body>
+</html>
+
+    /* 装饰层 */
+    #dashboard-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.4), transparent 20%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.05) 30%, rgba(184, 138, 59, 0.04) 100%);
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    #dashboard-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 18% 75%, rgba(139, 104, 70, 0.08), transparent 28%),
+        radial-gradient(ellipse at 82% 72%, rgba(91, 141, 134, 0.06), transparent 26%);
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    .dashboard-panel {
+      position: absolute;
+      border: 1px solid rgba(139, 104, 70, 0.25);
+      border-radius: 12px;
+      background: rgba(255, 252, 246, 0.35);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        0 4px 16px rgba(58, 48, 40, 0.08),
+        0 1px 4px rgba(58, 48, 40, 0.06);
+      backdrop-filter: blur(20px) saturate(1.1);
+      overflow: hidden;
+    }
+
+    .dashboard-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 40%, transparent),
+        radial-gradient(circle at 50% 0%, rgba(184, 138, 59, 0.08), transparent 60%);
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    .panel-title {
+      position: absolute;
+      top: 12px;
+      left: 16px;
+      font-size: 15px;
+      line-height: 1;
+      color: #5b4631;
+      font-family: "KaiTi", "STKaiti", serif;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+      z-index: 2;
+    }
+
+    .panel-divider {
+      position: absolute;
+      top: 37px;
+      left: 15px;
+      right: 15px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(139, 104, 70, 0.4) 20%, rgba(139, 104, 70, 0.4) 80%, transparent);
+      opacity: 0.4;
+      z-index: 1;
+    }
+
+    .panel-content {
+      position: relative;
+      padding: 40px 16px 14px;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .main-title {
+      position: absolute;
+      left: 630px;
+      top: 8px;
+      width: 400px;
+      height: 60px;
+      background: url("/beijing-siheyuan/head_bg.png") center center / 100% 100% no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "KaiTi", "STKaiti", serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: #5b4631;
+      letter-spacing: 3px;
+      text-shadow: 0 2px 8px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(58, 48, 40, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div id="dashboard-container">
+    <div id="dashboard-frame">
+      <div class="main-title" id="main-title">风物志数据大屏</div>
+
+      <!-- 温雨双折图 -->
+      <div class="dashboard-panel" style="left: 16px; top: 18px; width: 500px; height: 206px;">
+        <div class="panel-title">温雨双折图</div>
+        <div class="panel-divider"></div>
+        <div class="panel-content">
+          <div id="chart-climate" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- 建材环形图 -->
+      <div class="dashboard-panel" style="left: 16px; top: 238px; width: 500px; height: 248px;">
+        <div class="panel-title">建材环形图</div>
+        <div class="panel-divider"></div>
+        <div class="panel-content">
+          <div id="chart-material" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- 构造桑基图 -->
+      <div class="dashboard-panel" style="left: 16px; top: 500px; width: 500px; height: 250px;">
+        <div class="panel-title">构造桑基图</div>
+        <div class="panel-divider"></div>
+        <div class="panel-content">
+          <div id="chart-sankey" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- 分布图 -->
+      <div class="dashboard-panel" style="left: 548px; top: 214px; width: 548px; height: 364px;">
+        <div class="panel-title">分布图</div>
+        <div class="panel-divider"></div>
+        <div class="panel-content">
+          <div id="chart-map" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- 雷达图 -->
+      <div class="dashboard-panel" style="left: 1128px; top: 18px; width: 516px; height: 248px;">
+        <div class="panel-title">防御指标</div>
+        <div class="panel-divider"></div>
+        <div class="panel-content">
+          <div id="chart-radar" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- 词云 -->
+      <div class="dashboard-panel" style="left: 548px; top: 592px; width: 548px; height: 158px;">
+        <div class="panel-title">地域特色词云</div>
+        <div class="panel-divider"></div>
+        <div class="panel-content">
+          <div id="word-cloud" style="width: 100%; height: 100%; position: relative;"></div>
+        </div>
+      </div>
+
+      <!-- 保护状况 -->
+      <div class="dashboard-panel" style="left: 1128px; top: 280px; width: 516px; height: 298px;">
+        <div class="panel-title">保护状况</div>
+        <div class="panel-divider"></div>
+        <div class="panel-content">
+          <div id="protection-status" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- 历史进程 -->
+      <div class="dashboard-panel" style="left: 1128px; top: 592px; width: 516px; height: 158px;">
+        <div class="panel-title">历史进程</div>
+        <div class="panel-divider"></div>
+        <div class="panel-content">
+          <div id="history-timeline" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 自适应缩放
+    function scaleFrame() {
+      const container = document.getElementById('dashboard-container');
+      const frame = document.getElementById('dashboard-frame');
+      const rect = container.getBoundingClientRect();
+      const scale = Math.min(1, (rect.width - 16) / 1660, (rect.height - 16) / 900);
+      frame.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', scaleFrame);
+    window.addEventListener('load', scaleFrame);
+
+    // 模拟数据（从URL参数获取或使用默认值）
+    const dashboardData = {
+      title: '北京四合院风物志',
+      monthlyPrecipitation: [3, 5, 8, 20, 35, 78, 175, 168, 55, 20, 8, 2],
+      monthlyTemperature: [-4, -1, 6, 14, 20, 25, 26, 25, 20, 13, 4, -2],
+      materialDistribution: [
+        { name: '木材', value: 35 },
+        { name: '砖石', value: 30 },
+        { name: '瓦当', value: 20 },
+        { name: '其他', value: 15 }
+      ],
+      radarLabels: ['抗震', '防水', '防火', '耐久', '保温'],
+      radarValues: [85, 70, 65, 90, 75],
+      mapPoint: { name: '北京', coords: [116.4074, 39.9042] },
+      regionWords: [
+        { text: '四合院', x: 25, y: 30, size: 24, color: '#b88a3b' },
+        { text: '京派建筑', x: 60, y: 45, size: 18, color: '#5b8d86' },
+        { text: '传统民居', x: 40, y: 65, size: 20, color: '#8b6846' },
+        { text: '庭院', x: 75, y: 35, size: 16, color: '#d4834f' },
+        { text: '砖木结构', x: 50, y: 80, size: 14, color: '#6b8e5f' }
+      ]
+    };
+
+    // 初始化图表
+    const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+    // 温雨双折图
+    const climateChart = echarts.init(document.getElementById('chart-climate'));
+    climateChart.setOption({
+      backgroundColor: 'transparent',
+      grid: { left: 32, right: 32, top: 18, bottom: 32 },
+      legend: {
+        bottom: 2,
+        itemWidth: 12,
+        itemHeight: 8,
+        textStyle: { color: '#8f7556', fontSize: 10, fontWeight: 600 },
+        data: ['月降水量(mm)', '月均温度(℃)']
+      },
+      tooltip: { 
+        trigger: 'axis',
+        backgroundColor: 'rgba(255, 252, 246, 0.95)',
+        borderColor: 'rgba(139, 104, 70, 0.25)',
+        textStyle: { color: '#5b4631' }
+      },
+      xAxis: {
+        type: 'category',
+        data: months,
+        axisLine: { lineStyle: { color: 'rgba(139, 104, 70, 0.25)' } },
+        axisTick: { show: false },
+        axisLabel: { color: '#8f7556', fontSize: 10, fontWeight: 600 }
+      },
+      yAxis: [
+        {
+          type: 'value',
+          min: 0,
+          max: 180,
+          splitLine: { lineStyle: { color: 'rgba(139, 104, 70, 0.1)', type: 'dashed' } },
+          axisLine: { show: true, lineStyle: { color: 'rgba(139, 104, 70, 0.22)' } },
+          axisTick: { show: false },
+          axisLabel: { color: '#8f7556', fontSize: 10, fontWeight: 600 }
+        },
+        {
+          type: 'value',
+          min: -10,
+          max: 30,
+          splitLine: { show: false },
+          axisLine: { show: true, lineStyle: { color: 'rgba(91, 141, 134, 0.22)' } },
+          axisTick: { show: false },
+          axisLabel: { color: '#8f7556', fontSize: 10, fontWeight: 600 }
+        }
+      ],
+      series: [
+        {
+          name: '月降水量(mm)',
+          type: 'bar',
+          yAxisIndex: 0,
+          data: dashboardData.monthlyPrecipitation,
+          barWidth: 11,
+          itemStyle: {
+            color: {
+              type: 'linear',
+              x: 0, y: 0, x2: 0, y2: 1,
+              colorStops: [
+                { offset: 0, color: 'rgba(91, 141, 134, 0.9)' },
+                { offset: 1, color: 'rgba(91, 141, 134, 0.6)' }
+              ]
+            },
+            borderRadius: [6, 6, 0, 0]
+          }
+        },
+        {
+          name: '月均温度(℃)',
+          type: 'line',
+          yAxisIndex: 1,
+          smooth: true,
+          data: dashboardData.monthlyTemperature,
+          symbolSize: 6,
+          lineStyle: { color: '#b88a3b', width: 2.5 },
+          itemStyle: { color: '#b88a3b', borderWidth: 2, borderColor: '#fff' },
+          areaStyle: {
+            color: {
+              type: 'linear',
+              x: 0, y: 0, x2: 0, y2: 1,
+              colorStops: [
+                { offset: 0, color: 'rgba(184, 138, 59, 0.25)' },
+                { offset: 1, color: 'rgba(184, 138, 59, 0.05)' }
+              ]
+            }
+          }
+        }
+      ]
+    });
+
+    // 建材环形图
+    const materialChart = echarts.init(document.getElementById('chart-material'));
+    materialChart.setOption({
+      backgroundColor: 'transparent',
+      tooltip: { 
+        trigger: 'item',
+        backgroundColor: 'rgba(255, 252, 246, 0.95)',
+        borderColor: 'rgba(139, 104, 70, 0.25)',
+        textStyle: { color: '#5b4631' }
+      },
+      legend: {
+        bottom: 2,
+        itemWidth: 12,
+        itemHeight: 8,
+        textStyle: { color: '#8f7556', fontSize: 10, fontWeight: 600 }
+      },
+      series: [{
+        type: 'pie',
+        radius: ['40%', '64%'],
+        center: ['50%', '44%'],
+        label: { show: false },
+        labelLine: { show: false },
+        itemStyle: {
+          borderColor: 'rgba(255, 252, 246, 0.9)',
+          borderWidth: 2,
+          shadowBlur: 8,
+          shadowColor: 'rgba(58, 48, 40, 0.1)'
+        },
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 16,
+            shadowColor: 'rgba(58, 48, 40, 0.2)'
+          },
+          scale: true,
+          scaleSize: 8
+        },
+        data: dashboardData.materialDistribution.map((item, i) => ({
+          ...item,
+          itemStyle: {
+            color: ['#5b8d86', '#b88a3b', '#8b6846', '#d4834f'][i]
+          }
+        }))
+      }]
+    });
+
+    // 雷达图
+    const radarChart = echarts.init(document.getElementById('chart-radar'));
+    radarChart.setOption({
+      backgroundColor: 'transparent',
+      radar: {
+        center: ['50%', '54%'],
+        radius: '64%',
+        splitNumber: 5,
+        indicator: dashboardData.radarLabels.map(label => ({ name: label, max: 100 })),
+        axisName: { 
+          color: '#5b4631', 
+          fontSize: 11, 
+          fontWeight: 700,
+          fontFamily: '"KaiTi", "STKaiti", serif'
+        },
+        splitLine: { lineStyle: { color: 'rgba(139, 104, 70, 0.2)' } },
+        splitArea: { areaStyle: { color: ['rgba(255, 252, 246, 0.03)', 'rgba(184, 138, 59, 0.03)'] } },
+        axisLine: { lineStyle: { color: 'rgba(139, 104, 70, 0.25)' } }
+      },
+      legend: {
+        bottom: 2,
+        itemWidth: 12,
+        itemHeight: 8,
+        textStyle: { color: '#8f7556', fontSize: 10, fontWeight: 600 },
+        data: ['防御值']
+      },
+      series: [{
+        name: '防御值',
+        type: 'radar',
+        data: [{
+          value: dashboardData.radarValues,
+          name: '防御值',
+          lineStyle: { color: '#b88a3b', width: 2.5 },
+          itemStyle: { color: '#b88a3b', borderWidth: 2, borderColor: '#fff' },
+          areaStyle: { 
+            color: {
+              type: 'radial',
+              x: 0.5, y: 0.5, r: 1,
+              colorStops: [
+                { offset: 0, color: 'rgba(184, 138, 59, 0.3)' },
+                { offset: 1, color: 'rgba(184, 138, 59, 0.1)' }
+              ]
+            }
+          }
+        }]
+      }]
+    });
+
+    // 词云
+    const wordCloudContainer = document.getElementById('word-cloud');
+    dashboardData.regionWords.forEach(word => {
+      const span = document.createElement('span');
+      span.textContent = word.text;
+      span.style.position = 'absolute';
+      span.style.left = word.x + '%';
+      span.style.top = word.y + '%';
+      span.style.transform = 'translate(-50%, -50%)';
+      span.style.fontSize = word.size + 'px';
+      span.style.color = word.color;
+      span.style.fontWeight = '700';
+      span.style.fontFamily = '"KaiTi", "STKaiti", serif';
+      span.style.textShadow = '0 1px 3px rgba(255, 255, 255, 0.8)';
+      span.style.whiteSpace = 'nowrap';
+      wordCloudContainer.appendChild(span);
+    });
+
+    // 加载地图
+    fetch('/china.json')
+      .then(res => res.json())
+      .then(data => {
+        echarts.registerMap('china-dashboard', data);
+        
+        const mapChart = echarts.init(document.getElementById('chart-map'));
+        mapChart.setOption({
+          backgroundColor: 'transparent',
+          tooltip: { 
+            trigger: 'item', 
+            formatter: '{b}',
+            backgroundColor: 'rgba(255, 252, 246, 0.95)',
+            borderColor: 'rgba(139, 104, 70, 0.25)',
+            textStyle: { color: '#5b4631' }
+          },
+          geo: {
+            map: 'china-dashboard',
+            roam: false,
+            top: '10%',
+            layoutCenter: ['50%', '54%'],
+            layoutSize: '92%',
+            itemStyle: {
+              areaColor: {
+                type: 'linear',
+                x: 0, y: 0, x2: 0, y2: 1,
+                colorStops: [
+                  { offset: 0, color: '#d4a968' },
+                  { offset: 1, color: '#b88a3b' }
+                ]
+              },
+              borderColor: 'rgba(255, 252, 246, 0.8)',
+              borderWidth: 1.5,
+              shadowColor: 'rgba(58, 48, 40, 0.15)',
+              shadowBlur: 16,
+              shadowOffsetY: 4
+            },
+            emphasis: {
+              itemStyle: { 
+                areaColor: '#dcaf59',
+                shadowBlur: 20
+              }
+            }
+          },
+          series: [{
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            symbolSize: 20,
+            data: [{ 
+              name: dashboardData.mapPoint.name, 
+              value: [...dashboardData.mapPoint.coords, 1] 
+            }],
+            itemStyle: {
+              color: '#fff',
+              borderColor: '#5b8d86',
+              borderWidth: 5,
+              shadowColor: 'rgba(91, 141, 134, 0.5)',
+              shadowBlur: 16
+            },
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 24,
+                shadowColor: 'rgba(91, 141, 134, 0.7)'
+              },
+              scale: true,
+              scaleSize: 4
+            }
+          }]
+        });
+      });
+
+    // 桑基图
+    const sankeyChart = echarts.init(document.getElementById('chart-sankey'));
+    sankeyChart.setOption({
+      backgroundColor: 'transparent',
+      tooltip: { 
+        trigger: 'item',
+        triggerOn: 'mousemove',
+        backgroundColor: 'rgba(255, 252, 246, 0.95)',
+        borderColor: 'rgba(139, 104, 70, 0.25)',
+        textStyle: { color: '#5b4631' }
+      },
+      series: [{
+        type: 'sankey',
+        top: '10%',
+        bottom: '6%',
+        left: '2%',
+        right: '10%',
+        data: [
+          { name: '传统建筑' },
+          { name: '木结构' },
+          { name: '砖石结构' },
+          { name: '四合院' },
+          { name: '民居' }
+        ],
+        links: [
+          { source: '传统建筑', target: '木结构', value: 30 },
+          { source: '传统建筑', target: '砖石结构', value: 20 },
+          { source: '木结构', target: '四合院', value: 25 },
+          { source: '砖石结构', target: '民居', value: 15 }
+        ],
+        nodeWidth: 18,
+        nodeGap: 14,
+        lineStyle: {
+          color: 'gradient',
+          opacity: 0.4,
+          curveness: 0.5
+        },
+        itemStyle: {
+          borderWidth: 0,
+          borderRadius: 2,
+          color: (params) => {
+            const colors = ['#5b8d86', '#b88a3b', '#8b6846', '#d4834f', '#6b8e5f'];
+            return colors[params.dataIndex % 5];
+          },
+          shadowBlur: 6,
+          shadowColor: 'rgba(58, 48, 40, 0.1)'
+        },
+        label: {
+          color: '#5b4631',
+          fontSize: 11,
+          fontWeight: 700,
+          fontFamily: '"KaiTi", "STKaiti", serif'
+        },
+        emphasis: {
+          focus: 'adjacency'
+        }
+      }]
+    });
+
+    // 保护状况（仪表盘组）
+    const protectionContainer = document.getElementById('protection-status');
+    protectionContainer.innerHTML = `
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; height: 100%;">
+        <div id="gauge-1"></div>
+        <div id="gauge-2"></div>
+        <div id="gauge-3"></div>
+        <div id="gauge-4"></div>
+      </div>
+    `;
+
+    const gaugeData = [
+      { label: '完整度', value: 85, color: '#5b8d86' },
+      { label: '保护级别', value: 92, color: '#b88a3b' },
+      { label: '修缮率', value: 78, color: '#8b6846' },
+      { label: '活化率', value: 65, color: '#d4834f' }
+    ];
+
+    gaugeData.forEach((gauge, index) => {
+      const chart = echarts.init(document.getElementById('gauge-' + (index + 1)));
+      chart.setOption({
+        backgroundColor: 'transparent',
+        title: {
+          text: gauge.label,
+          left: 'center',
+          top: 6,
+          textStyle: {
+            color: '#5b4631',
+            fontSize: 12,
+            fontWeight: 700,
+            fontFamily: '"KaiTi", "STKaiti", serif'
+          }
+        },
+        series: [{
+          type: 'gauge',
+          startAngle: 210,
+          endAngle: -30,
+          min: 0,
+          max: 100,
+          radius: '80%',
+          center: ['50%', '60%'],
+          splitNumber: 10,
+          axisLine: {
+            lineStyle: {
+              width: 8,
+              color: [
+                [gauge.value / 100, {
+                  type: 'linear',
+                  x: 0, y: 0, x2: 1, y2: 0,
+                  colorStops: [
+                    { offset: 0, color: gauge.color },
+                    { offset: 1, color: gauge.color + 'dd' }
+                  ]
+                }],
+                [1, 'rgba(239, 227, 198, 0.35)']
+              ]
+            }
+          },
+          axisTick: {
+            distance: -10,
+            splitNumber: 5,
+            lineStyle: { color: 'rgba(139, 104, 70, 0.3)', width: 1 }
+          },
+          splitLine: {
+            distance: -12,
+            length: 8,
+            lineStyle: { color: 'rgba(139, 104, 70, 0.4)', width: 1.5 }
+          },
+          axisLabel: { show: false },
+          pointer: {
+            icon: 'path://M4 0 L0 48 L8 48 Z',
+            width: 6,
+            length: '50%',
+            offsetCenter: [0, '-2%'],
+            itemStyle: { 
+              color: '#5b4631',
+              shadowBlur: 4,
+              shadowColor: 'rgba(58, 48, 40, 0.3)'
+            }
+          },
+          anchor: {
+            show: true,
+            size: 6,
+            itemStyle: { 
+              color: '#5b4631',
+              borderWidth: 2,
+              borderColor: '#fff',
+              shadowBlur: 4,
+              shadowColor: 'rgba(58, 48, 40, 0.2)'
+            }
+          },
+          title: { show: false },
+          detail: {
+            offsetCenter: [0, '65%'],
+            color: '#8f7556',
+            fontSize: 11,
+            fontWeight: 700,
+            fontFamily: '"KaiTi", "STKaiti", serif',
+            formatter: gauge.value + '%'
+          },
+          data: [{ value: gauge.value }]
+        }]
+      });
+    });
+
+    // 历史进程
+    const historyContainer = document.getElementById('history-timeline');
+    const historyStages = [
+      { title: '明清', text: '建造期', color: '#5b8d86' },
+      { title: '民国', text: '发展期', color: '#b88a3b' },
+      { title: '建国后', text: '保护期', color: '#8b6846' },
+      { title: '现代', text: '传承期', color: '#d4834f' }
+    ];
+
+    historyContainer.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: space-around; height: 100%; padding: 0 20px;">
+        ${historyStages.map(stage => `
+          <div style="text-align: center;">
+            <div style="
+              width: 60px;
+              height: 60px;
+              border-radius: 50%;
+              background: ${stage.color};
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-size: 14px;
+              font-weight: 700;
+              margin: 0 auto 8px;
+              box-shadow: 0 4px 12px ${stage.color}40;
+            ">${stage.title}</div>
+            <div style="
+              color: #8f7556;
+              font-size: 12px;
+              font-weight: 600;
+            ">${stage.text}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    // 响应式调整
+    window.addEventListener('resize', () => {
+      climateChart.resize();
+      materialChart.resize();
+      radarChart.resize();
+      sankeyChart.resize();
+      scaleFrame();
+    });
+  </script>
+</body>
+</html>

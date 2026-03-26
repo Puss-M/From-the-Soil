@@ -1,0 +1,62 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f7f1e3;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url('/背景.jpeg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.95;
+  z-index: -2;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(247, 241, 227, 0.4), rgba(237, 230, 213, 0.3));
+  z-index: -1;
+}
+
+#screen {
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+}
+
+.main-title {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 48px;
+  font-weight: 900;
+  color: #3a3028;
+  text-align: center;
+  letter-spacing: 12px;
+  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.8);
+}
+
+.chart-panel {
+  position: absolute;
+  background: rgba(255, 253, 248, 0.75);
+  border: 1px solid rgba(139, 90, 43, 0.25);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(58, 48, 40, 0.15);
+  backdrop-filter: blur(8px);
+  padding: 20px;
+}

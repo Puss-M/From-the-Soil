@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试大屏</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #0a0e27;
+      color: #fff;
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+    #screen {
+      position: absolute;
+      width: 1920px;
+      height: 1080px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid #d4a968;
+    }
+    .test-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 48px;
+      color: #d4a968;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="screen">
+    <div class="test-title">
+      ✅ 如果你能看到这个镏金色大标题<br>
+      说明 iframe 可以正常加载 CSS
+    </div>
+  </div>
+  <script>
+    // 自适应缩放
+    function resize() {
+      const screen = document.getElementById('screen');
+      const scale = Math.min(
+        window.innerWidth / 1920,
+        window.innerHeight / 1080
+      );
+      screen.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+  </script>
+</body>
+</html>
