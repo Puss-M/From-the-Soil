@@ -17,7 +17,6 @@ import { useRouter } from 'next/navigation';
 /* ── Tab 定义 ──────────────────────────────── */
 const TABS = [
   { key: 'model',  label: '3D 模型',   icon: '🏛️', subtitle: 'Architectural Model' },
-  { key: 'model2d', label: '2D 模型', icon: '🧭', subtitle: '2D Interactive Model' },
   { key: 'info',   label: '建筑档案',  icon: '📜', subtitle: 'Architecture Profile' },
   { key: 'heritage', label: '风物志', icon: '🏺', subtitle: 'Heritage Dashboard' },
   { key: 'video', label: '影像志', icon: '🎬', subtitle: 'Video Chronicle' },
@@ -39,10 +38,6 @@ export function StationDetail() {
   }, []);
 
   const handleTabChange = useCallback((newTab: TabKey) => {
-    if (newTab === 'model2d') {
-      router.push('/siheyuan');
-      return;
-    }
     if (newTab === 'heritage') {
       window.location.href = getHeritageUrl(sid);
       return;

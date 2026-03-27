@@ -400,13 +400,6 @@ export default function SiheyuanDashboard() {
         <div className={styles.navGroup}>
           <button
             type="button"
-            className={styles.navButton}
-            onClick={() => router.push('/siheyuan')}
-          >
-            2D 模型
-          </button>
-          <button
-            type="button"
             className={`${styles.navButton} ${styles.navButtonActive}`}
             aria-current="page"
           >
