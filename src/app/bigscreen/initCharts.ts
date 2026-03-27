@@ -2,72 +2,72 @@ import * as echarts from 'echarts';
 import type { HeritageDashboardData } from '@/data/heritageDashboard';
 import { MONTHS } from '@/data/heritageDashboard';
 
-const textLight = 'rgba(255,255,255,0.86)';
-const chartColors = ['#db5b61', '#66427e', '#52b9c7', '#baa151', '#4f7de0', '#df8a5f'];
-
-function axisStyle() {
-  return {
-    axisLine: { lineStyle: { color: 'rgba(255,255,255,0.45)' } },
-    axisTick: { show: false },
-    axisLabel: { color: textLight, fontSize: 11 },
-    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.12)' } },
-  };
-}
+const themeText = '#8a5a1f';
+const subText = '#a2743c';
+const lightText = '#9a6a2e';
+const chartColors = ['#e45063', '#c8954d', '#baa151', '#58c8d2', '#6f8bf0', '#db5477'];
 
 function initGauge(id: string, label: string, value: number, display: string, color: string) {
   const dom = document.getElementById(id);
   if (!dom) return;
-  const chart = echarts.init(dom);
 
+  const chart = echarts.init(dom);
   chart.setOption({
-    title: {
-      text: label,
-      left: 'center',
-      top: 6,
-      textStyle: { color: '#f7f0db', fontSize: 14, fontWeight: 'bold' },
-    },
-    series: [
-      {
-        type: 'gauge',
-        min: 0,
-        max: 100,
-        startAngle: 210,
-        endAngle: -30,
-        center: ['50%', '72%'],
-        radius: '86%',
-        axisLine: {
-          lineStyle: {
-            width: 10,
-            color: [
-              [value / 100, color],
-              [1, 'rgba(255,255,255,0.3)'],
-            ],
-          },
-        },
-        axisTick: { show: false },
-        splitLine: { show: false },
-        axisLabel: { show: false },
-        pointer: {
-          icon: 'path://M6 0 L0 48 L12 48 Z',
-          width: 8,
-          length: '54%',
-          itemStyle: { color: '#d59c4a' },
-        },
-        anchor: { show: true, size: 7, itemStyle: { color: '#d59c4a' } },
-        detail: {
-          offsetCenter: [0, '34%'],
-          color,
-          fontSize: 18,
-          fontWeight: 800,
-          formatter: () => display,
-        },
-        data: [{ value }],
+    series: [{
+      type: 'gauge',
+      radius: '88%',
+      center: ['50%', '60%'],
+      startAngle: 180,
+      endAngle: 0,
+      min: 0,
+      max: 100,
+      progress: {
+        show: true,
+        width: 9,
+        itemStyle: { color, shadowBlur: 12, shadowColor: 'rgba(0,0,0,0.2)' },
       },
-    ],
+      axisLine: { lineStyle: { width: 9, color: [[1, 'rgba(255, 255, 255, 0.1)']] } },
+      axisTick: {
+        show: true,
+        splitNumber: 5,
+        distance: -9,
+        length: 3,
+        lineStyle: { color, width: 1 },
+      },
+      splitLine: {
+        show: true,
+        distance: -9,
+        length: 6,
+        lineStyle: { color, width: 1.5 },
+      },
+      axisLabel: { show: false },
+      pointer: { show: false },
+      anchor: { show: false },
+      title: {
+        show: true,
+        offsetCenter: [0, '62%'],
+        fontSize: 9,
+        color: subText,
+        lineHeight: 11,
+        overflow: 'truncate',
+        width: 70,
+      },
+      detail: {
+        valueAnimation: true,
+        offsetCenter: [0, '8%'],
+        fontSize: 22,
+        fontWeight: 'bold',
+        formatter: '{value}%',
+        color,
+      },
+      data: [{ value, name: label }],
+    }],
   });
 }
 
 export async function initBigscreenCharts(data: HeritageDashboardData) {
+  await import('echarts-wordcloud');
+
   const ids = [
     'chart-line',
     'chart-category',
@@ -106,220 +106,297 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
   const sankeyChart = echarts.init(sankeyDom);
   const cloudChart = echarts.init(cloudDom);
 
-  const maxPrecip = Math.max(...data.monthlyPrecipitation, 100);
-  const precipMax = Math.ceil(maxPrecip / 30) * 30;
-  const maxRadar = Math.max(...data.radarValues, 100);
-  const radarMax = Math.ceil(maxRadar / 20) * 20;
-
   lineChart.setOption({
-    backgroundColor: 'transparent',
-    grid: { left: 40, right: 34, top: 18, bottom: 28 },
-    legend: {
-      bottom: 0,
-      itemWidth: 12,
-      itemHeight: 8,
-      textStyle: { color: textLight, fontSize: 10 },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(255, 255, 255, 0.92)',
+      borderColor: 'rgba(93, 222, 214, 0.5)',
+      textStyle: { color: '#333' },
     },
-    xAxis: [{ type: 'category', data: MONTHS, ...axisStyle() }],
+    grid: { left: 48, right: 38, top: 38, bottom: 38 },
+    legend: {
+      top: 6,
+      right: 22,
+      itemWidth: 15,
+      itemHeight: 10,
+      textStyle: { color: lightText, fontSize: 13 },
+    },
+    xAxis: [{
+      type: 'category',
+      data: MONTHS,
+      axisLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.3)' } },
+      axisTick: { show: false },
+      axisLabel: { color: lightText, fontSize: 13 },
+    }],
     yAxis: [
-      { type: 'value', min: 0, max: precipMax, interval: Math.max(10, Math.round(precipMax / 6)), ...axisStyle() },
-      { type: 'value', min: -30, max: 30, interval: 10, axisLabel: { color: textLight, fontSize: 11 }, splitLine: { show: false } },
+      {
+        type: 'value',
+        name: '降水(mm)',
+        nameTextStyle: { color: subText, fontSize: 12 },
+        min: 0,
+        max: Math.max(200, Math.ceil(Math.max(...data.monthlyPrecipitation, 1) / 50) * 50),
+        interval: 50,
+        axisLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.3)' } },
+        axisTick: { show: false },
+        axisLabel: { color: subText, fontSize: 12 },
+        splitLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.08)' } },
+      },
+      {
+        type: 'value',
+        name: '温度(℃)',
+        nameTextStyle: { color: subText, fontSize: 12 },
+        min: -10,
+        max: 30,
+        interval: 10,
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: { color: subText, fontSize: 12 },
+        splitLine: { show: false },
+      },
     ],
     series: [
       {
-        name: '月降水量(mm)',
+        name: '月降水量',
         type: 'bar',
-        barWidth: 14,
-        itemStyle: { color: '#56c7d2', borderRadius: [6, 6, 0, 0] },
+        yAxisIndex: 0,
+        barWidth: 17,
+        itemStyle: {
+          color: '#58c8d2',
+          borderRadius: [8, 8, 0, 0],
+          shadowBlur: 8,
+          shadowColor: 'rgba(88, 200, 210, 0.3)',
+        },
         data: data.monthlyPrecipitation,
       },
       {
-        name: '月均温度(℃)',
+        name: '月均温度',
         type: 'line',
         yAxisIndex: 1,
         smooth: true,
         symbol: 'circle',
-        symbolSize: 5,
-        lineStyle: { width: 2, color: '#c69a56' },
-        itemStyle: { color: '#e7c489' },
+        symbolSize: 7,
+        lineStyle: { width: 3, color: '#c8954d' },
+        itemStyle: { color: '#d7b06e', borderColor: '#c8954d', borderWidth: 2 },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(200, 149, 77, 0.35)' },
+            { offset: 1, color: 'rgba(200, 149, 77, 0.05)' },
+          ]),
+        },
         data: data.monthlyTemperature,
       },
     ],
   });
 
-  pieChart.setOption({
-    backgroundColor: 'transparent',
-    legend: { bottom: 0, itemWidth: 12, itemHeight: 10, textStyle: { color: textLight, fontSize: 11 } },
-    series: [
-      {
-        type: 'pie',
-        radius: ['40%', '64%'],
-        center: ['50%', '48%'],
-        avoidLabelOverlap: false,
-        label: { show: false },
-        labelLine: { show: false },
-        itemStyle: { borderWidth: 0 },
-        data: data.materialDistribution.map((item, index) => ({
-          ...item,
-          itemStyle: { color: chartColors[index % chartColors.length] },
-        })),
-      },
-    ],
-  });
-
+  const topCategories = data.categoryDistribution.slice(0, 4);
+  const categoryNames = ['一类', '二类', '三类', '四类'];
+  const petals = ['rgba(224, 93, 106, 0.8)', 'rgba(102, 66, 126, 0.8)', 'rgba(82, 185, 199, 0.8)', 'rgba(186, 161, 81, 0.8)'];
   categoryChart.setOption({
-    legend: { bottom: 0, itemWidth: 10, itemHeight: 8, textStyle: { color: textLight, fontSize: 10 } },
-    series: [
-      {
-        type: 'pie',
-        radius: ['0%', '58%'],
-        center: ['50%', '50%'],
-        roseType: 'area',
-        label: { show: false },
-        data: data.categoryDistribution.map((item, index) => ({
-          ...item,
-          itemStyle: { color: chartColors[index % chartColors.length] },
-        })),
-      },
+    graphic: [
+      { type: 'circle', left: '20%', top: '25%', shape: { r: 45 }, style: { fill: petals[0] }, z: 10 },
+      { type: 'circle', left: '42%', top: '18%', shape: { r: 55 }, style: { fill: petals[1] }, z: 10 },
+      { type: 'circle', left: '55%', top: '45%', shape: { r: 48 }, style: { fill: petals[2] }, z: 10 },
+      { type: 'circle', left: '25%', top: '52%', shape: { r: 42 }, style: { fill: petals[3] }, z: 10 },
+      { type: 'text', left: '18%', top: '24%', style: { text: topCategories[0]?.name ?? categoryNames[0], fill: '#fff', fontSize: 14, fontWeight: 'bold' }, z: 20 },
+      { type: 'text', left: '41%', top: '16%', style: { text: topCategories[1]?.name ?? categoryNames[1], fill: '#fff', fontSize: 15, fontWeight: 'bold' }, z: 20 },
+      { type: 'text', left: '54%', top: '44%', style: { text: topCategories[2]?.name ?? categoryNames[2], fill: '#fff', fontSize: 14, fontWeight: 'bold' }, z: 20 },
+      { type: 'text', left: '23%', top: '51%', style: { text: topCategories[3]?.name ?? categoryNames[3], fill: '#fff', fontSize: 13, fontWeight: 'bold' }, z: 20 },
     ],
+    legend: {
+      show: true,
+      bottom: 2,
+      left: 'center',
+      itemWidth: 10,
+      itemHeight: 10,
+      textStyle: { color: lightText, fontSize: 12 },
+      data: topCategories.map((item) => item.name),
+    },
   });
 
   radarChart.setOption({
+    title: { show: false },
     radar: {
-      radius: '62%',
-      center: ['50%', '54%'],
-      splitNumber: 5,
-      axisName: { color: '#8b5b1f', fontSize: 11 },
-      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.35)' } },
-      splitArea: { areaStyle: { color: ['transparent'] } },
-      axisLine: { lineStyle: { color: 'rgba(255,255,255,0.35)' } },
-      indicator: data.radarLabels.map((label) => ({ name: label, max: radarMax })),
-    },
-    series: [
-      {
-        type: 'radar',
-        data: [
-          {
-            value: data.radarValues,
-            name: data.title,
-            areaStyle: { color: 'rgba(225, 193, 127, 0.18)' },
-            lineStyle: { color: '#d7b06e', width: 2 },
-            itemStyle: { color: '#d7b06e' },
-          },
-        ],
+      radius: '78%',
+      center: ['55%', '55%'],
+      indicator: data.radarLabels.map((label) => ({ name: label, max: 100 })),
+      axisName: { color: themeText, fontSize: 13, fontWeight: 'bold' },
+      splitArea: {
+        show: true,
+        areaStyle: { color: ['rgba(211, 166, 87, 0.04)', 'rgba(211, 166, 87, 0.09)'] },
       },
-    ],
+      splitLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.18)' } },
+      axisLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.18)' } },
+    },
+    series: [{
+      type: 'radar',
+      data: [{
+        value: data.radarValues,
+        name: `${data.title}防御`,
+        areaStyle: { color: 'rgba(211, 166, 87, 0.28)' },
+        lineStyle: { color: '#d3a657', width: 2.5 },
+        itemStyle: { color: '#d3a657' },
+      }],
+    }],
   });
 
-  const mapRes = await fetch('/china.json');
-  const chinaJson = await mapRes.json();
-  echarts.registerMap('china', chinaJson);
-
-  mapChart.setOption({
-    backgroundColor: 'transparent',
-    geo: {
-      map: 'china',
-      roam: false,
-      zoom: 1,
-      top: '8%',
-      layoutCenter: ['50%', '54%'],
-      layoutSize: '90%',
-      itemStyle: {
-        areaColor: '#dca74d',
-        borderColor: 'rgba(255,255,255,0.8)',
-        borderWidth: 1.2,
-      },
-      emphasis: { itemStyle: { areaColor: '#cf9a43' } },
-      regions: data.mapRegions.map((name) => ({
-        name,
-        itemStyle: {
-          areaColor: '#cf9a43',
-        },
+  pieChart.setOption({
+    legend: {
+      orient: 'horizontal',
+      bottom: 5,
+      left: 'center',
+      itemWidth: 12,
+      itemHeight: 10,
+      textStyle: { color: lightText, fontSize: 13 },
+    },
+    series: [{
+      type: 'pie',
+      radius: ['48%', '82%'],
+      center: ['50%', '45%'],
+      avoidLabelOverlap: false,
+      label: { show: false },
+      labelLine: { show: false },
+      itemStyle: { borderWidth: 0, shadowBlur: 16, shadowColor: 'rgba(0, 0, 0, 0.12)' },
+      emphasis: { scale: true, scaleSize: 8 },
+      data: data.materialDistribution.map((item, index) => ({
+        ...item,
+        itemStyle: { color: chartColors[index % chartColors.length] },
       })),
-    },
-    series: [
-      {
-        type: 'scatter',
+    }],
+  });
+
+  try {
+    const resp = await fetch('/china.json');
+    const chinaJson = await resp.json();
+    echarts.registerMap('china', chinaJson);
+
+    mapChart.setOption({
+      geo: {
+        map: 'china',
+        roam: false,
+        zoom: 1.26,
+        center: [105, 36],
+        label: { show: false },
+        emphasis: { label: { show: false }, itemStyle: { areaColor: '#e3b45c' } },
+        itemStyle: {
+          areaColor: '#dca548',
+          borderColor: '#b98a47',
+          borderWidth: 2.5,
+          shadowColor: 'rgba(255, 245, 220, 0.55)',
+          shadowBlur: 36,
+        },
+        regions: data.mapRegions.map((name) => ({
+          name,
+          itemStyle: { areaColor: '#cf9a43' },
+        })),
+      },
+      series: [{
+        type: 'effectScatter',
         coordinateSystem: 'geo',
-        symbolSize: 14,
-        data: [{ name: data.mapPoint.name, value: [...data.mapPoint.coords, 1] }],
-        itemStyle: { color: '#d6f5ff', borderColor: '#4bb8bf', borderWidth: 3 },
-      },
-    ],
-  });
-
-  sankeyChart.setOption({
-    backgroundColor: 'transparent',
-    series: [
-      {
-        type: 'sankey',
-        top: '14%',
-        bottom: '8%',
-        left: '2%',
-        right: '18%',
-        nodeGap: 8,
-        data: data.sankeyData.nodes,
-        links: data.sankeyData.links,
-        lineStyle: { color: 'gradient', opacity: 0.36, curveness: 0.5 },
-        label: { color: '#8a6332', fontSize: 10, fontWeight: 700 },
-        itemStyle: { borderWidth: 0, color: '#d3a04c' },
-      },
-    ],
-  });
-
-  const points = data.words.slice(0, 9).map((item, index) => {
-    const row = Math.floor(index / 3);
-    const col = index % 3;
-    const x = (col - 1) * 26 + Math.sin((index + 1) * 11.3) * 3;
-    const y = (row - 1) * -20 + Math.cos((index + 1) * 15.7) * 3;
-    return {
-      name: item.text,
-      value: [x, y, item.weight] as [number, number, number],
-      itemStyle: { color: chartColors[index % chartColors.length] },
-    };
-  });
-
-  cloudChart.setOption({
-    backgroundColor: 'transparent',
-    xAxis: { show: false, min: -55, max: 55 },
-    yAxis: { show: false, min: -48, max: 48 },
-    series: [
-      {
-        type: 'scatter',
-        data: points,
-        symbolSize: 0,
+        data: [{ name: data.mapPoint.name, value: [...data.mapPoint.coords, 180] }],
+        symbolSize: 32,
+        showEffectOn: 'render',
+        rippleEffect: {
+          brushType: 'stroke',
+          color: '#9ef0ff',
+          period: 3.2,
+          scale: 6.5,
+          number: 3,
+        },
         label: {
           show: true,
           formatter: '{b}',
-          color: (params: { dataIndex: number }) => chartColors[params.dataIndex % chartColors.length],
-          fontSize: (params: { value: [number, number, number] }) => Math.max(16, Math.min(40, params.value[2])),
-          fontWeight: 700,
-          fontFamily: '"KaiTi", "STKaiti", serif',
+          position: 'right',
+          color: '#fff',
+          fontSize: 18,
+          fontWeight: 'bold',
+          distance: 10,
+          textBorderColor: 'rgba(0,0,0,0.4)',
+          textBorderWidth: 2.5,
         },
-      },
-    ],
+        itemStyle: {
+          color: '#9ef0ff',
+          shadowBlur: 30,
+          shadowColor: 'rgba(158, 240, 255, 0.9)',
+        },
+        zlevel: 1,
+      }],
+    });
+  } catch (error) {
+    console.warn('无法加载 china.json，地图跳过', error);
+  }
+
+  sankeyChart.setOption({
+    series: {
+      type: 'sankey',
+      layout: 'none',
+      top: 30,
+      bottom: 30,
+      left: 40,
+      right: 40,
+      nodeWidth: 6,
+      nodeGap: 16,
+      draggable: false,
+      emphasis: { focus: 'adjacency' },
+      lineStyle: { color: 'gradient', curveness: 0.45, opacity: 0.16 },
+      data: data.sankeyData.nodes.map((item, index) => ({
+        ...item,
+        itemStyle: { color: `${chartColors[index % chartColors.length]}99`, borderWidth: 0 },
+      })),
+      links: data.sankeyData.links,
+      label: { color: lightText, fontSize: 13, fontWeight: 'normal' },
+    },
   });
 
-  data.gauges.slice(0, 3).forEach((gauge, index) => {
+  cloudChart.setOption({
+    series: [{
+      type: 'wordCloud',
+      shape: 'square',
+      sizeRange: [24, 120],
+      rotationRange: [0, 0],
+      rotationStep: 0,
+      gridSize: 18,
+      drawOutOfBound: false,
+      layoutAnimation: true,
+      left: '10%',
+      top: '12%',
+      width: '80%',
+      height: '70%',
+      textStyle: {
+        fontFamily: '"Microsoft YaHei", "PingFang SC", sans-serif',
+        fontWeight: 'bold',
+        shadowBlur: 10,
+        shadowColor: 'rgba(0, 0, 0, 0.22)',
+        color: (params: { dataIndex: number }) => chartColors[params.dataIndex % chartColors.length],
+      },
+      emphasis: {
+        focus: 'self',
+        textStyle: { shadowBlur: 18, shadowColor: 'rgba(0, 0, 0, 0.45)' },
+      },
+      data: data.words.slice(0, 13).map((item) => ({
+        name: item.text,
+        value: item.weight,
+      })),
+    }],
+  });
+
+  const gauges = data.gauges.slice(0, 3);
+  gauges.forEach((gauge, index) => {
     initGauge(`chart-g${index + 1}`, gauge.label, gauge.value, gauge.display, gauge.color);
   });
-
-  if (data.gauges.length > 0 && data.gauges.length < 3) {
-    const fallback = data.gauges[data.gauges.length - 1];
-    for (let index = data.gauges.length; index < 3; index += 1) {
+  if (gauges.length > 0 && gauges.length < 3) {
+    const fallback = gauges[gauges.length - 1];
+    for (let index = gauges.length; index < 3; index += 1) {
       initGauge(`chart-g${index + 1}`, fallback.label, fallback.value, fallback.display, fallback.color);
     }
   }
 
   const charts = [lineChart, categoryChart, radarChart, pieChart, mapChart, sankeyChart, cloudChart];
-
   const onResize = () => {
     charts.forEach((chart) => chart.resize());
     ['chart-g1', 'chart-g2', 'chart-g3'].forEach((id) => {
       const dom = document.getElementById(id);
-      if (dom) {
-        echarts.getInstanceByDom(dom)?.resize();
-      }
+      if (!dom) return;
+      echarts.getInstanceByDom(dom)?.resize();
     });
   };
 

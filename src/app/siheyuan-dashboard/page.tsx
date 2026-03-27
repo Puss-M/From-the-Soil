@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
-import 'echarts-wordcloud';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 
@@ -16,9 +15,11 @@ export default function SiheyuanDashboard() {
   const screenRef = useRef<HTMLDivElement>(null);
   const chartsRef = useRef<echarts.ECharts[]>([]);
   const [currentDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [isEmbedded, setIsEmbedded] = useState(false);
 
   async function initCharts() {
     const list: echarts.ECharts[] = [];
+    await import('echarts-wordcloud');
 
     /* ---------- 1. 温雨双折图 ---------- */
     const lineChart = echarts.init(document.getElementById('chart-line')!);
@@ -349,6 +350,9 @@ export default function SiheyuanDashboard() {
   }
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setIsEmbedded(params.get('embedded') === '1');
+
     /* --- viewport scale --- */
     const handleResize = () => {
       const baseW = 1920, baseH = 1080;
@@ -382,38 +386,43 @@ export default function SiheyuanDashboard() {
 
   /* ========== JSX ========== */
   return (
-    <div className={styles.container}>
-      <div className={styles.topbar}>
-        <button
-          type="button"
-          className={`guofeng-button ${styles.backButton}`}
-          onClick={() => router.back()}
-        >
-          ← 返回上一页
-        </button>
-
-        <div className={styles.titleGroup}>
-          <h1 className={styles.pageTitle}>北京四合院</h1>
-          <span className={styles.pageSubtitle}>Beijing Siheyuan · Heritage Dashboard</span>
-        </div>
-
-        <div className={styles.navGroup}>
+    <div
+      className={styles.container}
+      style={isEmbedded ? { gridTemplateRows: '1fr' } : undefined}
+    >
+      {!isEmbedded && (
+        <div className={styles.topbar}>
           <button
             type="button"
-            className={`${styles.navButton} ${styles.navButtonActive}`}
-            aria-current="page"
+            className={`guofeng-button ${styles.backButton}`}
+            onClick={() => router.back()}
           >
-            风物志
+            ← 返回上一页
           </button>
-          <button
-            type="button"
-            className={styles.navButton}
-            onClick={() => router.push('/bigscreen')}
-          >
-            通用风物志
-          </button>
+
+          <div className={styles.titleGroup}>
+            <h1 className={styles.pageTitle}>北京四合院</h1>
+            <span className={styles.pageSubtitle}>Beijing Siheyuan · Heritage Dashboard</span>
+          </div>
+
+          <div className={styles.navGroup}>
+            <button
+              type="button"
+              className={`${styles.navButton} ${styles.navButtonActive}`}
+              aria-current="page"
+            >
+              风物志
+            </button>
+            <button
+              type="button"
+              className={styles.navButton}
+              onClick={() => router.push('/bigscreen')}
+            >
+              通用风物志
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className={styles.viewport}>
         <div id="screen" className={styles.screen} ref={screenRef}>
