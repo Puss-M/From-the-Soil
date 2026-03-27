@@ -1,0 +1,283 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>index</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/comon0.css">
+</head>
+	<script>
+	$(window).load(function(){  
+             $(".loading").fadeOut()
+            })  
+			
+/****/
+$(document).ready(function(){
+	var whei=$(window).width()
+	$("html").css({fontSize:whei/20})
+	$(window).resize(function(){
+		var whei=$(window).width()
+	 $("html").css({fontSize:whei/20})
+});
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script> 
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script> 
+	<script language="JavaScript" src="js/js.js"></script> 
+<body>
+<div class="canvas" style="opacity: .2">
+	<iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
+	</div>
+<div class="loading">
+  <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+</div>
+<div class="head">
+  <h1>山东海草房</h1>
+  <div class="weather"><!--<img src="picture/weather.png"><span>多云转小雨</span>--><span id="showTime"></span></div>
+	
+	<script>
+var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+		var y=dt.getFullYear();
+		var mt=dt.getMonth()+1;
+		var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行     
+    } 
+
+</script>
+	
+	
+</div>
+<div class="mainbox">
+  <ul class="clearfix">
+    <li>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频基础信息</div>
+        <div class="video-info-container">
+          <div class="video-image-container">
+            <img src="http://i1.hdslb.com/bfs/archive/f4e76af97ee4c54b66f361887018586bb616d033.jpg" alt="视频封面" class="video-cover">
+          </div>
+          <div class="video-text-container">
+            <div class="video-info-item">时长01:11/播放量3218</div>
+            <div class="video-info-item">发布时间2023-05-06 19:53:00</div>
+          </div>
+        </div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频类型占比</div>
+        <div class="allnav" id="echart2"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">评论时段趋势：24小时分布</div>
+        <div class="allnav" id="echart7"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+    <li>
+      <!-- 顶部三个数据卡片 -->
+      <div class="middle-section">
+        <div class="data-cards-container">
+          <div class="data-card">
+            <div class="card-title">播放数据</div>
+            <div class="card-content">
+              <div class="card-value">309.45万</div>
+              <div class="card-label">总播放量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">互动数据</div>
+            <div class="card-content">
+              <div class="card-value">3.27万</div>
+              <div class="card-label">总点赞量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">评论数据</div>
+            <div class="card-content">
+              <div class="card-value">1642</div>
+              <div class="card-label">总评论量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+        </div>
+
+        <!-- B站视频嵌入 -->
+        <div class="video-container">
+          <div class="video-title">视频内容</div>
+          <div class="video-iframe-wrapper">
+            <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=570798933&bvid=BV1wz4y1a78b&cid=1118453210&p=1" 
+                    frameborder="0" 
+                    allowfullscreen="true"
+                    allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope; clipboard-write; encrypted-media; web-share"
+                    class="bilibili-video"
+                    id="bilibili-player"
+                    title="B站海草房视频"
+                    loading="lazy"
+                    style="cursor: pointer !important; pointer-events: auto !important; z-index: 10000;">
+            </iframe>
+          </div>
+          <div class="video-footer"></div>
+        </div>
+
+        <!-- 热评滚动条 -->
+        <div class="hot-comments-container">
+          <div class="comments-title">热评滚动</div>
+          <div class="comments-scroll-wrapper">
+            <div class="comments-scroll-content">
+              <div class="comment-item">
+                <div class="comment-text">很强的设计</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">螺蛳壳里做道场啊，这个设计师厉害</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">海风、盐雾，特别损害建筑寿命。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">草顶每年都得检修不检修最后一起修基本就换一个顶</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">唉跑了这么多地方，结果还是上头踩坑了。不知道你那草屋顶算不算普遍的建筑，师傅多就要多打听几个询询价，估计8k跑不了。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">你猜为什么现代盖房子不用这个海草了[doge]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">师傅说的对，省钱就维修，想少事就换，如果是为了外表，可以里面吊个复合顶然后修草顶</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">3.阅读图文材料，完成下列要求。
+海草房是世界上最具有代表性的生态民居之一，具有冬暖夏凉、居住舒适等优点．它主要分布在胶东半岛的沿海地带，海草房以厚石砌墙，通常有两面的屋顶，也有垒垛形的三角形屋顶，屋顶用晒干的海草苫盖，最厚处达4米，屋脊的建造左右倾斜为50度角（左图），朝向大海的那一面通常还罩上渔网，用石块等小件重物作坠子垂脚．现在越来越多原先住在海边的年轻人已经涌进了城市．即使在村子里居住，他们也宁愿选择宽敞明亮的大瓦房，红砖红瓦的房屋已经悄然替代海草房了。
+(1)联系当地的气候特征，指出当地海草房的环境适应性。
+
+(2)分析海草房房屋后墙的墙壁上长满青苔的原因。
+
+(3)与红砖红瓦的大瓦房相比，说明海草房被称为生态民居的原因。
+(4)红砖红瓦的房屋已经在悄然替代海草房，说出海草房衰落的原因。
+
+【答案】（1）山东沿海气候夏季多雨潮湿，冬季多雪，海草房屋顶坡度大,易于排水，不易发霉；夏热冬寒，四季分明，海草房房顶及墙壁较厚，建筑材料保温隔热；多大风天气，海草房房顶层层压叠，用渔网覆盖，重物压制,防风效果好。
+
+ （2）沿海降水较多，空气湿度大，甲面应为海草房背阴面，光照少，气温相对较低，蒸发弱，潮湿易长青苔。
+
+ （3）石块、海草等天然建筑材料就地取材；建筑草料废弃后容易降解,不会对环境造成任何污染与破坏；屋内冬暖夏凉，节约能源。
+
+（4）城市化发展，年轻人离开村庄进入城市；现代建筑技术的发展和冲击；海草房建造技术的凋零；近海养殖业的发展，建筑海草房的海草资源减少；大瓦房明亮宽敞，居住舒适。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">为数不多感觉设计的很不错的，这个设计师可以的</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">欢迎来胶东半岛旅游 生活</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">大宗海草有哪里买</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">有个疑问：这种泥草屋顶不会被绿植附生嘛？那样不就导致内部瓦解解构了吗？</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">山建校园里就有个海草房</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">我是本地人，我们还经常生食海带丝</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">还不如先盖一层瓦片，然后拿海草装饰，那样还经济实惠，光盖草皮，你就慢慢往里垫钱吧</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">我是不懂海草顶啥价格但你这么大个地就弄个两室一厅的农村一楼房顶修个房顶就6万我觉得有点离谱[doge]我感觉我这地方农村再添点起个小二楼应该没啥问题</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">我觉得贵了  我们海边人看了都直摇头
+这湿气得多大啊！没发霉都不错了[吃瓜]
+还能撑三年  两年就是蟑螂快乐屋咯！
+给我做狗窝都不要  老式祖宅的屋顶
+不能做是小看农村人的动手能力 嫌你麻烦
+还八千 还不如直接抢  五百差不多得了[笑哭]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">零几年时有次去农村，还看到村里人在盖海草房，如今才过了区区十几年，听说已经没几个会这个的人了[tv_大哭]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">沿海地区的因地制宜，也很有特色[支持]我祖籍在内陆，记忆中的茅草房，好像是玉米秸秆搭顶、草泥砌墙。
+这些山东人闯到关东，就又根据环境，学东北人盖出地窨子，都是劳动人民的智慧[呲牙]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">就地取材</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">很有感觉</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">我喜欢这个海草房</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">海草作用是啥？跟茅草一样吗</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">拍的我们家这里的海草房！视频很棒👍🏻</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">海草房冬暖夏凉
+夏季雨水易排走，难以渗漏
+泥质抵御大风</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">刚刚看了一篇文章，胶东半岛上的特色民居-海草房哈哈</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">不是海草房顶贵，而是现在变的贵了，一个因为做海草顶的海苔材料变得很稀缺了，一个因为这个技术快失传了，海草房顶远比什么树脂瓦彩钢瓦寿命长的多，且防潮防火防虫防水，保温效果极其优良，目前山东还有大概300多个200-300多年前造的海草顶，依然能用，这东西不是被淘汰，而是现代人想弄都弄不到了，这东西对现代人来说就是传统奢侈品，和古代隼牟结构木建筑在现代消失一个道理，不是传统木建筑性能寿命差，而是现代人住不起传统木建筑了。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">很有意思，长见识了！[支持][支持][支持]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">好喜欢这种地理视频 有图片的最有趣儿了[点赞]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">海草房不错[支持]解说太专业了[支持][支持]</div>
+              </div>
+            </div>
+          </div>
+          <div class="comments-footer"></div>
+        </div>
+      </div>
+    </li>
+    <li>
+          <div class="boxall" style="height:3.4rem">
+        <div class="alltitle">评论情感</div>
+        <div class="allnav" id="echart4"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3rem">
+        <div class="alltitle">评论词云</div>
+        <div class="allnav" id="echart5"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">知网相关主题发表论文数</div>
+        <div class="allnav" id="echart8"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="back"></div>
+
+
+<script type="text/javascript" src="js/china.js"></script> 
+<script type="text/javascript" src="js/area_echarts.js"></script> 
+</body>
+</html>

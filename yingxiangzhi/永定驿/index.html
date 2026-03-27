@@ -1,0 +1,260 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>客家土楼</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/comon0.css">
+</head>
+	<script>
+	$(window).load(function(){  
+             $(".loading").fadeOut()
+            })  
+			
+/****/
+$(document).ready(function(){
+	var whei=$(window).width()
+	$("html").css({fontSize:whei/20})
+	$(window).resize(function(){
+		var whei=$(window).width()
+	 $("html").css({fontSize:whei/20})
+});
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script> 
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script> 
+	<script language="JavaScript" src="js/js.js"></script> 
+<body>
+<div class="canvas" style="opacity: .2">
+	<iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
+	</div>
+<div class="loading">
+  <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+</div>
+<div class="head">
+  <h1>客家土楼</h1>
+  <div class="weather"><!--<img src="picture/weather.png"><span>多云转小雨</span>--><span id="showTime"></span></div>
+	
+	<script>
+var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+		var y=dt.getFullYear();
+		var mt=dt.getMonth()+1;
+		var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行     
+    } 
+
+</script>
+	
+	
+</div>
+<div class="mainbox">
+  <ul class="clearfix">
+    <li>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频基础信息</div>
+        <div class="video-info-container">
+          <div class="video-image-container">
+            <img src="http://i0.hdslb.com/bfs/archive/9dcb3401ab781a38ff92651423fa3a4f9d42fddc.jpg" alt="视频封面" class="video-cover">
+          </div>
+          <div class="video-text-container">
+            <div class="video-info-item">时长03:56/播放量4997</div>
+            <div class="video-info-item">发布时间2023-04-05 20:31:00</div>
+          </div>
+        </div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频类型占比</div>
+        <div class="allnav" id="echart2"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">评论时段趋势：24小时分布</div>
+        <div class="allnav" id="echart7"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+    <li>
+      <!-- 顶部三个数据卡片 -->
+      <div class="middle-section">
+        <div class="data-cards-container">
+          <div class="data-card">
+            <div class="card-title">播放数据</div>
+            <div class="card-content">
+              <div class="card-value">76.01万</div>
+              <div class="card-label">总播放量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">互动数据</div>
+            <div class="card-content">
+              <div class="card-value">1.65万</div>
+              <div class="card-label">总点赞量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">评论数据</div>
+            <div class="card-content">
+              <div class="card-value">1364</div>
+              <div class="card-label">总评论量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+        </div>
+
+        <!-- B站视频嵌入 -->
+        <div class="video-container">
+          <div class="video-title">视频内容</div>
+          <div class="video-iframe-wrapper">
+<iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=396831697&bvid=BV1qo4y1W73n&cid=1074625890&p=1"
+                    frameborder="0" 
+                    allowfullscreen="true"
+                    allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope; clipboard-write; encrypted-media; web-share"
+                    class="bilibili-video"
+                    id="bilibili-player"
+                    title="B站四合院视频"
+                    loading="lazy"
+                    style="cursor: pointer !important; pointer-events: auto !important; z-index: 10000;">
+            </iframe>
+          </div>
+          <div class="video-footer"></div>
+        </div>
+
+        <!-- 热评滚动条 -->
+        <div class="hot-comments-container">
+          <div class="comments-title">热评滚动</div>
+          <div class="comments-scroll-wrapper">
+            <div class="comments-scroll-content">
+              <div class="comment-item">
+                <div class="comment-text">我还以为这是央视视频[笑哭]，做得很好👍</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">某次地理考试就考了福建土楼，考完我们老师就找了这个视频给我们看，当时就超喜欢，现在再看还是很有味道[洛天依9th_资词][洛天依9th_资词]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">越看越觉得中国人在建筑审美、实用性与可操作性三个方面上已经达到了一个很高的程度，作为一个中国的建筑系学生真的很自豪。我认为真正的民族自信不是冰冷的文字或是高中课本上的照本宣科，而是一种活着的、灵动的信仰。你走过祖国的土地、看过祖国的大好河山、聆听过仍存在在自然和建筑中的活着的历史；你不盲目骄傲，学习过西方的知识，看过世界之大、地球之美，认识过同时存在在地球上的其他灿烂文明。经历这些最后你回到中国，然后，发自内心地为祖国骄傲，看过世界上的其他美好，归来后仍为中国文化自豪，在我心里，这才是真正的民族自信、文化自豪。希望🇨🇳中国建筑可以越来越有中国的味道，也希望中国越来越好！[藏狐][藏狐]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">up做的好还原，而且对围屋的风水格局也挺了解的[支持]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">拍的很好！！！期末论文就是写围楼，很感谢这部片子带给我很多知识和灵感</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">与其说是闽，不如说是客</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">梅州客家人路过 真的好还原啊[打call][打call]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">画质又好，讲的又细，我留下做地理教学素材了。谢谢！太棒了！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">导演继续加油哇！！视频好棒wdm我以为是央视的！为什么没那么多人看！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">神还原哦！[大笑][大笑][大笑]客家传统建筑除了这种半围龙的围龙屋，还有全包围的客家围屋，以及大家熟悉大鱼海棠里的那个客家土楼，希望up都来还原还原，挺有趣的[打call][打call][打call]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">大鱼海棠取景地承启楼位于福建龙岩永定，是闽西</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">哇，好壮观！让我想起了大鱼海棠里面的土楼</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">大鱼海棠里面的就是福建土楼，配乐好用心![给心心][给心心]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">本人梅州客家人，手码解释一下客家背景[呲牙]客家人是汉族七大分支之一，最早是魏晋南北朝时战乱南下（河南一带居多，而且多是中原人），之后又历经王朝更迭，经历数次大规模南下，而且因为逃难等因素，客家人形成团结一致，宗族至上，且耕读兴家的传统，所以应该从文化理解客家人，并不是人种，就是说，我们是一大堆已客地为家的人，因此也解释了为什么客家人遍及海内外，因为故乡只是临时落脚点，客家文化内核其实也包裹了一定的冒险开拓精神。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">好棒诶，建筑学复习中建史的民居部分，感觉很有帮助诶</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">看起来最土的民居却是最高效 精炼 有序的👍🏿</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">我们可能是最后一代住围屋，看婆婆穿蓝衫灯头帕长大的客家人了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">非常自豪自己是客家人，希望自己以后可以传承成都的客家文化，使我们的传统不被磨灭</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">哇，身为一个客家人，感到无比自豪，中国真美！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">地理课老师放的，就感觉家是那么的美好[大哭]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">做的不错，我们地理老师今天还用你的视频给我们讲课来着</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">中国独有的，最美的建筑之一。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">客家很有特色的古民居[支持]</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">土楼的结构在精神上体现了客家人世代相传的团结友爱的传统,具有强有力的凝聚力</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">感谢up主的视频，这才是中华文化的瑰宝，立体的文化，在大地上书写的民族符号，浓缩的不仅有智慧，还有代代相传的团结力量。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">应该归属客家建筑，客家建筑用地域划分不好分，闽西土楼与粤东，赣南客家地区的民居建筑更相似一些</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">"对家的认同，是中华文明能够持续五千年而没有中断的核心原因"。我们可能需要反思，当代社会人越来越"原子化"，是否真的变得更幸福呢，这对于社会的可持续性是否真的有益呢？</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">讲土楼，不干巴巴讲建筑，人文纵深，从老爷子一生展开讲，感觉很有意思</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">好感动啊，我以为土楼只是单独一个土楼，看了后才知道自己意识浅薄，周三就带爸爸去看土楼了，有点激动</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">超喜欢这种建筑风格，每逢佳节都很热闹</div>
+              </div>
+            </div>
+          </div>
+          <div class="comments-footer"></div>
+        </div>
+      </div>
+    </li>
+    <li>
+          <div class="boxall" style="height:3.4rem">
+        <div class="alltitle">评论情感</div>
+        <div class="allnav" id="echart4"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3rem">
+        <div class="alltitle">评论词云</div>
+        <div class="allnav" id="echart5"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">知网相关主题发表论文数</div>
+        <div class="allnav" id="echart8"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="back"></div>
+
+
+<script type="text/javascript" src="js/china.js"></script> 
+<script type="text/javascript" src="js/area_echarts.js"></script> 
+</body>
+</html>

@@ -1,0 +1,260 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>index</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/comon0.css">
+</head>
+	<script>
+	$(window).load(function(){  
+             $(".loading").fadeOut()
+            })  
+			
+/****/
+$(document).ready(function(){
+	var whei=$(window).width()
+	$("html").css({fontSize:whei/20})
+	$(window).resize(function(){
+		var whei=$(window).width()
+	 $("html").css({fontSize:whei/20})
+});
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script> 
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script> 
+	<script language="JavaScript" src="js/js.js"></script> 
+<body>
+<div class="canvas" style="opacity: .2">
+	<iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
+	</div>
+<div class="loading">
+  <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+</div>
+<div class="head">
+  <h1>藏族碉房</h1>
+  <div class="weather"><!--<img src="picture/weather.png"><span>多云转小雨</span>--><span id="showTime"></span></div>
+	
+	<script>
+var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+		var y=dt.getFullYear();
+		var mt=dt.getMonth()+1;
+		var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行     
+    } 
+
+</script>
+	
+	
+</div>
+<div class="mainbox">
+  <ul class="clearfix">
+    <li>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频基础信息</div>
+        <div class="video-info-container">
+          <div class="video-image-container">
+            <img src="http://i2.hdslb.com/bfs/archive/c708b45c219d7f1fd9cbf82706671c9ee369663f.jpg" alt="视频封面" class="video-cover">
+          </div>
+          <div class="video-text-container">
+            <div class="video-info-item">时长 05:04 / 播放量 3192</div>
+            <div class="video-info-item">发布时间 2024-05-13 08:00:00</div>
+          </div>
+        </div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频类型占比</div>
+        <div class="allnav" id="echart2"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">评论时段趋势：24小时分布</div>
+        <div class="allnav" id="echart7"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+    <li>
+      <!-- 顶部三个数据卡片 -->
+      <div class="middle-section">
+        <div class="data-cards-container">
+          <div class="data-card">
+            <div class="card-title">播放数据</div>
+            <div class="card-content">
+              <div class="card-value">271.43万</div>
+              <div class="card-label">总播放量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">互动数据</div>
+            <div class="card-content">
+              <div class="card-value">17.70万</div>
+              <div class="card-label">总点赞量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">评论数据</div>
+            <div class="card-content">
+              <div class="card-value">3932</div>
+              <div class="card-label">总评论量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+        </div>
+
+        <!-- B站视频嵌入 -->
+        <div class="video-container">
+          <div class="video-title">视频内容</div>
+          <div class="video-iframe-wrapper">
+            <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=1404473975&bvid=BV1Zr421776m&cid=1534911666&p=1" 
+                    frameborder="0" 
+                    allowfullscreen="true"
+                    allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope; clipboard-write; encrypted-media; web-share"
+                    class="bilibili-video"
+                    id="bilibili-player"
+                    title="B站藏族碉房视频"
+                    loading="lazy"
+                    style="cursor: pointer !important; pointer-events: auto !important; z-index: 10000;">
+            </iframe>
+          </div>
+          <div class="video-footer"></div>
+        </div>
+
+        <!-- 热评滚动条 -->
+        <div class="hot-comments-container">
+          <div class="comments-title">热评滚动</div>
+          <div class="comments-scroll-wrapper">
+            <div class="comments-scroll-content">
+              <div class="comment-item">
+                <div class="comment-text">向善向美的心是各族人民都一样的</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">好喜欢小哥带我们了解不同民族的风土人情，房子上的雕花好好看。给最后表演的小妹妹点赞，可爱</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">三连了，b 站做西藏历史的视频太少了，而且大多数都聚焦在农奴制和宗教的黑暗上，忽视了西藏总体历史文化的灿烂</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">博主带我们深度游庄园。说实话，即使去了实地，因为受时间限制，都不会看到这么细致的东西，非常感谢你们对题材的挖掘及介绍</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">刷到这视频真是很喜欢，旅行类视频很多，但是很多人都是大体一个模式的流水账讲述，没有代入深刻的思考和感受，看得出 up 做得很用心，三连并关注了，要加油啊</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">哇，这个确实挺不错，在其他地方从来没看过，还以为西藏只有一些原始风貌</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">天呐，好美！！谢谢小哥带我开眼界</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">旅游去过接近藏苗混住的地方住的民宿。风格真的超级美。眼花缭乱玩了半个月没看完。民宿老板管饭还不贵。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">去香格里拉时藏族朋友说藏屋的造价都是百万起步的。他们对建造自己房子的态度很认真，选址、用料非常讲究！抱着这辈子只建这一间房子的心态建造自己的家。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这软装太好看了，还很有民族特色</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">质量真高，播放量严重不匹配～</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">博主对庄园的知识挖掘得真够深入的，从历史脉络到文化细节都摸得透透的，像在这领域深耕了很久一样，太厉害了！赞赞赞</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">拍的真好，像是看官方纪录片</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">信息量巨大，图文并茂。我看了两遍才把内容看完，顾上听，就顾不上看屏幕上的字幕，哈哈。博主们太实在了，这些信息量，别人要做多期视频，赞赞赞</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">天呐 拍的真好 游牧生活和城市生活之间好像总是相互拉扯，常常是痛苦的抑郁的，但是这个视频里流淌着温柔：色调，叙事角度，旁白，沉默的少年… 好治愈。也许我们永远找不到一个确切的答案，但好在少年们已经做好了选择</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">今年 9 月本科毕业就过来援藏了，现在在日喀则，我爱西藏，希望这片土地和这里的人民都越来越好，</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">了不起的，有温度的纪录片</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">好久没在 B 站上看到这种个人博主拍摄的小纪录片了，真的很好看</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">拍的太好了 继续坚持啊！金子总有一天会发光的！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">藏式建筑地域差别很大，因为藏区各地气候不同材料不同甚至文化教派也有区别。藏式建筑历史丰富程度学问之复杂跟汉式建筑是相当的，还是要好好研究，希望咱们中国古建筑热也能覆盖的藏式建筑</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">云南的房子太好看啦！！！每一座房子都好赏心悦目！！喜欢</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">房子太好看了！我喜欢这种雕花</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">难得看到国内有人研究藏式建筑。藏式跟中式一样，是一整套的风格，要讲究的地方太多了。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">看看同一片蓝天下别人的生活，珍惜一下自己目前的生活，谢谢分享！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">被埋没的宝藏 up</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">藏式建筑！！！！果断三连加关注，是宝藏 up</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">做西藏的视频真的太少了，对他们的了解还是太少，谢谢 up 主</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">大开眼界</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">石头、泥巴、木头，化腐朽为神奇啊</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">支持特色建筑，世界上还有好多好看又特别的建筑风格等待 mc 建筑的探索与还原</div>
+              </div>
+            </div>
+          </div>
+          <div class="comments-footer"></div>
+        </div>
+      </div>
+    </li>
+    <li>
+          <div class="boxall" style="height:3.4rem">
+        <div class="alltitle">评论情感</div>
+        <div class="allnav" id="echart4"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3rem">
+        <div class="alltitle">评论词云</div>
+        <div class="allnav" id="echart5"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">知网相关主题发表论文数</div>
+        <div class="allnav" id="echart8"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="back"></div>
+
+
+<script type="text/javascript" src="js/china.js"></script> 
+<script type="text/javascript" src="js/area_echarts.js"></script> 
+</body>
+</html>
