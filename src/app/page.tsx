@@ -6,6 +6,7 @@ import { MapScene } from '@/components/map/MapScene';
 import { TransitionScene } from '@/components/transition/TransitionScene';
 import { RoamingScene } from '@/components/roaming/RoamingScene';
 import { StationDetail } from '@/components/detail/StationDetail';
+import CraftsmanshipPage from '@/components/craftsmanship/CraftsmanshipPage';
 
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
 
@@ -55,6 +56,13 @@ export default function Home() {
             variants={sceneVariants} initial="initial" animate="animate" exit="exit"
           >
             <RoamingScene />
+          </motion.div>
+        )}
+        {phase === 'craftsmanship' && (
+          <motion.div key="craftsmanship" className="w-full h-full"
+            variants={sceneVariants} initial="initial" animate="animate" exit="exit"
+          >
+            <CraftsmanshipPage />
           </motion.div>
         )}
       </AnimatePresence>

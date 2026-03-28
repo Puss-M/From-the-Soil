@@ -237,6 +237,41 @@ export function MapScene() {
         </div>
       </div>
 
+      {/* 匠作志按钮 */}
+      <div style={{ position: 'fixed', top: 20, right: 24, zIndex: 20 }}>
+        <button
+          className="guofeng-glass-strong"
+          onClick={() => setPhase('craftsmanship')}
+          style={{
+            padding: '10px 20px',
+            border: '1px solid rgba(139, 105, 70, 0.3)',
+            background: 'linear-gradient(135deg, rgba(201, 168, 106, 0.1) 0%, rgba(139, 105, 70, 0.05) 100%)',
+            color: '#8b6846',
+            fontSize: '14px',
+            fontWeight: 600,
+            borderRadius: '8px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            transition: 'all 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(201, 168, 106, 0.2) 0%, rgba(139, 105, 70, 0.1) 100%)';
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 16px rgba(139, 105, 70, 0.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(201, 168, 106, 0.1) 0%, rgba(139, 105, 70, 0.05) 100%)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <i className="fas fa-hammer" style={{ fontSize: '16px' }}></i>
+          匠作志
+        </button>
+      </div>
+
       {/* 悬停信息卡 */}
       {hoveredData && (
         <div style={{
