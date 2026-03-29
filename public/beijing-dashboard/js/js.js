@@ -274,6 +274,18 @@ $(function () {
     function initMapChart() {
         const myChart = echarts.init(document.getElementById('chart-map'));
         const option = {
+            graphic: [
+                {
+                    type: 'text',
+                    right: 20,
+                    bottom: 20,
+                    style: {
+                        text: '审图号：GS(2019)1719号',
+                        fill: 'rgba(138, 90, 31, 0.6)',
+                        fontSize: 10
+                    }
+                }
+            ],
             geo: {
                 map: 'china',
                 roam: false,

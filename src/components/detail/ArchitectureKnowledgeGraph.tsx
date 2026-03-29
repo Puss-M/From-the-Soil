@@ -35,6 +35,8 @@ type GraphNode = {
     fontWeight?: number | string;
     width?: number;
     overflow?: 'break' | 'truncate' | 'none';
+    textBorderColor?: string;
+    textBorderWidth?: number;
   };
 };
 
@@ -76,7 +78,8 @@ function extractFragments(text: string) {
 }
 
 export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
-  const [zoom, setZoom] = useState(1);
+  const initialZoom = 0.88;
+  const [zoom, setZoom] = useState(initialZoom);
   const [isDragging, setIsDragging] = useState(false);
   const chartRef = useRef<ReactECharts | null>(null);
 
@@ -130,11 +133,13 @@ export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
           shadowColor: `${meta.color}2a`,
         },
         label: {
-          color: '#fffdf8',
+          color: '#2f241b',
           fontSize: 11,
           fontWeight: 600,
           width: 64,
           overflow: 'break',
+          textBorderColor: 'rgba(252, 248, 242, 0.92)',
+          textBorderWidth: 3,
         },
       });
 
@@ -226,6 +231,9 @@ export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
             position: 'right',
             distance: 8,
             formatter: '{b}',
+            color: '#2f241b',
+            textBorderColor: 'rgba(252, 248, 242, 0.95)',
+            textBorderWidth: 3,
           },
           emphasis: {
             focus: 'adjacency',
@@ -301,7 +309,7 @@ export function ArchitectureKnowledgeGraph({ detail, stationName }: Props) {
       >
         {[
           { label: '－', onClick: () => setZoom((current) => Math.max(0.7, Number((current - 0.15).toFixed(2)))) },
-          { label: '重置', onClick: () => setZoom(1) },
+          { label: '重置', onClick: () => setZoom(initialZoom) },
           { label: '＋', onClick: () => setZoom((current) => Math.min(1.8, Number((current + 0.15).toFixed(2)))) },
         ].map((action) => (
           <button

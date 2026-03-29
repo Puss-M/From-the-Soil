@@ -180,6 +180,18 @@ export default function SiheyuanDashboard() {
       const mapChart = echarts.init(document.getElementById('chart-map')!);
       list.push(mapChart);
       mapChart.setOption({
+        graphic: [
+          {
+            type: 'text',
+            right: 20,
+            bottom: 20,
+            style: {
+              text: '中国地图审图号：GS(2019)1719号',
+              fill: 'rgba(255, 255, 255, 0.45)',
+              fontSize: 10
+            }
+          }
+        ],
         geo: {
           map: 'china', roam: false, zoom: 1.26, center: [105, 36],
           label: { show: false },

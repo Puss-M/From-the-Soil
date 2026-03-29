@@ -9,7 +9,7 @@ import chinaGeoJson from '../../../public/china.json';
 
 echarts.registerMap('china', chinaGeoJson as never);
 
-const MAP_REVIEW_LABEL = '中国地图审图号：待补充';
+const MAP_REVIEW_LABEL = '中国地图审图号：GS(2019)1719号';
 
 type MapEventParams = {
   seriesType?: string;
@@ -88,7 +88,7 @@ export function MapScene() {
       },
       geo: {
         map: 'china',
-        roam: 'scale', // 只允许缩放，禁止平移
+        roam: 'scale',
         zoom: 1.2,
         scaleLimit: { min: 0.8, max: 5 },
         center: [104.195397, 35.86166],
@@ -97,8 +97,8 @@ export function MapScene() {
           color: '#5a4d42'
         },
         itemStyle: {
-          areaColor: '#f7f1e9', // Parchment-like light area
-          borderColor: '#d6cbbd', // Traditional paper fold color
+          areaColor: '#f7f1e9',
+          borderColor: '#d6cbbd',
           borderWidth: 1.2,
           shadowColor: 'rgba(0, 0, 0, 0.05)',
           shadowBlur: 5
@@ -199,23 +199,6 @@ export function MapScene() {
         <p style={{ fontSize: '0.74rem', color: '#8b6846', fontWeight: 500 }}>
           从土而生 · 建筑方言 · Architectural Dialects
         </p>
-      </div>
-
-      {/* 左下角图例 */}
-      <div style={{ position: 'fixed', bottom: 20, left: 32, zIndex: 20 }}>
-        <div className="guofeng-glass-strong" style={{ padding: '10px 16px' }}>
-          <div style={{ fontSize: 10, color: '#8a7d73', letterSpacing: 2, marginBottom: 4, fontWeight: 600 }}>
-            地域图例
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px', maxWidth: 500 }}>
-            {['江南','皖南','赣北','闽西','湘西','岭南','滇西','滇南','藏区','晋中','陕北','京畿','胶东','蒙古','南疆','东疆','中原'].map((region) => (
-              <div key={region} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: getRegionColor(region) }} />
-                <span style={{ fontSize: 10, color: '#5a4d42' }}>{region}</span>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* 右下角驿站计数 */}
@@ -325,11 +308,6 @@ export function MapScene() {
             </div>
             <div style={{ fontSize: 13, color: '#5a4d42', marginBottom: 4 }}>🏠 {hoveredData.buildingGene}</div>
             <div style={{ fontSize: 12, color: '#8a7d73' }}>{hoveredData.description}</div>
-            <div style={{ display: 'flex', gap: 12, fontSize: 11, color: '#b0a498', marginTop: 6 }}>
-              <span>🌧️ {hoveredData.climate.rainfall}mm</span>
-              <span>☀️ {(hoveredData.climate.sunlight * 100).toFixed(0)}%</span>
-              <span>🛡️ Lv.{hoveredData.climate.defense}</span>
-            </div>
           </div>
         </div>
       )}

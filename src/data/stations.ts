@@ -266,9 +266,9 @@ export const stations: Station[] = [
   {
     id: 'turpan',
     name: '和田驿',
-    nameEn: 'Turpan',
+    nameEn: 'Hotan',
     position: [5, 0.8, 0],
-    coordinates: [89.19, 42.94],
+    coordinates: [79.93, 37.11],
     climate: {
       rainfall: 50,
       humidity: 25,
@@ -279,7 +279,7 @@ export const stations: Station[] = [
     },
     buildingGene: '新疆阿以旺',
     description: '土坯平顶，内设天窗通风',
-    region: '东疆',
+    region: '南疆',
     modelPath: '/models/阿以旺.glb',
   },
 ];
