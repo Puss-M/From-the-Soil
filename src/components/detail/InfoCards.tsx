@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { StationDetailData } from '@/data/stationDetails';
 
 interface Props {
@@ -107,8 +107,6 @@ const layoutMap: Record<CardConfig['size'], { gridColumn: string; minHeight: num
 };
 
 export function InfoCards({ detail, stationName }: Props) {
-  const [expandedMap, setExpandedMap] = useState<Partial<Record<DetailKey, boolean>>>({});
-
   const cards = useMemo(
     () =>
       CARD_CONFIG.filter((config) => {
@@ -200,9 +198,8 @@ export function InfoCards({ detail, stationName }: Props) {
       >
         {cards.map((config) => {
           const content = detail[config.key] ?? '';
-          const isExpanded = Boolean(expandedMap[config.key]);
           const layout = layoutMap[config.size];
-          const shouldToggle = content.length > 120;
+          const isScrollable = config.key === 'folklore';
 
           return (
             <div
@@ -300,31 +297,6 @@ export function InfoCards({ detail, stationName }: Props) {
                   </div>
                 </div>
 
-                {shouldToggle && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setExpandedMap((current) => ({
-                        ...current,
-                        [config.key]: !current[config.key],
-                      }))
-                    }
-                    style={{
-                      border: 'none',
-                      background: 'rgba(255,255,255,0.66)',
-                      color: '#8b7355',
-                      fontSize: 11,
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      borderRadius: 999,
-                      padding: '6px 10px',
-                      boxShadow: '0 6px 18px rgba(92,74,58,0.08)',
-                      flexShrink: 0,
-                    }}
-                  >
-                    {isExpanded ? '收起' : '展开'}
-                  </button>
-                )}
               </div>
 
               <div
@@ -333,10 +305,15 @@ export function InfoCards({ detail, stationName }: Props) {
                   fontSize: config.size === 'small' ? 12.5 : 13.5,
                   lineHeight: config.size === 'small' ? 1.8 : 1.95,
                   whiteSpace: 'pre-wrap',
-                  display: '-webkit-box',
-                  WebkitBoxOrient: 'vertical',
-                  WebkitLineClamp: isExpanded ? 'unset' : clampMap[config.size],
-                  overflow: 'hidden',
+                  display: isScrollable ? 'block' : '-webkit-box',
+                  WebkitBoxOrient: isScrollable ? undefined : 'vertical',
+                  WebkitLineClamp: isScrollable ? undefined : clampMap[config.size],
+                  overflowY: isScrollable ? 'auto' : 'hidden',
+                  overflowX: 'hidden',
+                  maxHeight: isScrollable ? 180 : undefined,
+                  paddingRight: isScrollable ? 10 : 0,
+                  scrollbarWidth: isScrollable ? 'thin' : undefined,
+                  scrollbarColor: isScrollable ? '#b89a75 rgba(196,168,130,0.14)' : undefined,
                 }}
               >
                 {content}

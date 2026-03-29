@@ -1,10 +1,15 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { stations } from '@/data/stations';
 import { useStore } from '@/store/useStore';
+import chinaGeoJson from '../../../public/china.json';
+
+echarts.registerMap('china', chinaGeoJson as never);
+
+const MAP_REVIEW_LABEL = '中国地图审图号：待补充';
 
 type MapEventParams = {
   seriesType?: string;
@@ -15,19 +20,8 @@ type MapEventParams = {
 
 export function MapScene() {
   const { setPhase, setSelectedStation } = useStore();
-  const [geoLoaded, setGeoLoaded] = useState(false);
   const [hoveredStation, setHoveredStation] = useState<string | null>(null);
   const chartRef = useRef<ReactECharts | null>(null);
-
-  useEffect(() => {
-    fetch('/china.json')
-      .then((res) => res.json())
-      .then((data) => {
-        echarts.registerMap('china', data);
-        setGeoLoaded(true);
-      })
-      .catch(err => console.error("Failed to load china.json", err));
-  }, []);
 
   const hoveredData = useMemo(() => {
     if (!hoveredStation) return null;
@@ -71,8 +65,6 @@ export function MapScene() {
   }), [setSelectedStation, setPhase]);
 
   const option = useMemo(() => {
-    if (!geoLoaded) return {};
-
     const scatterData = stations.map(s => ({
       name: s.name,
       value: [...s.coordinates, s.name],
@@ -164,7 +156,7 @@ export function MapScene() {
         }
       ]
     };
-  }, [geoLoaded]);
+  }, []);
 
   function getRegionColor(region: string): string {
     const colors: Record<string, string> = {
@@ -184,20 +176,16 @@ export function MapScene() {
       style={{ backgroundColor: '#f8f3e8' }}
     >
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
-        {geoLoaded ? (
-          <ReactECharts
-            ref={chartRef}
-            option={option}
-            opts={{ renderer: 'canvas' }}
-            notMerge={false}
-            lazyUpdate={true}
-            style={{ width: '100%', height: '100%' }}
-            onEvents={onEvents}
-            onChartReady={handleChartReady}
-          />
-        ) : (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#5c4a3a' }}>加载地图中...</div>
-        )}
+        <ReactECharts
+          ref={chartRef}
+          option={option}
+          opts={{ renderer: 'canvas' }}
+          notMerge={false}
+          lazyUpdate={true}
+          style={{ width: '100%', height: '100%' }}
+          onEvents={onEvents}
+          onChartReady={handleChartReady}
+        />
       </div>
 
       {/* 左上角标题 */}
@@ -237,8 +225,54 @@ export function MapScene() {
         </div>
       </div>
 
+      <div style={{ position: 'fixed', right: 24, bottom: 58, zIndex: 20 }}>
+        <div
+          className="guofeng-glass-strong"
+          style={{
+            padding: '6px 12px',
+            color: '#8b7355',
+            fontSize: 10.5,
+            letterSpacing: 1,
+            border: '1px solid rgba(139,105,70,0.2)',
+          }}
+        >
+          {MAP_REVIEW_LABEL}
+        </div>
+      </div>
+
       {/* 匠作志按钮 */}
-      <div style={{ position: 'fixed', top: 20, right: 24, zIndex: 20 }}>
+      <div style={{ position: 'fixed', top: 20, right: 24, zIndex: 20, display: 'flex', gap: 10 }}>
+        <button
+          className="guofeng-glass-strong"
+          onClick={() => setPhase('memory-game')}
+          style={{
+            padding: '10px 20px',
+            border: '1px solid rgba(139, 105, 70, 0.3)',
+            background: 'linear-gradient(135deg, rgba(157, 112, 66, 0.14) 0%, rgba(111, 73, 35, 0.08) 100%)',
+            color: '#8b6846',
+            fontSize: '14px',
+            fontWeight: 600,
+            borderRadius: '8px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            transition: 'all 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(157, 112, 66, 0.22) 0%, rgba(111, 73, 35, 0.14) 100%)';
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 16px rgba(139, 105, 70, 0.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(157, 112, 66, 0.14) 0%, rgba(111, 73, 35, 0.08) 100%)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <span style={{ fontSize: '16px' }}>◈</span>
+          民居翻翻乐
+        </button>
         <button
           className="guofeng-glass-strong"
           onClick={() => setPhase('craftsmanship')}
