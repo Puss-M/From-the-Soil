@@ -23,7 +23,7 @@ export function StationHeader({ station, heritage, climate }: Props) {
 
   return (
     <div style={{ marginBottom: 40, paddingTop: 20 }}>
-      {/* 驿站名称区域 */}
+      {/* 民居名称区域 */}
       <div style={{ textAlign: 'center', marginBottom: 32 }}>
         {/* 装饰线 */}
         <div style={{
@@ -40,7 +40,7 @@ export function StationHeader({ station, heritage, climate }: Props) {
           <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, #c4a882, transparent)' }} />
         </div>
 
-        {/* 驿站名 */}
+        {/* 民居名 */}
         <h1 style={{
           fontSize: '2.8rem',
           fontWeight: 800,
@@ -49,7 +49,7 @@ export function StationHeader({ station, heritage, climate }: Props) {
           margin: '0 0 12px',
           fontFamily: 'var(--font-serif, serif)',
         }}>
-          {station.name}
+          {station.buildingGene}
         </h1>
 
         {/* 建筑基因标签 */}

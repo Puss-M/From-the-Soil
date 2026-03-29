@@ -10,7 +10,7 @@ const stations = [
   { id: 'yanan', name: '延安驿', building: '窑洞', folder: '延安驿' },
   { id: 'yongding', name: '永定驿', building: '土楼', folder: '永定驿' },
   { id: 'weihai', name: '威海驿', building: '海草房', folder: '威海驿' },
-  { id: 'tulufan', name: '吐鲁番驿', building: '阿以旺', folder: '吐鲁番驿' },
+  { id: 'tulufan', name: '和田驿', building: '阿以旺', folder: '和田驿' },
   { id: 'suzhou', name: '苏州驿', building: '苏式民居', folder: '苏州驿' },
   { id: 'lasa', name: '拉萨驿', building: '碉房', folder: '拉萨驿' },
   { id: 'kashi', name: '喀什驿', building: '高台民居', folder: '喀什驿' },
@@ -166,10 +166,10 @@ const stationDataMap: Record<string, any> = {
       }
     ]
   },
-  // 吐鲁番驿 - 阿以旺
+  // 和田驿 - 阿以旺
   tulufan: {
     building: '阿以旺',
-    folder: '吐鲁番驿',
+    folder: '和田驿',
     mainImage: '阿以旺主体.png',
     introText: '阿以旺民居装饰以伊斯兰教文化为基底，整体呈现外简内繁、重点装饰的特点。装饰主要分布于门、窗、墙面、顶棚、外廊、壁龛及色彩系统，多用植物纹、几何纹、尖拱造型，不绘人物动物。装饰同时承载宗教表达、居住身份彰显、防风沙 / 采光 / 防潮等实用功能，体现中原、西域与伊斯兰文化的融合。',
     infoItems: [

@@ -30,7 +30,7 @@ const stationIdToFolderMap: Record<string, string> = {
   'xishuangbanna': '版纳驿',
   'xilingol': '草原驿',
   'guangzhou': '广州驿',
-  'turpan': '吐鲁番驿',
+  'turpan': '和田驿',
 };
 
 export function VideoChronicle({ station }: Props) {

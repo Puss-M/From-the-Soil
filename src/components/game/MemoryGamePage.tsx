@@ -24,18 +24,18 @@ const MATCH_COUNT = 8;
 const FLIP_BACK_DELAY = 850;
 
 const MEMORY_STATIONS: MemoryStation[] = [
-  { id: 'siheyuan', name: '四合院', image: '/memory-game/四合院.jpg', reward: '礼序徽章已点亮' },
+  { id: 'siheyuan', name: '北京四合院', image: '/memory-game/四合院.jpg', reward: '北京四合院徽章已点亮' },
   { id: 'yaodong', name: '窑洞', image: '/memory-game/窑洞.jpg', reward: '黄土营造徽章已点亮' },
-  { id: 'tulou', name: '土楼', image: '/memory-game/土楼.jpg', reward: '聚族防御徽章已点亮' },
-  { id: 'haicaofang', name: '海草房', image: '/memory-game/海草房.jpg', reward: '海岸聚落徽章已点亮' },
-  { id: 'aiwang', name: '阿以旺', image: '/memory-game/阿以旺.jpg', reward: '和田民居徽章已点亮' },
-  { id: 'sushi-minju', name: '苏式民居', image: '/memory-game/苏式民居.jpg', reward: '江南院落徽章已点亮' },
-  { id: 'diaofang', name: '碉房', image: '/memory-game/碉房.jpg', reward: '高原居所徽章已点亮' },
+  { id: 'tulou', name: '客家土楼', image: '/memory-game/土楼.jpg', reward: '客家土楼徽章已点亮' },
+  { id: 'haicaofang', name: '山东海草房', image: '/memory-game/海草房.jpg', reward: '山东海草房徽章已点亮' },
+  { id: 'aiwang', name: '新疆阿以旺', image: '/memory-game/阿以旺.jpg', reward: '新疆阿以旺徽章已点亮' },
+  { id: 'sushi-minju', name: '苏州民居', image: '/memory-game/苏式民居.jpg', reward: '苏州民居徽章已点亮' },
+  { id: 'diaofang', name: '藏族碉房', image: '/memory-game/碉房.jpg', reward: '藏族碉房徽章已点亮' },
   { id: 'gaotai-minju', name: '高台民居', image: '/memory-game/高台民居.jpg', reward: '生土聚落徽章已点亮' },
   { id: 'huipai-minju', name: '徽派民居', image: '/memory-game/徽派民居.jpg', reward: '粉墙黛瓦徽章已点亮' },
-  { id: 'guoerwu', name: '镬耳屋', image: '/memory-game/镬耳屋.jpg', reward: '岭南山墙徽章已点亮' },
-  { id: 'diaojiaolou', name: '吊脚楼', image: '/memory-game/吊脚楼.jpg', reward: '山水吊脚徽章已点亮' },
-  { id: 'tuzhangfang', name: '土掌房', image: '/memory-game/土掌房.jpg', reward: '白族院落徽章已点亮' },
+  { id: 'guoerwu', name: '广东镬耳屋', image: '/memory-game/镬耳屋.jpg', reward: '广东镬耳屋徽章已点亮' },
+  { id: 'diaojiaolou', name: '湘西吊脚楼', image: '/memory-game/吊脚楼.jpg', reward: '湘西吊脚楼徽章已点亮' },
+  { id: 'tuzhangfang', name: '云南彝族土掌房', image: '/memory-game/土掌房.jpg', reward: '云南彝族土掌房徽章已点亮' },
   { id: 'menggubao', name: '蒙古包', image: '/memory-game/蒙古包.jpg', reward: '穹庐游牧徽章已点亮' },
   { id: 'zhulou', name: '竹楼', image: '/memory-game/竹楼.jpg', reward: '雨林干栏徽章已点亮' },
 ];
