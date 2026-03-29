@@ -17,7 +17,6 @@ type Particle = {
   driftX: number;
 };
 
-const TITLE_CHARS = ['千', '里', '江', '山'];
 const ENGLISH_SUBTITLE = 'FROM THE SOIL';
 
 const titleContainerVariants: Variants = {
@@ -306,9 +305,11 @@ export function LandingPage() {
         position: 'fixed',
         inset: 0,
         zIndex: 0,
-        background:
-          'linear-gradient(160deg, #f7f0e3 0%, #f1e6d3 28%, #e3cdaa 66%, #d3b28b 100%)',
-        fontFamily: 'var(--font-serif), "Noto Serif SC", SimSun, STSong, serif',
+        backgroundImage: 'url("/fengmian/di.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), "Noto Serif SC", SimSun, STSong, serif',
       }}
     >
       <style>{`
@@ -420,44 +421,6 @@ export function LandingPage() {
           }}
         />
       </div>
-
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        style={{ zIndex: 2 }}
-        viewBox="0 0 1000 600"
-        preserveAspectRatio="none"
-      >
-        <rect
-          x="30"
-          y="20"
-          width="940"
-          height="560"
-          fill="none"
-          stroke="#c8a97e"
-          strokeWidth="0.6"
-          opacity="0.25"
-        />
-        <rect
-          x="45"
-          y="35"
-          width="910"
-          height="530"
-          fill="none"
-          stroke="#c8a97e"
-          strokeWidth="0.3"
-          opacity="0.15"
-        />
-        <g opacity="0.2" stroke="#8b6b47" fill="none" strokeWidth="0.8">
-          <path d="M30,20 L30,60 L70,60 L70,45 L45,45 L45,20" />
-          <path d="M35,25 L35,55 L65,55 L65,40 L50,40 L50,25" />
-          <path d="M970,20 L970,60 L930,60 L930,45 L955,45 L955,20" />
-          <path d="M965,25 L965,55 L935,55 L935,40 L950,40 L950,25" />
-          <path d="M30,580 L30,540 L70,540 L70,555 L45,555 L45,580" />
-          <path d="M35,575 L35,545 L65,545 L65,560 L50,560 L50,575" />
-          <path d="M970,580 L970,540 L930,540 L930,555 L955,555 L955,580" />
-          <path d="M965,575 L965,545 L935,545 L935,560 L950,560 L950,575" />
-        </g>
-      </svg>
 
       <div
         aria-hidden="true"
@@ -608,37 +571,40 @@ export function LandingPage() {
           ))}
         </motion.div>
 
-        <motion.h1
+        <motion.div
           className="landing-title-breath"
           variants={titleContainerVariants}
           initial="hidden"
           animate="visible"
           style={{
-            fontSize: 'clamp(3.8rem, 9vw, 6.8rem)',
-            fontWeight: 700,
-            color: '#3a2e21',
-            letterSpacing: '0.34em',
-            lineHeight: 1.1,
-            textShadow: '3px 3px 12px rgba(139, 107, 71, 0.08)',
             marginBottom: '1.25rem',
             display: 'flex',
             justifyContent: 'center',
-            gap: '0.28em',
-            paddingLeft: '0.34em',
+            alignItems: 'center',
             animation: prefersReducedMotion ? 'none' : 'titleBreath 6s ease-in-out infinite 2.2s',
             transformOrigin: 'center center',
           }}
         >
-          {TITLE_CHARS.map((char) => (
-            <motion.span
-              key={char}
-              variants={titleCharVariants}
-              style={{ display: 'inline-block' }}
-            >
-              {char}
-            </motion.span>
-          ))}
-        </motion.h1>
+          <motion.div
+            variants={titleCharVariants}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <img
+              src="/fengmian/zhao.png"
+              alt="山河筑语"
+              style={{
+                maxWidth: 'min(700px, 75vw)',
+                width: 'auto',
+                height: 'auto',
+                maxHeight: '180px',
+              }}
+            />
+          </motion.div>
+        </motion.div>
 
         <div
           style={{
@@ -671,6 +637,9 @@ export function LandingPage() {
               color: '#8b6b47',
               fontWeight: 400,
               whiteSpace: 'nowrap',
+              fontFamily: '"FangSong", "仿宋", "STFangsong", serif',
+              marginTop: '1.5rem',
+              display: 'block',
             }}
           >
             从土而生 建筑方言
@@ -808,7 +777,18 @@ export function LandingPage() {
                 }}
               />
             ))}
-            <span style={{ position: 'relative', zIndex: 1 }}>踏上旅途</span>
+            <span
+              style={{
+                position: 'relative',
+                zIndex: 1,
+                fontSize: 'clamp(1.3rem, 1.8vw, 1.5rem)',
+                fontFamily: '"FangSong", "仿宋", "STFangsong", serif',
+                fontWeight: 700,
+                letterSpacing: '0.1em',
+              }}
+            >
+              踏上旅途
+            </span>
           </button>
           <div
             style={{
@@ -840,7 +820,7 @@ export function LandingPage() {
           transition: 'transform 0.6s ease, opacity 0.6s ease',
         }}
       >
-        © 2025 从土而生 · From the Soil · 计算机设计大赛
+        © 2026 山河筑语 · from the sol · 计算机设计大赛
       </footer>
 
       {showInkMask && (

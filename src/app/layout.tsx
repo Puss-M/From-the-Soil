@@ -20,7 +20,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "千里江山 · 建筑方言",
+  title: "山河筑语 · 建筑方言",
   description: "从土而生 · 探索中国传统民居的气候适应性智慧 | Algorithmic Architectural Dialects",
 };
 
