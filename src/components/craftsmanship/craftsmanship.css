@@ -498,10 +498,11 @@
     box-shadow: 0 2px 6px rgba(139, 105, 70, 0.3); /* 缩小阴影 */
     /* 取消平动效果，干脆果断 */
     z-index: 10;
+    transform: translate(-50%, -50%);
 }
 
 .detail-point:hover {
-    transform: scale(1.2); /* 悬停放大效果 - 干脆果断 */
+    transform: translate(-50%, -50%) scale(1.2); /* 悬停时保持中心点不偏移 */
     background: rgba(139, 105, 70, 0.9);
     box-shadow: 0 3px 10px rgba(139, 105, 70, 0.4); /* 悬停阴影 */
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useStore } from '@/store/useStore';
 import './craftsmanship.css';
 
@@ -10,7 +10,7 @@ const stations = [
   { id: 'yanan', name: '延安驿', building: '窑洞', folder: '延安驿' },
   { id: 'yongding', name: '永定驿', building: '土楼', folder: '永定驿' },
   { id: 'weihai', name: '威海驿', building: '海草房', folder: '威海驿' },
-  { id: 'tulufan', name: '和田驿', building: '阿以旺', folder: '和田驿' },
+  { id: 'turpan', name: '和田驿', building: '阿以旺', folder: '吐鲁番驿' },
   { id: 'suzhou', name: '苏州驿', building: '苏式民居', folder: '苏州驿' },
   { id: 'lasa', name: '拉萨驿', building: '碉房', folder: '拉萨驿' },
   { id: 'kashi', name: '喀什驿', building: '高台民居', folder: '喀什驿' },
@@ -45,25 +45,25 @@ const stationDataMap: Record<string, any> = {
         name: '四合院匾额',
         image: '四合院匾额.png',
         description: '四合院匾额是宅第的文化名片，通常悬挂于门楣之上，多以木质或石质制成，题字多出自名家之手，内容或为祈福纳祥（如"福瑞祥和"），或彰显家风志向，兼具标识与教化功能。匾额的形制、字体与装饰也暗含门第等级，是传统建筑中"文以载道"的直观体现，承载着中式美学与家族精神。',
-        pointPosition: { left: '50%', top: '40%' }
+        pointPosition: { left: '50%', top: '39%' }
       },
       {
         name: '四合院木雕垂花门',
         image: '四合院木雕垂花门.png',
         description: '垂花门是四合院内宅与外院的分界，因檐柱垂头雕成花瓣状而得名。其木构件装饰极为考究，垂莲柱、雀替、门簪等处常雕刻花卉、瑞兽等吉祥纹样，工艺繁复细腻。它既起到空间过渡、遮挡内院视线的作用，又以精巧木雕展现匠人技艺，是四合院中最具装饰性与仪式感的门型，象征着家族的精致与内敛。',
-        pointPosition: { left: '50%', top: '70%' }
+        pointPosition: { left: '50%', top: '68%' }
       },
       {
         name: '四合院石雕抱鼓石',
         image: '四合院石雕抱鼓石.png',
         description: '抱鼓石是置于宅门两侧的石雕构件，多由青石或汉白玉雕成，造型以圆鼓形为主，常雕刻狮子、缠枝纹、祥云等图案。它最初用于稳固门轴、承托门扇，后逐渐演变为等级与身份的象征，造型越精美、体量越大，代表宅第主人地位越高。同时，瑞兽纹样也寄托着镇宅辟邪、祈福平安的寓意。',
-        pointPosition: { left: '30%', top: '60%' } /* 调整位置，避免超出图片 */
+        pointPosition: { left: '33%', top: '59%' }
       },
       {
         name: '四合院砖雕影壁',
         image: '四合院砖雕影壁.png',
         description: '影壁又称照壁，多以青砖砌筑，壁面布满精致砖雕。常见题材有花卉、鸟兽、吉祥图案（如"五福捧寿""连年有余"），工艺细腻生动。它既遮挡外部视线、保护院内隐私，又符合风水"挡煞"理念，同时以砖雕艺术传递家族对美好生活的向往，是四合院中集实用、装饰与文化于一体的经典构件。',
-        pointPosition: { left: '70%', top: '60%' }
+        pointPosition: { left: '62%', top: '59%' }
       }
     ]
   },
@@ -88,13 +88,13 @@ const stationDataMap: Record<string, any> = {
         name: '窑洞门窗窗饰',
         image: '窑洞门窗窗饰.png',
         description: '窑洞门窗窗饰是黄土高原窑洞建筑的点睛之笔，多以木质为材，窗棂常采用几何纹、花卉纹或吉祥纹样，工艺精巧。拱形门洞与木格窗既适配窑洞的拱券结构，又能最大化采光通风。窗饰图案承载着当地百姓祈福纳祥的美好愿望，是实用功能与民俗审美、地域文化的巧妙融合。',
-        pointPosition: { left: '50%', top: '60%' }
+        pointPosition: { left: '50%', top: '61%' }
       },
       {
         name: '窑洞女儿墙装饰',
         image: '窑洞女儿墙装饰.png',
         description: '窑洞女儿墙是窑顶边缘的防护矮墙，其装饰多以砖雕、泥塑或彩绘为主，题材多为卷草纹、回纹、瑞兽等吉祥元素，风格质朴粗犷。它既起到遮挡窑顶、防止雨水倒灌与人员坠落的作用，又以简洁有力的装饰线条强化窑洞建筑的轮廓美感，彰显着黄土民居粗犷而细腻的乡土气质。',
-        pointPosition: { left: '50%', top: '40%' }
+        pointPosition: { left: '50%', top: '36%' }
       }
     ]
   },
@@ -119,25 +119,25 @@ const stationDataMap: Record<string, any> = {
         name: '土楼壁画',
         image: '土楼壁画.png',
         description: '土楼壁画多绘制于门厅、祖堂等公共空间，以矿物颜料为材，题材涵盖神话传说、历史故事、吉祥纹样与客家生活场景。色彩浓郁厚重，线条质朴生动，既承载着教化后人、凝聚宗族的功能，又传递着客家人对美好生活的向往，是客家文化与民间艺术的重要载体。',
-        pointPosition: { left: '30%', top: '40%' }
+        pointPosition: { left: '33%', top: '42%' }
       },
       {
         name: '土楼木雕',
         image: '土楼木雕.png',
         description: '土楼木雕多见于梁柱、门窗、屏风与神龛等处，以樟木、杉木等本地木材为料，雕刻技法多样，题材多为瑞兽、花鸟、戏曲人物与祈福纹样。工艺精巧细腻，既起到加固木构件、装饰空间的作用，又暗含客家宗族的伦理观念与审美追求，是土楼建筑中极具人文温度的装饰艺术。',
-        pointPosition: { left: '50%', top: '30%' }
+        pointPosition: { left: '51%', top: '27%' }
       },
       {
         name: '土楼石雕',
         image: '土楼石雕.png',
         description: '土楼石雕主要用于门墩、柱础、栏杆与碑刻等部位，以青石为材，造型浑厚古朴。常见题材有狮子、卷草纹、几何纹与吉祥文字，既稳固建筑结构，又彰显宗族的威严与秩序。石雕风格粗犷有力，与土楼夯土墙体的厚重感相得益彰，是客家建筑中刚柔并济的艺术表达。',
-        pointPosition: { left: '70%', top: '50%' }
+        pointPosition: { left: '66%', top: '58%' }
       },
       {
         name: '土楼砖雕',
         image: '土楼砖雕.png',
         description: '土楼砖雕多用于门楣、窗楣与屋脊装饰，以青砖为料，采用浮雕、透雕等技法，题材多为花卉、瑞兽与戏曲故事。砖雕工艺细腻，布局均衡，既美化建筑立面，又传递着客家文化的祈福寓意。它与土楼的夯土肌理形成材质对比，让厚重的土楼建筑更具层次与装饰美感。',
-        pointPosition: { left: '40%', top: '70%' }
+        pointPosition: { left: '43%', top: '73%' }
       }
     ]
   },
@@ -162,14 +162,14 @@ const stationDataMap: Record<string, any> = {
         name: '海草房门饰',
         image: '海草房门饰.png',
         description: '海草房门饰以木质为基底，多搭配海草编织、木刻或简单彩绘装饰，题材多为几何纹、渔猎符号与吉祥纹样，风格质朴粗犷。它既加固了以海草为顶、木为骨的门扇结构，又适配沿海潮湿多风的气候，同时以充满渔家生活气息的装饰，传递着胶东渔民对自然的敬畏与对平安丰收的祈愿，是海草房极具地域辨识度的细节。',
-        pointPosition: { left: '50%', top: '50%' }
+        pointPosition: { left: '49%', top: '58%' }
       }
     ]
   },
   // 和田驿 - 阿以旺
-  tulufan: {
+  turpan: {
     building: '阿以旺',
-    folder: '和田驿',
+    folder: '吐鲁番驿',
     mainImage: '阿以旺主体.png',
     introText: '阿以旺民居装饰以伊斯兰教文化为基底，整体呈现外简内繁、重点装饰的特点。装饰主要分布于门、窗、墙面、顶棚、外廊、壁龛及色彩系统，多用植物纹、几何纹、尖拱造型，不绘人物动物。装饰同时承载宗教表达、居住身份彰显、防风沙 / 采光 / 防潮等实用功能，体现中原、西域与伊斯兰文化的融合。',
     infoItems: [
@@ -189,25 +189,25 @@ const stationDataMap: Record<string, any> = {
         name: '阿以旺壁龛装饰',
         image: '阿以旺壁龛装饰.png',
         description: '阿以旺壁龛是嵌入墙体的装饰性龛位，多以石膏雕花、彩绘或木刻装点，题材以几何纹、植物纹与伊斯兰纹样为主，造型精致规整。它既兼具储物与陈设功能，可摆放器物与经书，又以细腻装饰美化室内空间，是维吾尔族建筑中融合实用与宗教审美、体现生活仪式感的经典细节。',
-        pointPosition: { left: '30%', top: '40%' }
+        pointPosition: { left: '31%', top: '45%' }
       },
       {
         name: '阿以旺门饰',
         image: '阿以旺门饰.png',
         description: '阿以旺门饰以木质门扉为核心，门楣、门框与门扇常饰有木雕、彩绘或石膏浮雕，纹样繁复对称，多为卷草纹、几何纹与宗教符号，色彩浓郁艳丽。它既起到加固门扇、分隔空间的作用，又以华丽装饰彰显宅第的富足与文化品位，是阿以旺建筑中极具民族辨识度的门面符号。',
-        pointPosition: { left: '50%', top: '60%' }
+        pointPosition: { left: '50%', top: '63%' }
       },
       {
         name: '阿以旺墙饰',
         image: '阿以旺墙饰.png',
         description: '阿以旺墙饰以石膏浮雕、彩绘与木刻为主要形式，题材涵盖几何纹、花卉纹与伊斯兰经文，布局均衡对称、线条流畅。墙饰多分布于厅堂与居室墙面，既起到防潮防风、保护墙体的作用，又以浓郁民族风格营造出庄重典雅的室内氛围，传递着维吾尔族对生活美学与宗教信仰的追求。',
-        pointPosition: { left: '70%', top: '40%' }
+        pointPosition: { left: '68%', top: '44%' }
       },
       {
         name: '阿以旺外廊装饰',
         image: '阿以旺外廊装饰.png',
         description: '阿以旺外廊是建筑的核心公共空间，廊柱、檐口与栏杆处常饰有木雕、石膏雕花与彩绘，纹样以卷草、葡萄、花卉等吉祥图案为主，风格华丽灵动。它既起到遮阳避雨、通风纳凉的实用功能，又以通透开放的形制与精致装饰，成为家族社交与节庆活动的场所，是阿以旺建筑中最具生活气息与艺术魅力的部分。',
-        pointPosition: { left: '40%', top: '70%' }
+        pointPosition: { left: '42%', top: '72%' }
       }
     ]
   },
@@ -233,19 +233,19 @@ const stationDataMap: Record<string, any> = {
         name: '苏州民居木雕窗',
         image: '苏州民居木雕窗.png',
         description: '苏州民居木雕窗以优质硬木为材，窗棂采用浮雕、透雕等技法，雕刻题材多为梅兰竹菊、花鸟虫鱼与吉祥纹样，工艺细腻雅致。它既起到通风采光、分隔空间的作用，又以精巧木雕传递江南文人的审美意趣，是苏州民居"移步换景"造园理念的重要载体，尽显温婉雅致的江南气质。',
-        pointPosition: { left: '40%', top: '40%' }
+          pointPosition: { left: '41%', top: '42%' }
       },
       {
         name: '苏州民居石栏杆',
         image: '苏州民居石栏杆.png',
         description: '苏州民居石栏杆多以青石或花岗岩打造，栏板与望柱常雕刻卷草纹、几何纹与山水图案，造型简洁流畅。它既保障了廊檐、天井等处的行走安全，又以质朴石材质感与白墙黛瓦形成对比，强化了建筑的层次美感，是江南园林与民居中兼具实用与装饰性的经典构件。',
-        pointPosition: { left: '60%', top: '60%' }
+          pointPosition: { left: '54%', top: '64%' }
       },
       {
         name: '苏州民居砖雕',
         image: '苏州民居砖雕.png',
         description: '苏州民居砖雕以青砖为料，采用浮雕、圆雕等技法，题材涵盖戏曲故事、山水园林与吉祥文字，布局均衡、刀法细腻。砖雕多见于门楣、照壁与屋脊等处，既美化建筑立面，又承载着家族祈福纳祥、崇文重教的美好寓意，是苏州民居"精雕细琢"工艺美学的集中体现。',
-        pointPosition: { left: '70%', top: '30%' }
+          pointPosition: { left: '62%', top: '31%' }
       }
     ]
   },
@@ -271,19 +271,19 @@ const stationDataMap: Record<string, any> = {
         name: '碉房经幡风马旗',
         image: '碉房经幡风马旗.png',
         description: '碉房经幡风马旗是藏式民居屋顶的标志性装饰，由五彩布条印制经文与吉祥图案，随风飘扬。它既承载着祈福禳灾、传播佛法的心灵寄托，又以鲜艳色彩点缀厚重的石砌建筑，是藏民与天地神灵沟通的媒介，彰显着高原民居浓厚的宗教氛围与生命活力。',
-        pointPosition: { left: '50%', top: '30%' }
+        pointPosition: { left: '48%', top: '25%' }
       },
       {
         name: '碉房门窗',
         image: '碉房门窗.png',
         description: '碉房门窗以厚重的木质为框架，窗套呈梯形，饰有彩绘宗教符号与吉祥图案，色彩对比强烈。它既起到防风保温、适应高原气候的作用，又以独特的梯形造型与浓郁宗教装饰，强化了碉房建筑的防御性与神圣感，是藏式建筑美学与实用功能的完美结合。',
-        pointPosition: { left: '40%', top: '60%' }
+        pointPosition: { left: '42%', top: '58%' }
       },
       {
         name: '碉房牛角状白石',
         image: '碉房牛角状白石.png',
         description: '碉房牛角状白石是置于屋顶四角或门楣上的白石装饰，形似牛角，表面常刻有经文或吉祥图案。它既起到镇宅辟邪、祈福纳祥的宗教功能，又以白色石材与深色墙体形成鲜明对比，是藏民对自然崇拜与宗教信仰的物质化表达，承载着高原民族的精神寄托。',
-        pointPosition: { left: '60%', top: '50%' } /* 向左移动 */
+        pointPosition: { left: '58%', top: '49%' }
       }
     ]
   },
@@ -309,19 +309,19 @@ const stationDataMap: Record<string, any> = {
         name: '高台民居窗饰',
         image: '高台民居窗饰.png',
         description: '高台民居窗饰多为木质镂空结构，窗棂常以几何纹、回纹或简单花草纹样拼接而成，造型质朴简洁。它既适配高台民居的夯土墙体，保障室内通风采光，又能过滤风沙、遮挡视线，同时以规整的木构线条点缀厚重的土黄色墙面，形成材质与色彩的对比，是西域乡土建筑中实用与审美兼具的细节。',
-        pointPosition: { left: '40%', top: '40%' }
+        pointPosition: { left: '45%', top: '53%' }
       },
       {
         name: '高台民居门饰',
         image: '高台民居门饰.png',
         description: '高台民居门饰以木质门扉为核心，门楣、门框处常饰有简单木雕或彩绘，题材多为几何纹、植物纹与宗教符号，风格粗犷大气。门饰既加固了门扇结构，又彰显着家族的生活气息与文化信仰，与高台民居依山而建、层层叠叠的形制呼应，传递出西域民居厚重而鲜活的地域气质。',
-        pointPosition: { left: '60%', top: '60%' }
+        pointPosition: { left: '55%', top: '68%' }
       },
       {
         name: '高台民居墙饰',
         image: '高台民居墙饰.png',
         description: '高台民居墙饰以夯土墙面为基底，局部饰有泥雕、彩绘或砖刻，题材多为花卉、几何纹与吉祥图案，色彩浓郁质朴。墙饰既起到美化墙面、防止风化的作用，又寄托着当地居民祈福平安的美好愿望，与高台民居的土黄色肌理浑然一体，是西域建筑中极具生命力的装饰表达。',
-        pointPosition: { left: '70%', top: '30%' }
+        pointPosition: { left: '61%', top: '41%' }
       }
     ]
   },
@@ -347,19 +347,19 @@ const stationDataMap: Record<string, any> = {
         name: '徽派木雕',
         image: '徽派木雕.png',
         description: '徽派木雕以优质硬木为材，采用浮雕、透雕、圆雕等技法，题材涵盖人物故事、山水花鸟与吉祥纹样，工艺精湛细腻。它多见于门窗、梁枋与屏风，既起到装饰空间、分隔功能的作用，又以精巧雕刻传递徽商"贾而好儒"的文化追求，是徽派建筑中极具艺术价值的装饰元素。',
-        pointPosition: { left: '40%', top: '40%' }
+        pointPosition: { left: '44%', top: '45%' }
       },
       {
         name: '徽派民居门楼与砖雕',
         image: '徽派民居门楼与砖雕.png',
         description: '徽派民居门楼是宅第的"脸面"，多以青砖砌筑，门楣、门框处布满精致砖雕，题材多为人物故事、吉祥图案与戏曲场景。它既起到标识门第、分隔内外的作用，又以繁复砖雕彰显家族的财力与文化品位，是徽派建筑中集实用、装饰与礼制于一体的经典构件。',
-        pointPosition: { left: '60%', top: '60%' }
+        pointPosition: { left: '55%', top: '67%' }
       },
       {
         name: '徽派石雕',
         image: '徽派石雕.png',
         description: '徽派石雕以青石、花岗岩为料，多用于门墩、柱础、栏杆与碑刻，造型浑厚古朴，题材涵盖瑞兽、花卉与吉祥文字。它既稳固建筑结构，又以质朴石材质感与白墙黛瓦形成对比，强化了徽派建筑的层次美感，是徽商文化中刚柔并济的艺术表达。',
-        pointPosition: { left: '60%', top: '30%' } /* 向左移动 */
+        pointPosition: { left: '56%', top: '33%' }
       }
     ]
   },
@@ -385,19 +385,19 @@ const stationDataMap: Record<string, any> = {
         name: '镬耳屋山墙装饰',
         image: '镬耳屋山墙装饰.png',
         description: '镬耳屋山墙装饰以灰塑、砖雕为主要形式，镬耳造型的山墙常饰有花卉、瑞兽与吉祥图案，色彩鲜艳，工艺繁复。它既起到防火防风、强化建筑结构的作用，又以独特的镬耳造型与华丽装饰彰显家族的财力与地位，是广府民居中最具辨识度的建筑符号。',
-        pointPosition: { left: '40%', top: '30%' }
+        pointPosition: { left: '39%', top: '28%' }
       },
       {
         name: '镬耳屋龙船脊',
         image: '镬耳屋龙船脊.png',
         description: '镬耳屋龙船脊是屋脊的典型形式，多以灰塑、砖雕装饰，题材涵盖花卉、瑞兽与吉祥文字，造型蜿蜒如龙船。它既起到防水排水、保护屋面的作用，又以华丽装饰寄托家族祈福纳祥、一帆风顺的美好愿望，是广府建筑中集实用与象征于一体的经典构件。',
-        pointPosition: { left: '60%', top: '50%' }
+        pointPosition: { left: '56%', top: '44%' }
       },
       {
         name: '镬耳屋门柱',
         image: '镬耳屋门柱.png',
         description: '镬耳屋门柱以石质或木质为材，柱身常雕刻花卉、瑞兽或吉祥文字，造型简洁有力。它既起到支撑门廊、分隔空间的作用，又以精致雕刻彰显门第的文化品位，与镬耳山墙、龙船脊共同构成广府民居完整而和谐的装饰体系。',
-        pointPosition: { left: '70%', top: '70%' }
+        pointPosition: { left: '63%', top: '69%' }
       }
     ]
   },
@@ -423,19 +423,19 @@ const stationDataMap: Record<string, any> = {
         name: '吊脚楼吊瓜柱',
         image: '吊脚楼吊瓜柱.png',
         description: '吊脚楼吊瓜柱是支撑楼体的重要构件，形似瓜果，柱身常饰有简单雕刻或彩绘，造型质朴灵动。它既起到承重结构、适应山地地形的作用，又以独特的造型点缀吊脚楼的立面，是湘西民居中极具地域特色的结构装饰元素。',
-        pointPosition: { left: '40%', top: '60%' }
+        pointPosition: { left: '43%', top: '66%' }
       },
       {
         name: '吊脚楼栏杆',
         image: '吊脚楼栏杆.png',
         description: '吊脚楼栏杆以木质为材，采用镂空、雕刻等工艺，纹样多为几何纹、花卉纹或民族符号，造型简洁实用。它既保障了楼廊行走的安全，又以规整的木构线条丰富建筑立面，与青山绿水相映成趣，彰显着湘西民居的灵动与质朴。',
-        pointPosition: { left: '60%', top: '40%' }
+        pointPosition: { left: '60%', top: '47%' }
       },
       {
         name: '吊脚楼檐角',
         image: '吊脚楼檐角.png',
         description: '吊脚楼檐角多呈翘角飞檐造型，局部饰有简单木雕或彩绘，风格轻盈灵动。它既起到排水防雨、保护楼体的作用，又以优美的曲线强化建筑轮廓，与周围的山水环境和谐相融，是湘西民居"天人合一"建筑理念的直观体现。',
-        pointPosition: { left: '70%', top: '70%' }
+        pointPosition: { left: '69%', top: '64%' }
       }
     ]
   },
@@ -461,7 +461,7 @@ const stationDataMap: Record<string, any> = {
         name: '土掌房石虎装饰',
         image: '土掌房石虎装饰.png',
         description: '土掌房石虎装饰是白族民居的特色构件，多以青石雕刻成虎形，置于门墩、照壁或屋顶，造型威猛古朴。它既起到镇宅辟邪、祈福纳祥的宗教功能，又以石材质感与土掌房的土木结构形成对比，是白族文化中自然崇拜与宗教信仰的物质化表达。',
-        pointPosition: { left: '50%', top: '50%' }
+        pointPosition: { left: '56%', top: '46%' }
       }
     ]
   },
@@ -487,19 +487,19 @@ const stationDataMap: Record<string, any> = {
         name: '蒙古包毡绣',
         image: '蒙古包毡绣.png',
         description: '蒙古包毡绣以羊毛毡为底，采用刺绣、编织等工艺，纹样多为花卉、几何纹与蒙古族符号，色彩鲜艳对比强烈。它既起到保暖防风、装饰室内空间的作用，又以精美的工艺展现蒙古族妇女的巧手与审美，是游牧文化中实用与艺术完美结合的典范。',
-        pointPosition: { left: '40%', top: '40%' }
+        pointPosition: { left: '42%', top: '44%' }
       },
       {
         name: '蒙古包木雕',
         image: '蒙古包木雕.png',
         description: '蒙古包木雕多见于哈那（围墙）与乌尼（椽子）的连接处，采用简单雕刻工艺，纹样多为几何纹或民族符号，造型质朴实用。它既起到加固木构、稳定包体的作用，又以简洁装饰点缀蒙古包的内部结构，体现着游牧民族对自然材料的巧妙运用。',
-        pointPosition: { left: '60%', top: '60%' }
+        pointPosition: { left: '56%', top: '58%' }
       },
       {
         name: '蒙古包银器',
         image: '蒙古包银器.png',
         description: '蒙古包银器是游牧民族的重要装饰与实用器物，多以纯银或银合金打造，器身常雕刻花卉、瑞兽与蒙古族符号，工艺精湛。它既用于盛装奶茶、奶酒等日常饮食，又以华丽银饰彰显家族的财富与地位，是蒙古族文化中实用与审美完美结合的代表。',
-        pointPosition: { left: '70%', top: '30%' }
+        pointPosition: { left: '64%', top: '34%' }
       }
     ]
   },
@@ -525,13 +525,13 @@ const stationDataMap: Record<string, any> = {
         name: '竹楼歇山顶',
         image: '竹楼歇山顶.png',
         description: '竹楼歇山顶是傣族竹楼的典型屋顶形式，由多组三角形山面与坡面组合而成，檐角微微上翘，造型轻盈灵动。屋顶多以茅草或竹片铺盖，既利于快速排水，适配南方多雨气候，又能通过通透结构通风散热。山面顶端常饰有精致木雕或彩绘，既强化了建筑轮廓，也承载着傣族的民俗审美与文化寓意。',
-        pointPosition: { left: '50%', top: '30%' }
+        pointPosition: { left: '52%', top: '28%' }
       },
       {
         name: '竹楼柱饰',
         image: '竹楼柱饰.png',
         description: '竹楼柱饰是支撑架空底层的木柱或竹柱上的装饰，柱身多雕刻几何纹、动植物纹或吉祥图案，部分柱础也会做造型处理，既起到防潮防虫的作用，又美化了建筑立面。柱饰工艺质朴粗犷，与竹楼整体的通透轻盈风格呼应，既传递着傣族对自然的敬畏，也彰显了乡土建筑的人文温度。',
-        pointPosition: { left: '40%', top: '60%' }
+        pointPosition: { left: '42%', top: '62%' }
       }
     ]
   }
@@ -544,6 +544,9 @@ export default function CraftsmanshipPage() {
   const [currentDetail, setCurrentDetail] = useState<any>(null);
   const [showDetail, setShowDetail] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageBounds, setImageBounds] = useState({ left: 0, top: 0, width: 0, height: 0 });
+  const imageContainerRef = useRef<HTMLDivElement | null>(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
   
   const stationData = stationDataMap[currentStation.id] || {
     building: '未知建筑',
@@ -580,6 +583,68 @@ export default function CraftsmanshipPage() {
 
   const handleImageLoad = () => {
     setImageLoaded(true);
+  };
+
+  useEffect(() => {
+    const updateImageBounds = () => {
+      const container = imageContainerRef.current;
+      const image = imageRef.current;
+
+      if (!container || !image) {
+        return;
+      }
+
+      const containerRect = container.getBoundingClientRect();
+      const imageRect = image.getBoundingClientRect();
+
+      setImageBounds({
+        left: imageRect.left - containerRect.left,
+        top: imageRect.top - containerRect.top,
+        width: imageRect.width,
+        height: imageRect.height
+      });
+    };
+
+    updateImageBounds();
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(() => {
+          updateImageBounds();
+        })
+      : null;
+
+    if (resizeObserver) {
+      if (imageContainerRef.current) {
+        resizeObserver.observe(imageContainerRef.current);
+      }
+      if (imageRef.current) {
+        resizeObserver.observe(imageRef.current);
+      }
+    }
+
+    window.addEventListener('resize', updateImageBounds);
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updateImageBounds);
+    };
+  }, [currentStation, showDetail, imageLoaded]);
+
+  const getPointStyle = (detail: any) => {
+    const leftPercent = parseFloat(detail.pointPosition?.left || '50');
+    const topPercent = parseFloat(detail.pointPosition?.top || '50');
+
+    if (imageBounds.width > 0 && imageBounds.height > 0) {
+      return {
+        left: `${imageBounds.left + (imageBounds.width * leftPercent) / 100}px`,
+        top: `${imageBounds.top + (imageBounds.height * topPercent) / 100}px`
+      };
+    }
+
+    return {
+      left: detail.pointPosition?.left || '50%',
+      top: detail.pointPosition?.top || '50%'
+    };
   };
 
   return (
@@ -679,23 +744,25 @@ export default function CraftsmanshipPage() {
         <div className="right-panel">
           <div className="image-area">
             {/* 主体图片容器 */}
-            <div className={`main-image-container ${showDetail ? 'shrink' : ''}`}>
-              <img 
-                src={`/民居/${stationData.folder}/${stationData.mainImage}`} 
-                alt={`${stationData.building}主体`} 
+            <div
+              ref={imageContainerRef}
+              className={`main-image-container ${showDetail ? 'shrink' : ''}`}
+            >
+              <img
+                ref={imageRef}
+                src={`/民居/${stationData.folder}/${stationData.mainImage}`}
+                alt={`${stationData.building}主体`}
                 className="main-image"
+                onLoad={handleImageLoad}
               />
-              
-              {/* 细节点 - 每个驿站的细节点独立 */}
+
+              {/* 细节点 - 按图片实际渲染区域定位，不影响初始比例 */}
               {stationData.details && stationData.details.length > 0 ? (
                 stationData.details.map((detail: any, index: number) => (
-                  <div 
+                  <div
                     key={index}
                     className="detail-point"
-                    style={{
-                      left: detail.pointPosition?.left || '50%',
-                      top: detail.pointPosition?.top || '50%'
-                    }}
+                    style={getPointStyle(detail)}
                     onClick={() => handleShowDetail(detail)}
                   >
                     <span className="point-label">{detail.name}</span>
