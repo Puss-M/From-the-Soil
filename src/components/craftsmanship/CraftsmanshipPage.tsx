@@ -79,13 +79,13 @@ const stationDataMap: Record<string, StationData> = {
         name: '四合院匾额',
         image: '四合院匾额.png',
         description: '四合院匾额是宅第的文化名片，通常悬挂于门楣之上，多以木质或石质制成，题字多出自名家之手，内容或为祈福纳祥（如"福瑞祥和"），或彰显家风志向，兼具标识与教化功能。匾额的形制、字体与装饰也暗含门第等级，是传统建筑中"文以载道"的直观体现，承载着中式美学与家族精神。',
-        pointPosition: { left: '53.91%', top: '71.65%' }
+        pointPosition: { left: '52.25%', top: '45.46%' }
       },
       {
         name: '四合院木雕垂花门',
         image: '四合院木雕垂花门.png',
         description: '垂花门是四合院内宅与外院的分界，因檐柱垂头雕成花瓣状而得名。其木构件装饰极为考究，垂莲柱、雀替、门簪等处常雕刻花卉、瑞兽等吉祥纹样，工艺繁复细腻。它既起到空间过渡、遮挡内院视线的作用，又以精巧木雕展现匠人技艺，是四合院中最具装饰性与仪式感的门型，象征着家族的精致与内敛。',
-        pointPosition: { left: '54.54%', top: '48.11%' }
+        pointPosition: { left: '52.56%', top: '73.90%' }
       },
       {
         name: '四合院石雕抱鼓石',
@@ -128,7 +128,7 @@ const stationDataMap: Record<string, StationData> = {
         name: '窑洞女儿墙装饰',
         image: '窑洞女儿墙装饰.png',
         description: '窑洞女儿墙是窑顶边缘的防护矮墙，其装饰多以砖雕、泥塑或彩绘为主，题材多为卷草纹、回纹、瑞兽等吉祥元素，风格质朴粗犷。它既起到遮挡窑顶、防止雨水倒灌与人员坠落的作用，又以简洁有力的装饰线条强化窑洞建筑的轮廓美感，彰显着黄土民居粗犷而细腻的乡土气质。',
-        pointPosition: { left: '84.54%', top: '60.92%' }
+        pointPosition: { left: '51.62%', top: '42.33%' }
       }
     ]
   },
@@ -457,7 +457,7 @@ const stationDataMap: Record<string, StationData> = {
         name: '吊脚楼吊瓜柱',
         image: '吊脚楼吊瓜柱.png',
         description: '吊脚楼吊瓜柱是支撑楼体的重要构件，形似瓜果，柱身常饰有简单雕刻或彩绘，造型质朴灵动。它既起到承重结构、适应山地地形的作用，又以独特的造型点缀吊脚楼的立面，是湘西民居中极具地域特色的结构装饰元素。',
-        pointPosition: { left: '54.23%', top: '64.36%' }
+        pointPosition: { left: '32.25%', top: '61.08%' }
       },
       {
         name: '吊脚楼栏杆',
@@ -574,6 +574,7 @@ const stationDataMap: Record<string, StationData> = {
 // 组件主体
 export default function CraftsmanshipPage() {
   const { setPhase } = useStore();
+  const calibrationUiEnabled = false;
   const [currentStation, setCurrentStation] = useState<Station>(stations[0]);
   const [currentDetail, setCurrentDetail] = useState<DetailItem | null>(null);
   const [showDetail, setShowDetail] = useState(false);
@@ -789,13 +790,15 @@ export default function CraftsmanshipPage() {
             匠作志 · {currentStation.name} · {stationData.building}
           </div>
           <div className="timeline-actions">
-            <button
-              className={`calibration-toggle ${calibrationMode ? 'active' : ''}`}
-              onClick={handleToggleCalibrationMode}
-            >
-              <i className={`fas ${calibrationMode ? 'fa-crosshairs' : 'fa-location-crosshairs'}`}></i>
-              {calibrationMode ? '退出校点' : '校点模式'}
-            </button>
+            {calibrationUiEnabled && (
+              <button
+                className={`calibration-toggle ${calibrationMode ? 'active' : ''}`}
+                onClick={handleToggleCalibrationMode}
+              >
+                <i className={`fas ${calibrationMode ? 'fa-crosshairs' : 'fa-location-crosshairs'}`}></i>
+                {calibrationMode ? '退出校点' : '校点模式'}
+              </button>
+            )}
             <button className="back-button" onClick={handleBackToMap}>
               <i className="fas fa-map"></i>
               返回地图
@@ -883,7 +886,7 @@ export default function CraftsmanshipPage() {
 
         {/* 右边面板：图片展示 */}        
         <div className="right-panel">
-          {calibrationMode && (
+          {calibrationUiEnabled && calibrationMode && (
             <div className="calibration-panel">
               <div className="calibration-panel-header">
                 <div className="section-title">
