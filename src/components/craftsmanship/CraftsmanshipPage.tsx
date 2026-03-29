@@ -359,7 +359,7 @@ const stationDataMap: Record<string, any> = {
         name: '徽派石雕',
         image: '徽派石雕.png',
         description: '徽派石雕以青石、花岗岩为料，多用于门墩、柱础、栏杆与碑刻，造型浑厚古朴，题材涵盖瑞兽、花卉与吉祥文字。它既稳固建筑结构，又以质朴石材质感与白墙黛瓦形成对比，强化了徽派建筑的层次美感，是徽商文化中刚柔并济的艺术表达。',
-        pointPosition: { left: '56%', top: '33%' }
+        pointPosition: { left: '60%', top: '58%' }
       }
     ]
   },
