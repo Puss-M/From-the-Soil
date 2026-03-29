@@ -12,7 +12,6 @@ import { ModelViewer } from './ModelViewer';
 import { VideoChronicle } from './VideoChronicle';
 import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 
 /* ── Tab 定义 ──────────────────────────────── */
 const TABS = [
@@ -26,27 +25,16 @@ type TabKey = (typeof TABS)[number]['key'];
 /* ── 主组件 ────────────────────────────────── */
 export function StationDetail() {
   const { selectedStation, setPhase } = useStore();
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabKey>('model');
   const [direction, setDirection] = useState(0);
   const sid = selectedStation?.id ?? '';
-  const getHeritageUrl = useCallback((stationId: string) => {
-    if (stationId === 'beijing') {
-      return '/siheyuan-dashboard';
-    }
-    return `/folk-dashboard/index.html?stationId=${stationId}`;
-  }, []);
 
   const handleTabChange = useCallback((newTab: TabKey) => {
-    if (newTab === 'heritage') {
-      window.location.href = getHeritageUrl(sid);
-      return;
-    }
     const oldIdx = TABS.findIndex((t) => t.key === activeTab);
     const newIdx = TABS.findIndex((t) => t.key === newTab);
     setDirection(newIdx > oldIdx ? 1 : -1);
     setActiveTab(newTab);
-  }, [activeTab, getHeritageUrl, router, sid]);
+  }, [activeTab]);
 
   if (!selectedStation) {
     return (
@@ -407,7 +395,7 @@ export function StationDetail() {
                   <div style={{ flex: 1, minHeight: 0 }}>
                     {sid === 'beijing' ? (
                       <iframe
-                        src="/siheyuan-dashboard"
+                        src="/siheyuan-dashboard?embedded=1"
                         title={`${selectedStation.name}风物志大屏`}
                         style={{
                           width: '100%',
