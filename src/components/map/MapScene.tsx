@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { stations } from '@/data/stations';
@@ -21,7 +21,12 @@ type MapEventParams = {
 export function MapScene() {
   const { setPhase, setSelectedStation } = useStore();
   const [hoveredStation, setHoveredStation] = useState<string | null>(null);
+  const [chartVisible, setChartVisible] = useState(false);
   const chartRef = useRef<ReactECharts | null>(null);
+
+  useEffect(() => {
+    setChartVisible(false);
+  }, []);
 
   const hoveredData = useMemo(() => {
     if (!hoveredStation) return null;
@@ -36,6 +41,14 @@ export function MapScene() {
     };
 
     dom.addEventListener('dblclick', preventDoubleClickZoom);
+
+    requestAnimationFrame(() => {
+      instance.resize();
+      requestAnimationFrame(() => {
+        instance.resize();
+        setChartVisible(true);
+      });
+    });
 
     return () => {
       dom.removeEventListener('dblclick', preventDoubleClickZoom);
@@ -175,7 +188,18 @@ export function MapScene() {
       className="relative w-full h-full overflow-hidden"
       style={{ backgroundColor: '#f8f3e8' }}
     >
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 0,
+          opacity: chartVisible ? 1 : 0,
+          transition: 'opacity 0.2s ease',
+        }}
+      >
         <ReactECharts
           ref={chartRef}
           option={option}
@@ -192,9 +216,10 @@ export function MapScene() {
       <div className="guofeng-glass-strong" style={{ position: 'fixed', top: 20, left: 22, zIndex: 20, padding: '10px 14px' }}>
         <h1 style={{
           fontSize: '1.5rem', fontWeight: 800, color: '#3a2a1a',
-          letterSpacing: '0.12em', marginBottom: 3, fontFamily: 'var(--font-serif)',
+          letterSpacing: '0.12em', marginBottom: 3,
+          fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), "Noto Serif SC", SimSun, STSong, serif',
         }}>
-          千里江山
+          山河筑语
         </h1>
         <p style={{ fontSize: '0.74rem', color: '#8b6846', fontWeight: 500 }}>
           从土而生 · 建筑方言 · Architectural Dialects
