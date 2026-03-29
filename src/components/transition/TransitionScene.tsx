@@ -135,7 +135,7 @@ export function TransitionScene({ onComplete, onBack }: TransitionSceneProps) {
           <div>
             <h2 style={{
               fontSize: '1.4rem', fontWeight: 700, color: '#1e293b',
-              letterSpacing: '0.12em', fontFamily: 'var(--font-serif)',
+              letterSpacing: '0.12em', fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), "Noto Serif SC", SimSun, STSong, serif',
               textShadow: '0 1px 8px rgba(255,255,255,0.6)',
             }}>
               形态渐变

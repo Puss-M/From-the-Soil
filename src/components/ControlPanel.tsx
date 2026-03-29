@@ -29,7 +29,7 @@ export function ControlPanel() {
               fontWeight: 700,
               color: 'var(--paper-ink)',
               letterSpacing: '0.12em',
-              fontFamily: 'var(--font-serif)',
+              fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), "Noto Serif SC", SimSun, STSong, serif',
             }}
           >
             形态调控
