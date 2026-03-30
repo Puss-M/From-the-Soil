@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { stations } from '@/data/stations';
@@ -21,12 +21,7 @@ type MapEventParams = {
 export function MapScene() {
   const { setPhase, setSelectedStation } = useStore();
   const [hoveredStation, setHoveredStation] = useState<string | null>(null);
-  const [chartVisible, setChartVisible] = useState(false);
   const chartRef = useRef<ReactECharts | null>(null);
-
-  useEffect(() => {
-    setChartVisible(false);
-  }, []);
 
   const hoveredData = useMemo(() => {
     if (!hoveredStation) return null;
@@ -41,14 +36,6 @@ export function MapScene() {
     };
 
     dom.addEventListener('dblclick', preventDoubleClickZoom);
-
-    requestAnimationFrame(() => {
-      instance.resize();
-      requestAnimationFrame(() => {
-        instance.resize();
-        setChartVisible(true);
-      });
-    });
 
     return () => {
       dom.removeEventListener('dblclick', preventDoubleClickZoom);
@@ -110,7 +97,7 @@ export function MapScene() {
           color: '#5a4d42'
         },
         itemStyle: {
-          areaColor: '#f7f1e9',
+          areaColor: '#EFD59C4D',
           borderColor: '#d6cbbd',
           borderWidth: 1.2,
           shadowColor: 'rgba(0, 0, 0, 0.05)',
@@ -118,7 +105,7 @@ export function MapScene() {
         },
         emphasis: {
           itemStyle: {
-            areaColor: '#fdfaf7',
+            areaColor: '#EFD59C99',
           },
           label: {
             show: false
@@ -186,7 +173,18 @@ export function MapScene() {
   return (
     <div
       className="relative w-full h-full overflow-hidden"
-      style={{ backgroundColor: '#f8f3e8' }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
+        backgroundImage: 'url(/fengmian/di3.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
     >
       <div
         style={{
@@ -196,8 +194,6 @@ export function MapScene() {
           right: 0,
           bottom: 0,
           zIndex: 0,
-          opacity: chartVisible ? 1 : 0,
-          transition: 'opacity 0.2s ease',
         }}
       >
         <ReactECharts
