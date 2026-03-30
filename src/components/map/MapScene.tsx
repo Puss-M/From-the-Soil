@@ -97,7 +97,7 @@ export function MapScene() {
           color: '#5a4d42'
         },
         itemStyle: {
-          areaColor: '#f7f1e9',
+          areaColor: '#EFD59C4D',
           borderColor: '#d6cbbd',
           borderWidth: 1.2,
           shadowColor: 'rgba(0, 0, 0, 0.05)',
@@ -105,7 +105,7 @@ export function MapScene() {
         },
         emphasis: {
           itemStyle: {
-            areaColor: '#fdfaf7',
+            areaColor: '#EFD59C99',
           },
           label: {
             show: false
@@ -173,7 +173,19 @@ export function MapScene() {
   return (
     <div
       className="relative w-full h-full overflow-hidden"
-      style={{ backgroundColor: '#f8f3e8' }}
+      style={{ 
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
+        backgroundColor: '#00ff00',
+        backgroundImage: 'url(/fengmian/di3.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
     >
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
         <ReactECharts
