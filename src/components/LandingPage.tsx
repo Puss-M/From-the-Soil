@@ -17,6 +17,10 @@ type Particle = {
   driftX: number;
 };
 
+<<<<<<< HEAD
+=======
+const TITLE_CHARS = ['山', '河', '筑', '语'];
+>>>>>>> 8c5aaab4cc795d17445596456d0acf368b2af3df
 const ENGLISH_SUBTITLE = 'FROM THE SOIL';
 
 const titleContainerVariants: Variants = {
@@ -422,6 +426,10 @@ export function LandingPage() {
         />
       </div>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8c5aaab4cc795d17445596456d0acf368b2af3df
       <div
         aria-hidden="true"
         className="absolute inset-x-0 bottom-0 pointer-events-none"
@@ -777,6 +785,7 @@ export function LandingPage() {
                 }}
               />
             ))}
+<<<<<<< HEAD
             <span
               style={{
                 position: 'relative',
@@ -789,6 +798,16 @@ export function LandingPage() {
             >
               踏上旅途
             </span>
+=======
+            <span style={{ 
+              position: 'relative', 
+              zIndex: 1,
+              fontSize: 'clamp(1.3rem, 1.8vw, 1.5rem)',
+              fontFamily: '"FangSong", "仿宋", "STFangsong", serif',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+            }}>踏上旅途</span>
+>>>>>>> 8c5aaab4cc795d17445596456d0acf368b2af3df
           </button>
           <div
             style={{
