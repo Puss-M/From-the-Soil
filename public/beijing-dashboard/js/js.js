@@ -1,554 +1,1043 @@
+﻿
 $(function () {
-    // 颜色配置基线 - 统一暖棕色系
-    const themeText = '#8a5a1f';
-    const subText = '#a2743c';
-    const lightText = '#9a6a2e';
-    const chartBlue = '#34c0d5';
-    const chartGold = '#d3a657';
-    const chartRed = '#db5477';
+// echarts_1(); // Removed - component deleted
+echarts_2(); // Restored - component exists
+echarts_4();
+echarts_5(); // 启用词云图组件
+// echarts_6(); // 图表容器已移除
+echarts_7();
+echarts_8(); // 知网论文数柱状图
+function echarts_1() {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echart1'));
 
-    // 坐标轴样式基线
-    function axisStyle() {
-        return {
-            axisLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.2)' } },
-            axisTick: { show: false },
-            axisLabel: { color: themeText, fontSize: 11 },
-            splitLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.05)' } }
-        };
-    }
-
-    // 1. 温雨双折图 - 更亮的青蓝色和暖金色
-    function initLineChart() {
-        const myChart = echarts.init(document.getElementById('chart-line'));
-        const option = {
-            tooltip: { 
-                trigger: 'axis',
-                backgroundColor: 'rgba(255, 255, 255, 0.92)',
-                borderColor: 'rgba(93, 222, 214, 0.5)',
-                textStyle: { color: '#333' }
+       option = {
+  //  backgroundColor: '#00265f',
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'shadow'
+        }
+    },
+    grid: {
+        left: '0%',
+		top:'10px',
+        right: '0%',
+        bottom: '4%',
+       containLabel: true
+    },
+    xAxis: [{
+        type: 'category',
+      		data: ['商超门店', '教育培训', '房地产', '生活服务', '汽车销售', '旅游酒店', '五金建材'],
+        axisLine: {
+            show: true,
+         lineStyle: {
+                color: "rgba(255,255,255,.1)",
+                width: 1,
+                type: "solid"
             },
-            grid: { left: 48, right: 38, top: 38, bottom: 38 },
-            legend: {
-                top: 6,
-                right: 22,
-                itemWidth: 15,
-                itemHeight: 10,
-                textStyle: { color: lightText, fontSize: 11 }
-            },
-            xAxis: [{
-                type: 'category',
-                data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
-                axisLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.3)' } },
-                axisTick: { show: false },
-                axisLabel: { color: lightText, fontSize: 11 }
-            }],
-            yAxis: [
-                { 
-                    type: 'value', 
-                    name: '降水(mm)', 
-                    nameTextStyle: { color: subText, fontSize: 10 },
-                    min: 0, 
-                    max: 200, 
-                    interval: 50,
-                    axisLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.3)' } },
-                    axisTick: { show: false },
-                    axisLabel: { color: subText, fontSize: 10 },
-                    splitLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.08)' } }
-                },
-                { 
-                    type: 'value', 
-                    name: '温度(℃)',
-                    nameTextStyle: { color: subText, fontSize: 10 },
-                    min: -10, 
-                    max: 30, 
-                    interval: 10,
-                    axisLine: { show: false },
-                    axisTick: { show: false },
-                    axisLabel: { color: subText, fontSize: 10 },
-                    splitLine: { show: false }
-                }
-            ],
-            series: [
-                {
-                    name: '月降水量',
-                    type: 'bar',
-                    yAxisIndex: 0,
-                    barWidth: 17,
-                    itemStyle: { 
-                        color: '#58c8d2',
-                        borderRadius: [8, 8, 0, 0],
-                        shadowBlur: 8,
-                        shadowColor: 'rgba(88, 200, 210, 0.3)'
-                    },
-                    data: [3, 5, 8, 18, 35, 78, 173, 151, 58, 28, 8, 2]
-                },
-                {
-                    name: '月均温度',
-                    type: 'line',
-                    yAxisIndex: 1,
-                    smooth: true,
-                    symbol: 'circle',
-                    symbolSize: 7,
-                    lineStyle: { width: 3, color: '#c8954d' },
-                    itemStyle: { 
-                        color: '#d7b06e',
-                        borderColor: '#c8954d',
-                        borderWidth: 2
-                    },
-                    areaStyle: {
-                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                            { offset: 0, color: 'rgba(200, 149, 77, 0.35)' },
-                            { offset: 1, color: 'rgba(200, 149, 77, 0.05)' }
-                        ])
-                    },
-                    data: [-4, -1, 7, 15, 21, 26, 28, 27, 22, 14, 5, -2]
-                }
-            ]
-        };
-        myChart.setOption(option);
-    }
-
-    // 2. 分类图 - 四瓣花重叠设计（最像目标）
-    function initCategoryChart() {
-        const myChart = echarts.init(document.getElementById('chart-category'));
-        const option = {
-            graphic: [
-                {
-                    type: 'circle',
-                    left: '20%',
-                    top: '25%',
-                    shape: { r: 45 },
-                    style: { fill: 'rgba(224, 93, 106, 0.8)' },
-                    z: 10
-                },
-                {
-                    type: 'circle',
-                    left: '42%',
-                    top: '18%',
-                    shape: { r: 55 },
-                    style: { fill: 'rgba(102, 66, 126, 0.8)' },
-                    z: 10
-                },
-                {
-                    type: 'circle',
-                    left: '55%',
-                    top: '45%',
-                    shape: { r: 48 },
-                    style: { fill: 'rgba(82, 185, 199, 0.8)' },
-                    z: 10
-                },
-                {
-                    type: 'circle',
-                    left: '25%',
-                    top: '52%',
-                    shape: { r: 42 },
-                    style: { fill: 'rgba(186, 161, 81, 0.8)' },
-                    z: 10
-                },
-                // 添加标注文字
-                {
-                    type: 'text',
-                    left: '18%',
-                    top: '24%',
-                    style: { text: '一进', fill: '#fff', fontSize: 11, fontWeight: 'bold' },
-                    z: 20
-                },
-                {
-                    type: 'text',
-                    left: '41%',
-                    top: '16%',
-                    style: { text: '三进', fill: '#fff', fontSize: 12, fontWeight: 'bold' },
-                    z: 20
-                },
-                {
-                    type: 'text',
-                    left: '54%',
-                    top: '44%',
-                    style: { text: '二进', fill: '#fff', fontSize: 11, fontWeight: 'bold' },
-                    z: 20
-                },
-                {
-                    type: 'text',
-                    left: '23%',
-                    top: '51%',
-                    style: { text: '四进', fill: '#fff', fontSize: 10, fontWeight: 'bold' },
-                    z: 20
-                }
-            ],
-            legend: {
+        },
+		
+        axisTick: {
+            show: false,
+        },
+		axisLabel:  {
+                interval: 0,
+               // rotate:50,
                 show: true,
-                bottom: 2,
-                left: 'center',
-                itemWidth: 10,
-                itemHeight: 10,
-                textStyle: { color: lightText, fontSize: 10 },
-                data: ['一进四合院', '三进四合院', '二进四合院', '四进四合院']
-            }
-        };
-        myChart.setOption(option);
-    }
-
-    // 3. 雷达图 - 放大到78%填满右侧
-    function initRadarChart() {
-        const myChart = echarts.init(document.getElementById('chart-radar'));
-        const option = {
-            title: { show: false },
-            radar: {
-                radius: '78%',
-                center: ['55%', '55%'],
-                indicator: [
-                    { name: '防火', max: 100 },
-                    { name: '防盗', max: 100 },
-                    { name: '防水', max: 100 },
-                    { name: '防恶劣天气', max: 100 },
-                    { name: '防匪', max: 100 }
-                ],
-                axisName: { 
-                    color: themeText, 
-                    fontSize: 11,
-                    fontWeight: 'bold'
-                },
-                splitArea: { 
-                    show: true,
-                    areaStyle: {
-                        color: ['rgba(211, 166, 87, 0.04)', 'rgba(211, 166, 87, 0.09)']
-                    }
-                },
-                splitLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.18)' } },
-                axisLine: { lineStyle: { color: 'rgba(139, 91, 31, 0.18)' } }
-            },
-            series: [{
-                type: 'radar',
-                data: [{
-                    value: [78, 85, 70, 83, 65],
-                    name: '四合院防御',
-                    areaStyle: { color: 'rgba(211, 166, 87, 0.28)' },
-                    lineStyle: { color: '#d3a657', width: 2.5 },
-                    itemStyle: { color: '#d3a657' }
-                }]
-            }]
-        };
-        myChart.setOption(option);
-    }
-
-    // 4. 建材环形图 - 终版加粗
-    function initPieChart() {
-        const myChart = echarts.init(document.getElementById('chart-pie'));
-        const option = {
-            legend: {
-                orient: 'horizontal',
-                bottom: 5,
-                left: 'center',
-                itemWidth: 12,
-                itemHeight: 10,
-                textStyle: { color: lightText, fontSize: 11 }
-            },
-            series: [{
-                type: 'pie',
-                radius: ['48%', '82%'],
-                center: ['50%', '45%'],
-                avoidLabelOverlap: false,
-                label: { show: false },
-                labelLine: { show: false },
-                itemStyle: {
-                    borderWidth: 0,
-                    shadowBlur: 16,
-                    shadowColor: 'rgba(0, 0, 0, 0.12)'
-                },
-                emphasis: {
-                    scale: true,
-                    scaleSize: 8
-                },
-                data: [
-                    { value: 35, name: '白灰', itemStyle: { color: '#d8c8a2' } },
-                    { value: 30, name: '青砖', itemStyle: { color: '#4ec4cf' } },
-                    { value: 25, name: '大理石', itemStyle: { color: '#6f8bf0' } },
-                    { value: 20, name: '耐火土', itemStyle: { color: '#dc5d6d' } }
-                ]
-            }]
-        };
-        myChart.setOption(option);
-    }
-
-    // 5. 分布图 (中国地图) - 终版发光加强
-    function initMapChart() {
-        const myChart = echarts.init(document.getElementById('chart-map'));
-        const option = {
-            geo: {
-                map: 'china',
-                roam: false,
-                zoom: 1.26,
-                center: [105, 36],
-                label: { show: false },
-                emphasis: {
-                    label: { show: false },
-                    itemStyle: { areaColor: '#e3b45c' }
-                },
-                itemStyle: {
-                    areaColor: '#dca548',
-                    borderColor: '#b98a47',
-                    borderWidth: 2.5,
-                    shadowColor: 'rgba(255, 245, 220, 0.55)',
-                    shadowBlur: 36,
-                    shadowOffsetX: 0,
-                    shadowOffsetY: 0
-                }
-            },
-            series: [
-                {
-                    type: 'effectScatter',
-                    coordinateSystem: 'geo',
-                    data: [
-                        { name: '北京', value: [116.407, 39.904, 180] }
-                    ],
-                    symbolSize: 32,
-                    showEffectOn: 'render',
-                    rippleEffect: {
-                        brushType: 'stroke',
-                        color: '#9ef0ff',
-                        period: 3.2,
-                        scale: 6.5,
-                        number: 3
-                    },
-                    label: {
-                        show: true,
-                        formatter: '{b}',
-                        position: 'right',
-                        color: '#fff',
-                        fontSize: 14,
-                        fontWeight: 'bold',
-                        distance: 10,
-                        textBorderColor: 'rgba(0,0,0,0.4)',
-                        textBorderWidth: 2.5
-                    },
-                    itemStyle: {
-                        color: '#9ef0ff',
-                        shadowBlur: 30,
-                        shadowColor: 'rgba(158, 240, 255, 0.9)'
-                    },
-                    zlevel: 1
-                }
-            ]
-        };
-        myChart.setOption(option);
-    }
-
-    // 6. 构造桑基图 - 最终装饰化版本
-    function initSankeyChart() {
-        const myChart = echarts.init(document.getElementById('chart-sankey'));
-        const option = {
-            series: {
-                type: 'sankey',
-                layout: 'none',
-                top: 30,
-                bottom: 30,
-                left: 40,
-                right: 40,
-                nodeWidth: 6,
-                nodeGap: 16,
-                draggable: false,
-                emphasis: { focus: 'adjacency' },
-                lineStyle: {
-                    color: 'gradient',
-                    curveness: 0.45,
-                    opacity: 0.16
-                },
-                data: [
-                    { name: '大门', itemStyle: { color: 'rgba(228, 80, 99, 0.6)', borderWidth: 0 } },
-                    { name: '影壁', itemStyle: { color: 'rgba(52, 192, 213, 0.6)', borderWidth: 0 } },
-                    { name: '倒座房', itemStyle: { color: 'rgba(211, 166, 87, 0.6)', borderWidth: 0 } },
-                    { name: '垂花门', itemStyle: { color: 'rgba(82, 185, 199, 0.6)', borderWidth: 0 } },
-                    { name: '游廊', itemStyle: { color: 'rgba(186, 161, 81, 0.6)', borderWidth: 0 } },
-                    { name: '正房', itemStyle: { color: 'rgba(219, 84, 119, 0.6)', borderWidth: 0 } },
-                    { name: '厢房', itemStyle: { color: 'rgba(102, 66, 126, 0.6)', borderWidth: 0 } },
-                    { name: '耳房', itemStyle: { color: 'rgba(102, 142, 234, 0.6)', borderWidth: 0 } },
-                    { name: '后罩房', itemStyle: { color: 'rgba(223, 97, 113, 0.6)', borderWidth: 0 } }
-                ],
-                links: [
-                    { source: '大门', target: '影壁', value: 10 },
-                    { source: '大门', target: '倒座房', value: 8 },
-                    { source: '影壁', target: '垂花门', value: 10 },
-                    { source: '倒座房', target: '垂花门', value: 5 },
-                    { source: '垂花门', target: '游廊', value: 8 },
-                    { source: '垂花门', target: '正房', value: 12 },
-                    { source: '游廊', target: '厢房', value: 6 },
-                    { source: '正房', target: '耳房', value: 8 },
-                    { source: '正房', target: '后罩房', value: 4 },
-                    { source: '厢房', target: '后罩房', value: 3 }
-                ],
-                label: { 
-                    color: lightText, 
-                    fontSize: 10,
-                    fontWeight: 'normal'
-                }
-            }
-        };
-        myChart.setOption(option);
-    }
-
-    // 7. 分布词云图 - 终版精准排版
-    function initWordCloud() {
-        const myChart = echarts.init(document.getElementById('chart-wordcloud'));
-        const option = {
-            series: [{
-                type: 'wordCloud',
-                shape: 'square',
-                sizeRange: [18, 105],
-                rotationRange: [0, 0],
-                rotationStep: 0,
-                gridSize: 18,
-                drawOutOfBound: false,
-                layoutAnimation: true,
-                left: '10%',
-                top: '12%',
-                width: '80%',
-                height: '70%',
+                splitNumber: 15,
                 textStyle: {
-                    fontFamily: '"Microsoft YaHei", "PingFang SC", sans-serif',
-                    fontWeight: 'bold',
-                    shadowBlur: 10,
-                    shadowColor: 'rgba(0, 0, 0, 0.22)',
-                    color: function (params) {
-                        const map = {
-                            '东城区': '#e45063',
-                            '西城区': '#c8954d',
-                            '崇文门周边': '#baa151',
-                            '海淀区': '#b4934d',
-                            '丰台区': '#db5477',
-                            '什刹海': '#28a8ff',
-                            '南锣鼓巷': '#58c8d2',
-                            '前门': '#6f8bf0',
-                            '大栅栏': '#58c8d2',
-                            '天津老城厢': '#c8954d',
-                            '宣武门周边': '#e45063',
-                            '胡同': '#6f8bf0',
-                            '顺义区': '#58c8d2'
-                        };
-                        return map[params.name] || '#58c8d2';
-                    }
+ 					color: "rgba(255,255,255,.6)",
+                    fontSize: '12',
                 },
-                emphasis: {
-                    focus: 'self',
-                    textStyle: {
-                        shadowBlur: 18,
-                        shadowColor: 'rgba(0, 0, 0, 0.45)'
-                    }
+            },
+    }],
+    yAxis: [{
+        type: 'value',
+        axisLabel: {
+           //formatter: '{value} %'
+			show:true,
+			 textStyle: {
+ 					color: "rgba(255,255,255,.6)",
+                    fontSize: '12',
                 },
-                data: [
-                    { name: '西城区', value: 140 },
-                    { name: '东城区', value: 150 },
-                    { name: '崇文门周边', value: 120 },
-                    { name: '海淀区', value: 86 },
-                    { name: '丰台区', value: 82 },
-                    { name: '什刹海', value: 74 },
-                    { name: '南锣鼓巷', value: 68 },
-                    { name: '前门', value: 58 },
-                    { name: '大栅栏', value: 52 },
-                    { name: '天津老城厢', value: 46 },
-                    { name: '宣武门周边', value: 42 },
-                    { name: '胡同', value: 38 },
-                    { name: '顺义区', value: 28 }
-                ]
-            }]
-        };
+        },
+        axisTick: {
+            show: false,
+        },
+        axisLine: {
+            show: true,
+            lineStyle: {
+                color: "rgba(255,255,255,.1	)",
+                width: 1,
+                type: "solid"
+            },
+        },
+        splitLine: {
+            lineStyle: {
+               color: "rgba(255,255,255,.1)",
+            }
+        }
+    }],
+    series: [
+		{
+        type: 'bar',
+        data: [200, 300, 300, 900, 1500, 1200, 600],
+        barWidth:'35%', //柱子宽度
+       // barGap: 1, //柱子之间间距
+        itemStyle: {
+            normal: {
+                color:'#2f89cf',
+                opacity: 1,
+				barBorderRadius: 5,
+            }
+        }
+    }
+		
+	]
+};
+      
+        // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
+        window.addEventListener("resize",function(){
+            myChart.resize();
+        });
     }
+function echarts_2() {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echart2'));
 
-    // 8. 仪表盘 (保持状况示例) - 调整尺寸适应新高度
-    function initGauges() {
-        const ids = ['chart-g1', 'chart-g2', 'chart-g3'];
-        const names = ['完整四合院占比', '保护四合院占比', '完整核桃树占比'];
-        const values = [92, 48, 23];
-        const colors = ['#58c8d2', '#c8954d', '#db5477'];
+       option = {
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+        legend: {
+        top: '5%',
+        left: 'center',
+        itemWidth: 10,
+        itemHeight: 10,
+        textStyle: {
+            color: '#000',
+            fontSize: '12',
+        }
+    },
+    series: [
+        {
+            name: '视频类型占比',
+            type: 'pie',
+            radius: ['40%', '60%'],
+            center: ['50%', '55%'],
+            avoidLabelOverlap: true,
+            itemStyle: {
+                borderRadius: 8,
+                borderColor: '#fff',
+                borderWidth: 2
+            },
+            label: {
+                show: true,
+                formatter: function(params) {
+                    var percent = params.percent;
+                    var value = params.value;
+                    var name = params.name;
+                    // 显示名称、值和百分比
+                    return name + '\n' + value + ' (' + percent.toFixed(1) + '%)';
+                },
+                color: '#000',
+                fontSize: 12,
+                fontWeight: 'normal'
+            },
+            labelLine: {
+                show: true,
+                length: 10,
+                length2: 15,
+                lineStyle: {
+                    color: 'rgba(255,255,255,.3)'
+                }
+            },
+            emphasis: {
+                label: {
+                    show: true,
+                    fontSize: 14,
+                    fontWeight: 'bold'
+                }
+            },
+            data: [
+                { value: 26, name: '建筑科普' },
+                { value: 16, name: '文化历史' },
+                { value: 0, name: '旅游实拍' },
+                { value: 1, name: '生活体验' },
+                { value: 9, name: '房产介绍' },
+                { value: 8, name: '其他' }
+            ],
+            color: ['#4a9eff', '#2de69e', '#ffb399', '#ffe29e', '#b3adff', '#8fd4ff']
+        }
+    ]
+};
+      
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        window.addEventListener("resize",function(){
+            myChart.resize();
+        });
+    }
+function echarts_5() {
+        // 基于准备好的dom，初始化echarts实例
+        console.log('开始初始化词云图...');
+        var container = document.getElementById('echart5');
+        if (!container) {
+            console.error('找不到词云图容器 #echart5');
+            return;
+        }
+        console.log('词云图容器找到:', container);
+        
+        // 检查ECharts是否可用
+        if (typeof echarts === 'undefined') {
+            console.error('ECharts未定义，请检查加载顺序');
+            return;
+        }
+        
+        // 调试：检查wordCloud插件是否已注册
+        console.log('检查wordCloud系列类型...');
+        console.log('echarts对象:', echarts);
+        console.log('echarts.seriesTypes:', echarts.seriesTypes);
+        
+        try {
+            var myChart = echarts.init(container);
+            console.log('ECharts实例创建成功');
+        } catch (error) {
+            console.error('创建ECharts实例失败:', error);
+            return;
+        }
 
-        ids.forEach((id, i) => {
-            const myChart = echarts.init(document.getElementById(id));
-            const option = {
-                series: [{
-                    type: 'gauge',
-                    radius: '88%',
-                    center: ['50%', '60%'],
-                    startAngle: 180,
-                    endAngle: 0,
-                    min: 0,
-                    max: 100,
-                    progress: { 
-                        show: true, 
-                        width: 9,
-                        itemStyle: { 
-                            color: colors[i],
-                            shadowBlur: 12,
-                            shadowColor: 'rgba(0,0,0,0.2)'
-                        }
-                    },
-                    axisLine: { 
-                        lineStyle: { 
-                            width: 9, 
-                            color: [[1, 'rgba(255, 255, 255, 0.1)']] 
-                        } 
-                    },
-                    axisTick: { 
-                        show: true,
-                        splitNumber: 5,
-                        distance: -9,
-                        length: 3,
-                        lineStyle: {
-                            color: colors[i],
-                            width: 1
-                        }
-                    },
-                    splitLine: { 
-                        show: true,
-                        distance: -9,
-                        length: 6,
-                        lineStyle: {
-                            color: colors[i],
-                            width: 1.5
-                        }
-                    },
-                    axisLabel: { show: false },
-                    pointer: { show: false },
-                    anchor: { show: false },
-                    title: { 
-                        show: true,
-                        offsetCenter: [0, '62%'], 
-                        fontSize: 9, 
-                        color: subText,
-                        lineHeight: 11,
-                        overflow: 'truncate',
-                        width: 70
-                    },
-                    detail: {
-                        valueAnimation: true,
-                        offsetCenter: [0, '8%'],
-                        fontSize: 22,
-                        fontWeight: 'bold',
-                        formatter: '{value}%',
-                        color: colors[i]
-                    },
-                    data: [{ value: values[i], name: names[i] }]
-                }]
-            };
+       option = {
+    backgroundColor: 'transparent',
+    tooltip: {
+        trigger: 'item',
+        formatter: function(params) {
+            return params.name + ': ' + params.value + '次';
+        }
+    },
+    series: [{
+        type: 'wordCloud',
+        // 简约干净的专业词云配置
+        left: 'center',
+        top: 'center',
+        width: '100%',
+        height: '100%',
+        sizeRange: [14, 42], // 更小的字体范围，避免过大过粗
+        rotationRange: [0, 0], // 完全禁用旋转，所有词汇水平显示
+        rotationStep: 0, // 无旋转步长
+        gridSize: 12, // 更大的网格，词汇排列更松散整齐
+        drawOutOfBound: false,
+        textStyle: {
+            fontFamily: '"Microsoft YaHei", "Segoe UI", Arial, sans-serif',
+            fontWeight: 'normal',
+            color: function (params) {
+                // 进一步加深颜色，特别是青色和绿色
+                var value = params.value;
+                
+                if (value > 100) {
+                    // 最高频词：深红色
+                    return '#ff3333'; // 鲜艳红色
+                } else if (value > 50) {
+                    // 高频词：深橙色
+                    return '#ff704d'; // 温暖橙色
+                } else if (value > 30) {
+                    // 中高频词：深蓝色
+                    return '#3399ff'; // 经典蓝色
+                } else if (value > 20) {
+                    // 中频词：更深绿色
+                    return '#006633'; // 更深绿色
+                } else if (value > 15) {
+                    // 低频词：深紫色
+                    return '#9966ff'; // 柔和紫色
+                } else {
+                    // 最低频词：改为橙色，与绿色明显区分
+                    return '#ff9900'; // 鲜艳橙色
+                }
+            }
+        },
+        emphasis: {
+            focus: 'self',
+            textStyle: {
+                shadowBlur: 4,
+                shadowColor: 'rgba(0,0,0,0.15)',
+                fontWeight: 'bold'
+            }
+        },
+        // 优化布局参数
+        layoutAnimation: false, // 禁用动画，布局更稳定
+        ellipticity: 1, // 完全矩形布局
+        shape: 'rect', // 矩形形状
+        // 更线性的权重因子
+        weightFactor: function (size) {
+            return size * 0.7; // 线性缩放，更自然
+        },
+        data: [
+            { name: '四合院', value: 178 },
+            { name: '房子', value: 79 },
+            { name: '建筑', value: 67 },
+            { name: '喜欢', value: 64 },
+            { name: '院子', value: 34 },
+            { name: '风格', value: 31 },
+            { name: '面积', value: 29 },
+            { name: '王府', value: 29 },
+            { name: '装修', value: 40 },
+            { name: '北京', value: 43 },
+            { name: '中国', value: 26 },
+            { name: '知识', value: 24 },
+            { name: '支持', value: 26 },
+            { name: '布局', value: 26 },
+            { name: '中式', value: 25 },
+            { name: '设计', value: 22 },
+            { name: '传统', value: 22 },
+            { name: '大门', value: 22 },
+            { name: '加油', value: 22 },
+            { name: '厉害', value: 21 },
+            { name: '三进院', value: 21 },
+            { name: '豪宅', value: 19 },
+            { name: '后罩房', value: 19 },
+            { name: '民居', value: 19 },
+            { name: '二环', value: 18 },
+            { name: '花园', value: 18 },
+            { name: '好看', value: 18 },
+            { name: '压抑', value: 17 },
+            { name: '耳房', value: 17 },
+            { name: '厕所', value: 17 },
+            { name: '不错', value: 16 },
+            { name: '采光', value: 16 },
+            { name: '古代', value: 16 },
+            { name: '房屋', value: 16 },
+            { name: '园林', value: 16 },
+            { name: '倒座房', value: 16 },
+            { name: '垂花门', value: 15 },
+            { name: '厨房', value: 15 }
+        ]
+    }]
+};
+      
+        // 使用刚指定的配置项和数据显示图表。
+        try {
             myChart.setOption(option);
+            console.log('词云图配置设置成功');
+            
+            // 添加resize监听
+            window.addEventListener("resize",function(){
+                myChart.resize();
+            });
+            
+        } catch (error) {
+            console.error('设置词云图选项失败:', error);
+            console.error('错误详情:', error.message, error.stack);
+            
+            // 如果wordCloud失败，直接使用简单的文本显示
+            console.log('尝试使用文本显示数据...');
+            container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">' +
+                '<h3>评论高频词汇</h3>' +
+                '<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px;">' +
+                '<span style="font-size: 30px; color: #2f89cf;">四合院(178)</span>' +
+                '<span style="font-size: 20px; color: #27d08a;">房子(79)</span>' +
+                '<span style="font-size: 18px; color: #ff9f7f;">建筑(67)</span>' +
+                '<span style="font-size: 16px; color: #f5c87c;">喜欢(64)</span>' +
+                '<span style="font-size: 14px; color: #9d96f5;">院子(34)</span>' +
+                '</div></div>';
+        }
+    }
+	
+function echarts_4() {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echart4'));
+
+    option = {
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+    legend: {
+        top: '5%',
+        left: 'center',
+        itemWidth: 10,
+        itemHeight: 10,
+        textStyle: {
+            color: '#000',
+            fontSize: '12',
+        },
+        data: ['正面', '中性', '负面']
+    },
+    series: [
+        {
+            name: '评论情感',
+            type: 'pie',
+            radius: ['40%', '60%'],
+            center: ['50%', '55%'],
+            avoidLabelOverlap: true,
+            itemStyle: {
+                borderRadius: 8,
+                borderColor: '#fff',
+                borderWidth: 2
+            },
+            label: {
+                show: true,
+                formatter: function(params) {
+                    var percent = params.percent;
+                    var value = params.value;
+                    var name = params.name;
+                    // 显示名称、值和百分比
+                    return name + '\n' + value + ' (' + percent.toFixed(1) + '%)';
+                },
+                color: '#000',
+                fontSize: 12,
+                fontWeight: 'normal'
+            },
+            labelLine: {
+                show: true,
+                length: 10,
+                length2: 15,
+                lineStyle: {
+                    color: 'rgba(255,255,255,.3)'
+                }
+            },
+            emphasis: {
+                label: {
+                    show: true,
+                    fontSize: 14,
+                    fontWeight: 'bold'
+                }
+            },
+            data: [
+                { value: 125, name: '正面' },
+                { value: 542, name: '中性' },
+                { value: 89, name: '负面' }
+            ],
+            color: ['#4cd08a', '#4a9eff', '#ff8b7b']
+        }
+    ]
+};
+      
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        window.addEventListener("resize",function(){
+            myChart.resize();
+        });
+    }
+function echarts_6() {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echart6'));
+
+        var dataStyle = {
+	normal: {
+		label: {
+			show: false
+		},
+		labelLine: {
+			show: false
+		},
+		//shadowBlur: 40,
+		//shadowColor: 'rgba(40, 40, 40, 1)',
+	}
+};
+var placeHolderStyle = {
+	normal: {
+		color: 'rgba(255,255,255,.05)',
+		label: {show: false,},
+		labelLine: {show: false}
+	},
+	emphasis: {
+		color: 'rgba(0,0,0,0)'
+	}
+};
+option = {
+	color: ['#0f63d6', '#0f78d6', '#0f8cd6', '#0fa0d6', '#0fb4d6'],
+	tooltip: {
+		show: true,
+		formatter: "{a} : {c} "
+	},
+	legend: {
+		itemWidth: 10,
+        itemHeight: 10,
+		itemGap: 12,
+		bottom: '3%',
+		
+		data: ['浙江', '上海', '广东', '北京', '深圳'],
+		textStyle: {
+                    color: 'rgba(255,255,255,.6)',
+                }
+	},
+	
+	series: [
+		{
+		name: '浙江',
+		type: 'pie',
+		clockWise: false,
+		center: ['50%', '42%'],
+		radius: ['59%', '70%'],
+		itemStyle: dataStyle,
+		hoverAnimation: false,
+		data: [{
+			value: 80,
+			name: '01'
+		}, {
+			value: 20,
+			name: 'invisible',
+			tooltip: {show: false},
+			itemStyle: placeHolderStyle
+		}]
+	},
+		{
+		name: '上海',
+		type: 'pie',
+		clockWise: false,
+		center: ['50%', '42%'],
+		radius: ['49%', '60%'],
+		itemStyle: dataStyle,
+		hoverAnimation: false,
+		data: [{
+			value: 70,
+			name: '02'
+		}, {
+			value: 30,
+			name: 'invisible',
+			tooltip: {show: false},
+			itemStyle: placeHolderStyle
+		}]
+	}, 
+		{
+		name: '广东',
+		type: 'pie',
+		clockWise: false,
+		hoverAnimation: false,
+		center: ['50%', '42%'],
+		radius: ['39%', '50%'],
+		itemStyle: dataStyle,
+		data: [{
+			value: 65,
+			name: '03'
+		}, {
+			value: 35,
+			name: 'invisible',
+			tooltip: {show: false},
+			itemStyle: placeHolderStyle
+		}]
+	},
+		{
+		name: '北京',
+		type: 'pie',
+		clockWise: false,
+		hoverAnimation: false,
+		center: ['50%', '42%'],
+		radius: ['29%', '40%'],
+		itemStyle: dataStyle,
+		data: [{
+			value: 60,
+			name: '04'
+		}, {
+			value: 40,
+			name: 'invisible',
+			tooltip: {show: false},
+			itemStyle: placeHolderStyle
+		}]
+	}, 
+		{
+		name: '深圳',
+		type: 'pie',
+		clockWise: false,
+		hoverAnimation: false,
+		center: ['50%', '42%'],
+		radius: ['20%', '30%'],
+		itemStyle: dataStyle,
+		data: [{
+			value: 50,
+			name: '05'
+		}, {
+			value: 50,
+			name: 'invisible',
+			tooltip: {show: false},
+			itemStyle: placeHolderStyle
+		}]
+	}, ]
+};
+      
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        window.addEventListener("resize",function(){
+            myChart.resize();
+        });
+    }
+function echarts_31() {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('fb1')); 
+option = {
+   
+	    title: [{
+        text: '年龄分布',
+        left: 'center',
+        textStyle: {
+            color: '#fff',
+			fontSize:'16'
+        }
+
+    }],
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)",
+position:function(p){   //其中p为当前鼠标的位置
+            return [p[0] + 10, p[1] - 10];
+        }
+    },
+    legend: {
+        
+top:'70%',
+       itemWidth: 10,
+        itemHeight: 10,
+        data:['0岁以下','20-29岁','30-39岁','40-49岁','50岁以上'],
+                textStyle: {
+            color: 'rgba(255,255,255,.5)',
+			fontSize:'12',
+        }
+    },
+    series: [
+        {
+        	name:'年龄分布',
+            type:'pie',
+			center: ['50%', '42%'],
+            radius: ['40%', '60%'],
+                  color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab','#06b4ab','#06c8ab','#06dcab','#06f0ab'],	
+            label: {show:false},
+			labelLine: {show:false},
+            data:[
+                {value:1, name:'0岁以下'},
+                {value:4, name:'20-29岁'},
+                {value:2, name:'30-39岁'},
+                {value:2, name:'40-49岁'},
+                {value:1, name:'50岁以上'},
+            ]
+        }
+    ]
+};
+      
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        window.addEventListener("resize",function(){
+            myChart.resize();
+        });
+    }
+function echarts_32() {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('fb2'));
+option = {
+   
+	    title: [{
+        text: '职业分布',
+        left: 'center',
+        textStyle: {
+            color: '#fff',
+			fontSize:'16'
+        }
+
+    }],
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)",
+position:function(p){   //其中p为当前鼠标的位置
+            return [p[0] + 10, p[1] - 10];
+        }
+    },
+    legend: {
+        
+    top:'70%',
+       itemWidth: 10,
+        itemHeight: 10,
+        data:['电子商务','教育','IT/互联网','金融','学生','其他'],
+                textStyle: {
+           color: 'rgba(255,255,255,.5)',
+			fontSize:'12',
+        }
+    },
+    series: [
+        {
+        	name:'年龄分布',
+            type:'pie',
+			center: ['50%', '42%'],
+            radius: ['40%', '60%'],
+            color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab','#06b4ab','#06c8ab','#06dcab','#06f0ab'],	
+            label: {show:false},
+			labelLine: {show:false},
+            data:[
+                {value:5, name:'电子商务'},
+                {value:1, name:'教育'},
+                {value:6, name:'IT/互联网'},
+                {value:2, name:'金融'},
+                {value:1, name:'学生'},
+                {value:1, name:'其他'},
+            ]
+        }
+    ]
+};
+      
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        window.addEventListener("resize",function(){
+            myChart.resize();
+        });
+    }
+function echarts_33() {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('fb3'));
+option = {
+	    title: [{
+        text: '兴趣分布',
+        left: 'center',
+        textStyle: {
+            color: '#fff',
+			fontSize:'16'
+        }
+
+    }],
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)",
+position:function(p){   //其中p为当前鼠标的位置
+            return [p[0] + 10, p[1] - 10];
+        }
+    },
+    legend: {
+    top:'70%',
+       itemWidth: 10,
+        itemHeight: 10,
+        data:['汽车','旅游','财经','教育','软件','其他'],
+                textStyle: {
+            color: 'rgba(255,255,255,.5)',
+			fontSize:'12',
+        }
+    },
+    series: [
+        {
+        	name:'兴趣分布',
+            type:'pie',
+			center: ['50%', '42%'],
+            radius: ['40%', '60%'],
+                   color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab','#06b4ab','#06c8ab','#06dcab','#06f0ab'],	
+            label: {show:false},
+			labelLine: {show:false},
+            data:[
+                {value:2, name:'汽车'},
+                {value:3, name:'旅游'},
+                {value:1, name:'财经'},
+                {value:4, name:'教育'},
+                {value:8, name:'软件'},
+                {value:1, name:'其他'},
+            ]
+        }
+    ]
+};
+      
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        window.addEventListener("resize",function(){
+            myChart.resize();
         });
     }
 
-    // 全部初始化
-    initLineChart();
-    initCategoryChart();
-    initRadarChart();
-    initPieChart();
-    initMapChart();
-    initSankeyChart();
-    initWordCloud();
-    initGauges();
+function echarts_7() {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echart7'));
 
-    // 响应式
-    window.addEventListener('resize', function () {
-        const charts = document.querySelectorAll('.chart');
-        charts.forEach(c => {
-            const inst = echarts.getInstanceByDom(c);
-            if (inst) inst.resize();
+    option = {
+	    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            lineStyle: {
+                color: '#dddc6b'
+            }
+        }
+    },
+    grid: {
+        left: '0',
+		top: '30',
+        right: '65',
+        bottom: '10',
+        containLabel: true
+    },
+
+      xAxis: [{
+          type: 'category',
+          boundaryGap: false,
+          name: '时间',
+          nameGap: 20,
+          nameTextStyle: {
+              color: '#000',
+              fontSize: 12
+          },
+          axisLabel:  {
+                  interval: 4,
+                  textStyle: {
+                                        color: "#000",
+                                        fontSize:12,
+                  },
+              },
+          axisLine: {
+                        lineStyle: {
+                                color: '#000'
+                        }
+          },
+          data: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
+      }],
+
+    yAxis: [{
+        type: 'value',
+        name: '评论数',
+        nameTextStyle: {
+            color: '#000',
+            fontSize: 12
+        },
+        axisTick: {show: false},
+        axisLine: {
+            show: true,
+            lineStyle: {
+                color: '#000',
+                width: 1
+            }
+        },
+       axisLabel:  {
+                textStyle: {
+ 					color: "#000",
+					fontSize:12,
+                },
+            },
+        splitLine: {
+            lineStyle: {
+                 color: 'rgba(0,0,0,0.1)'
+            }
+        }
+    }],
+    series: [
+		{
+        name: '评论数量',
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 5,
+        showSymbol: false,
+        markPoint: {
+            data: [
+                {name: '102', value: 102, xAxis: 22, yAxis: 102, symbolSize: 8, itemStyle: {color: '#ff6b6b'}}
+            ],
+            symbol: 'circle',
+            symbolSize: 8,
+            label: {
+                show: true,
+                position: 'top',
+                formatter: '{b}',
+                color: '#ff6b6b',
+                fontSize: 12,
+                fontWeight: 'bold'
+            }
+        },
+        lineStyle: {
+            normal: {
+				color: '#2f89cf',
+                width: 2
+            }
+        },
+        areaStyle: {
+            normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    offset: 0,
+                    color: 'rgba(47, 137, 207, 0.4)'
+                }, {
+                    offset: 0.8,
+                    color: 'rgba(47, 137, 207, 0.1)'
+                }], false),
+                shadowColor: 'rgba(0, 0, 0, 0.1)',
+            }
+        },
+			itemStyle: {
+			normal: {
+				color: '#2f89cf',
+				borderColor: 'rgba(221, 220, 107, .1)',
+				borderWidth: 12
+			}
+		},
+        data: [73, 37, 12, 10, 17, 2, 18, 17, 40, 52, 45, 80, 50, 66, 101, 59, 61, 76, 49, 76, 99, 83, 102, 74]
+    }
+	]
+};
+      
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        window.addEventListener("resize",function(){
+            myChart.resize();
         });
-    });
-});
+    }
+
+function echarts_8() {
+        // 基于准备好的dom，初始化echarts实例
+        console.log('开始初始化知网论文数柱状图...');
+        var container = document.getElementById('echart8');
+        if (!container) {
+            console.error('找不到柱状图容器 #echart8');
+            return;
+        }
+        
+        try {
+            var myChart = echarts.init(container);
+            console.log('ECharts实例创建成功');
+        } catch (error) {
+            console.error('创建ECharts实例失败:', error);
+            return;
+        }
+
+       option = {
+    backgroundColor: 'transparent',
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'shadow'
+        },
+        formatter: function(params) {
+            return params[0].name + ': ' + params[0].value + '篇';
+        }
+    },
+      grid: {
+          left: '2%',      // 减小左边距
+          right: '10%',    // 增大右边距
+          top: '15%',
+          bottom: '15%',
+          containLabel: true
+      },
+    xAxis: [{
+        type: 'category',
+        name: '主题',
+        nameGap: 5,
+        nameTextStyle: {
+            color: '#000',
+            fontSize: 12
+        },
+        axisLine: {
+            show: true,
+            lineStyle: {
+                color: '#000',
+                width: 1,
+                type: 'solid'
+            }
+        },
+        axisTick: {
+            show: false
+        },
+        axisLabel: {
+            interval: 2,  // 每2个显示一个标签（每隔2个显示一个）
+            rotate: 45, // 倾斜45度显示长标签
+            textStyle: {
+                color: '#000',
+                fontSize: 10
+            }
+        },
+        data: [
+            '北京四合院', '四合院', '传统民居', '四合院建筑', '传统民居建筑', 
+            '《北京四合院志》', '北京旧城', '院落空间', '传统建筑', '四合院文化', 
+            '老北京', '建筑形态', '四合院民居', '中国传统建筑', '民居建筑', 
+            '中国传统民居', '空间设计', '人居环境', '比较研究', '地域文化'
+        ]
+    }],
+    yAxis: [{
+        type: 'value',
+        name: '论文数',
+        nameTextStyle: {
+            color: '#000',
+            fontSize: 12
+        },
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: true,
+            lineStyle: {
+                color: '#000',
+                width: 1,
+                type: 'solid'
+            }
+        },
+        splitLine: {
+            lineStyle: {
+                color: 'rgba(255,255,255,.3)'
+            }
+        },
+        axisLabel: {
+            textStyle: {
+                color: '#000',
+                fontSize: 10
+            }
+        }
+    }],
+    series: [{
+        name: '文献数(篇)',
+        type: 'bar',
+        barWidth: '60%',
+        data: [248, 127, 48, 19, 12, 11, 9, 9, 8, 8, 7, 7, 7, 7, 6, 6, 6, 6, 5, 5],
+        itemStyle: {
+            normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    { offset: 0, color: '#4a9eff' },
+                    { offset: 1, color: '#2a6ad6' }
+                ]),
+                barBorderRadius: [3, 3, 0, 0],
+                opacity: 0.9
+            },
+            emphasis: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    { offset: 0, color: '#ff6b6b' },
+                    { offset: 1, color: '#ff4d4d' }
+                ]),
+                shadowBlur: 10,
+                shadowColor: 'rgba(255,107,107,0.5)'
+            }
+        },
+        label: {
+            show: true,
+            position: 'top',
+            color: '#000',
+            fontSize: 10,
+            fontWeight: 'normal',
+            formatter: function(params) {
+                return params.value;
+            }
+        }
+    }]
+};
+      
+        // 使用刚指定的配置项和数据显示图表。
+        try {
+            myChart.setOption(option);
+            console.log('知网论文数柱状图配置设置成功');
+            
+            // 添加resize监听
+            window.addEventListener("resize",function(){
+                myChart.resize();
+            });
+            
+        } catch (error) {
+            console.error('设置柱状图选项失败:', error);
+            console.error('错误详情:', error.message, error.stack);
+        }
+    }
+
+})
+
+
+
+		
+		
+		
+
+
+		
+
+
+
+
+
+
+
+
+
