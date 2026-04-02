@@ -11,9 +11,9 @@ import CraftsmanshipPage from '@/components/craftsmanship/CraftsmanshipPage';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
 
 const sceneVariants: Variants = {
-  initial: { opacity: 0, scale: 0.98 },
-  animate: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' } },
-  exit: { opacity: 0, scale: 1.02, transition: { duration: 0.4, ease: 'easeIn' } },
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { duration: 0.3, ease: 'easeOut' } },
+  exit: { opacity: 0, transition: { duration: 0.2, ease: 'easeIn' } },
 };
 
 export default function Home() {
