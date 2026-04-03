@@ -20,7 +20,7 @@
         ];
         
         // 颜色配置
-        const colors = ['#58c8d2', '#c8954d', '#d3a657', '#db5b61'];
+        const colors = ['#58c8d2', '#A5D6A7', '#d3a657', '#db5b61'];
         
         // 环形图配置选项 - 简化版
         const option = {
