@@ -20,7 +20,7 @@
         ];
         
         // 颜色配置
-        const colors = ['#58c8d2', '#c8954d', '#d3a657', '#db5b61'];
+        const colors = ['#58c8d2', '#A5D6A7', '#d3a657', '#db5b61'];
         
         // 环形图配置选项 - 简化版
         const option = {
@@ -78,19 +78,19 @@
                     }
                 }))
             }],
-            legend: {
+legend: {
                 show: true, // 显示图例
                 orient: 'vertical', // 垂直排列
                 right: '2%', // 图例在圆环右边，更靠近右边
                 top: 'center', // 垂直居中
-                itemWidth: 12, // 图例标记宽度，稍微大一点
-                itemHeight: 10, // 图例标记高度，稍微大一点
+                itemWidth: 16, // 图例标记宽度，调大一点
+                itemHeight: 14, // 图例标记高度，调大一点
                 textStyle: {
                     color: 'rgba(212, 160, 23, 0.9)', // 深一点的土黄色文字
-                    fontSize: 10, // 字体大小，稍微大一点
+                    fontSize: 14, // 字体大小，调大一点
                     fontWeight: 'normal'
                 },
-                itemGap: 10 // 图例项间距，稍微大一点
+                itemGap: 12 // 图例项间距，调大一点
             },
             graphic: [] // 不显示任何图形文字
         };
