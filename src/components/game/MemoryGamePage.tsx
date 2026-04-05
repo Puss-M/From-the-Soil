@@ -181,16 +181,6 @@ export default function MemoryGamePage() {
         overflow: 'hidden',
       }}
     >
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage:
-            'linear-gradient(rgba(139, 115, 85, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 115, 85, 0.05) 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
-          pointerEvents: 'none',
-        }}
-      />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1480, margin: '0 auto', padding: '10px 12px 12px' }}>
         <style>{`
@@ -279,23 +269,28 @@ export default function MemoryGamePage() {
           }
           .memory-card-face-back.idle {
             background:
-              linear-gradient(135deg, rgba(255,249,239,0.96), rgba(242,231,213,0.92));
-            border: 1px solid rgba(177, 147, 111, 0.18);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 8px 18px rgba(92,74,58,0.06);
+              linear-gradient(135deg, rgba(255,255,255,0.40) 0%, rgba(252,247,238,0.15) 55%, rgba(145,125,85,0.06) 100%),
+              url(/翻翻乐背面.png) center center / cover no-repeat;
+            border: 1px solid rgba(177, 147, 111, 0.26);
+            box-shadow:
+              inset 0 1px 0 rgba(255,255,255,0.82),
+              inset 0 -1px 0 rgba(110,90,65,0.12),
+              0 12px 24px rgba(92,74,58,0.14);
           }
           .memory-card-face-back.playing {
             background:
-              linear-gradient(135deg, rgba(139,104,70,0.95), rgba(91,70,49,0.92));
-            border: 1px solid rgba(255,248,237,0.18);
-            box-shadow: 0 10px 18px rgba(92,74,58,0.10);
+              linear-gradient(135deg, rgba(255,255,255,0.40) 0%, rgba(252,247,238,0.15) 55%, rgba(145,125,85,0.06) 100%),
+              url(/翻翻乐背面.png) center center / cover no-repeat;
+            border: 1px solid rgba(177, 147, 111, 0.26);
+            box-shadow:
+              inset 0 1px 0 rgba(255,255,255,0.82),
+              inset 0 -1px 0 rgba(110,90,65,0.12),
+              0 12px 24px rgba(92,74,58,0.14);
           }
           .memory-card-sheen {
             position: absolute;
             inset: 0;
-            background:
-              linear-gradient(140deg, rgba(255,255,255,0.34), transparent 34%, transparent 68%, rgba(135,110,79,0.08)),
-              repeating-linear-gradient(0deg, rgba(156,127,91,0.055) 0 1px, transparent 1px 24px),
-              repeating-linear-gradient(90deg, rgba(156,127,91,0.045) 0 1px, transparent 1px 24px);
+            background: transparent;
             pointer-events: none;
           }
           .memory-card-orb {
@@ -517,31 +512,9 @@ export default function MemoryGamePage() {
                         <div
                           className={`memory-card-face memory-card-face-back ${isIdle ? 'idle' : 'playing'}`}
                           style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            color: isIdle ? '#8f7659' : '#f7efe3',
+                            color: 'transparent',
                           }}
                         >
-                          <div className="memory-card-sheen" />
-                          <div
-                            className="memory-card-orb"
-                            style={{
-                              background: isIdle ? 'rgba(168, 141, 107, 0.12)' : 'rgba(255,255,255,0.1)',
-                              border: isIdle ? '1px solid rgba(177, 147, 111, 0.18)' : '1px solid rgba(255,255,255,0.12)',
-                              color: isIdle ? '#9b8062' : '#f6ede2',
-                            }}
-                          >
-                            ◈
-                          </div>
-                          <div style={{ fontSize: 10, letterSpacing: 3, opacity: isIdle ? 0.7 : 0.78 }}>ARCHITECTURAL DIALECTS</div>
-                          <div style={{ marginTop: 10, fontSize: 14, fontWeight: 700 }}>
-                            {isIdle ? '待开启' : '点击翻牌'}
-                          </div>
-                          <div style={{ marginTop: 7, fontSize: 11, opacity: isIdle ? 0.8 : 0.6 }}>
-                            {isIdle ? '点击右上角开始游戏' : '寻找相同民居'}
-                          </div>
                         </div>
 
                         <div
