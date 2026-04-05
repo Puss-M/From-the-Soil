@@ -242,8 +242,8 @@ export function StationDetail() {
           {activeTab === 'info' && (
             <div key="info-wrap" style={{
               position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-              overflow: 'auto',
-              background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0eb 30%, #f0ece6 100%)',
+              overflow: 'hidden',
+              background: 'url(/建筑档案背景图.png) center center / cover no-repeat',
             }}>
               <motion.div
                 custom={direction}

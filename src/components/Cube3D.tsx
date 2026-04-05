@@ -617,14 +617,14 @@ export function Cube3D({ stationId, stationName }: Cube3DProps) {
                 position: 'absolute',
                 width: '360px',
                 height: '360px',
-                background: 'linear-gradient(145deg, var(--paper-base, #f7f1e3), var(--paper-warm, #efe3c6))',
+                 background: 'url(/立方体装饰素材.png) center center / cover no-repeat',
                 border: '2px solid var(--ui-border-strong, rgba(139, 104, 70, 0.5))',
                 borderRadius: '14px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transform: face.transform,
-                backfaceVisibility: 'visible',
+                backfaceVisibility: 'hidden',
                 boxShadow: `
                   0 6px 24px rgba(91, 70, 44, 0.15),
                   inset 0 1px 0 rgba(255, 255, 255, 0.3),
@@ -639,13 +639,12 @@ export function Cube3D({ stationId, stationName }: Cube3DProps) {
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = `${face.transform} scale(1.08)`;
                 e.currentTarget.style.boxShadow = `
-                  0 12px 40px rgba(184, 138, 59, 0.35),
-                  inset 0 2px 0 rgba(255, 255, 255, 0.4),
-                  inset 0 -2px 0 rgba(139, 104, 70, 0.2),
-                  0 0 0 2px rgba(184, 138, 59, 0.2)
+                  0 12px 40px rgba(184, 138, 59, 0.6),
+                  inset 0 2px 0 rgba(255, 255, 255, 0.8),
+                  inset 0 -2px 0 rgba(139, 104, 70, 0.4),
+                  0 0 0 3px rgba(184, 138, 59, 0.6)
                 `;
-                e.currentTarget.style.background = 'linear-gradient(145deg, var(--ui-bg-strong, rgba(255, 248, 234, 0.93)), var(--paper-gold-soft, rgba(184, 138, 59, 0.18)))';
-                e.currentTarget.style.border = '2px solid var(--paper-gold, #b88a3b)';
+                e.currentTarget.style.border = '3px solid var(--paper-gold, #b88a3b)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = face.transform;
@@ -655,7 +654,6 @@ export function Cube3D({ stationId, stationName }: Cube3DProps) {
                   inset 0 -1px 0 rgba(139, 104, 70, 0.15),
                   0 0 0 1px rgba(255, 248, 234, 0.2)
                 `;
-                e.currentTarget.style.background = 'linear-gradient(145deg, var(--paper-base, #f7f1e3), var(--paper-warm, #efe3c6))';
                 e.currentTarget.style.border = '2px solid var(--ui-border-strong, rgba(139, 104, 70, 0.5))';
               }}
               onClick={() => handleFaceClick(index)}
