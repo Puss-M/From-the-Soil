@@ -8,6 +8,7 @@ import { RoamingScene } from '@/components/roaming/RoamingScene';
 import { StationDetail } from '@/components/detail/StationDetail';
 import CraftsmanshipPage from '@/components/craftsmanship/CraftsmanshipPage';
 import MemoryGamePage from '@/components/game/MemoryGamePage';
+import { FolkMusicPage } from '@/components/folk-music/FolkMusicPage';
 
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
 
@@ -71,6 +72,13 @@ export default function Home() {
             variants={sceneVariants} initial="initial" animate="animate" exit="exit"
           >
             <MemoryGamePage />
+          </motion.div>
+        )}
+        {phase === 'folk-music' && (
+          <motion.div key="folk-music" className="w-full h-full"
+            variants={sceneVariants} initial="initial" animate="animate" exit="exit"
+          >
+            <FolkMusicPage />
           </motion.div>
         )}
       </AnimatePresence>

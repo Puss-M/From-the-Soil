@@ -277,37 +277,68 @@ export function MapScene() {
           <span style={{ fontSize: '16px' }}>◈</span>
           民居翻翻乐
         </button>
-         <button
-           className="guofeng-glass-strong"
-           onClick={() => setPhase('craftsmanship')}
-           style={{
-             padding: '10px 20px',
-             border: '1px solid rgba(139, 105, 70, 0.3)',
-             background: 'linear-gradient(135deg, rgba(201, 168, 106, 0.1) 0%, rgba(139, 105, 70, 0.05) 100%)',
-             color: '#8b6846',
-             fontSize: '14px',
-             fontWeight: 600,
-             borderRadius: '8px',
-             cursor: 'pointer',
-             display: 'flex',
-             alignItems: 'center',
-             gap: '8px',
-             transition: 'all 0.3s ease',
-           }}
-           onMouseEnter={(e) => {
-             e.currentTarget.style.background = 'linear-gradient(135deg, rgba(201, 168, 106, 0.2) 0%, rgba(139, 105, 70, 0.1) 100%)';
-             e.currentTarget.style.transform = 'translateY(-2px)';
-             e.currentTarget.style.boxShadow = '0 6px 16px rgba(139, 105, 70, 0.15)';
-           }}
-           onMouseLeave={(e) => {
-             e.currentTarget.style.background = 'linear-gradient(135deg, rgba(201, 168, 106, 0.1) 0%, rgba(139, 105, 70, 0.05) 100%)';
-             e.currentTarget.style.transform = 'translateY(0)';
-             e.currentTarget.style.boxShadow = 'none';
-           }}
-         >
-           <i className="fas fa-hammer" style={{ fontSize: '16px' }}></i>
-           匠作志
-         </button>
+          <button
+            className="guofeng-glass-strong"
+            onClick={() => setPhase('craftsmanship')}
+            style={{
+              padding: '10px 20px',
+              border: '1px solid rgba(139, 105, 70, 0.3)',
+              background: 'linear-gradient(135deg, rgba(201, 168, 106, 0.1) 0%, rgba(139, 105, 70, 0.05) 100%)',
+              color: '#8b6846',
+              fontSize: '14px',
+              fontWeight: 600,
+              borderRadius: '8px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(201, 168, 106, 0.2) 0%, rgba(139, 105, 70, 0.1) 100%)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(139, 105, 70, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(201, 168, 106, 0.1) 0%, rgba(139, 105, 70, 0.05) 100%)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            <i className="fas fa-hammer" style={{ fontSize: '16px' }}></i>
+            匠作志
+          </button>
+          <button
+            className="guofeng-glass-strong"
+            onClick={() => setPhase('folk-music')}
+            style={{
+              padding: '10px 20px',
+              border: '1px solid rgba(139, 105, 70, 0.3)',
+              background: 'linear-gradient(135deg, rgba(210, 175, 110, 0.15) 0%, rgba(160, 120, 70, 0.08) 100%)',
+              color: '#8b6846',
+              fontSize: '14px',
+              fontWeight: 600,
+              borderRadius: '8px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(210, 175, 110, 0.25) 0%, rgba(160, 120, 70, 0.15) 100%)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(180, 130, 60, 0.2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(210, 175, 110, 0.15) 0%, rgba(160, 120, 70, 0.08) 100%)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            <i className="fas fa-music" style={{ fontSize: '16px' }}></i>
+            乡韵集
+          </button>
          <button
            className="guofeng-glass-strong"
            onClick={() => setPhase('landing')}
