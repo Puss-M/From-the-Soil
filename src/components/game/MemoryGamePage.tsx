@@ -175,7 +175,7 @@ export default function MemoryGamePage() {
       style={{
         minHeight: '100vh',
         background:
-          'radial-gradient(circle at top, rgba(214, 188, 145, 0.18), transparent 25%), linear-gradient(180deg, #f8f2e7 0%, #efe4d3 48%, #e7d9c3 100%)',
+          'linear-gradient(rgba(248, 242, 231, 0.35), rgba(231, 217, 195, 0.45)), url(/翻翻乐背景图.jpg) center center / cover no-repeat',
         color: '#3a2a1a',
         position: 'relative',
         overflow: 'hidden',
@@ -269,8 +269,9 @@ export default function MemoryGamePage() {
           }
           .memory-card-face-back.idle {
             background:
-              linear-gradient(135deg, rgba(255,255,255,0.40) 0%, rgba(252,247,238,0.15) 55%, rgba(145,125,85,0.06) 100%),
-              url(/翻翻乐背面.png) center center / cover no-repeat;
+              url(/翻翻乐背面.png) center center / cover no-repeat,
+              linear-gradient(135deg, #ffffff 0%, #e9ddc8 100%);
+            opacity: 0.96;
             border: 1px solid rgba(177, 147, 111, 0.26);
             box-shadow:
               inset 0 1px 0 rgba(255,255,255,0.82),
@@ -279,8 +280,9 @@ export default function MemoryGamePage() {
           }
           .memory-card-face-back.playing {
             background:
-              linear-gradient(135deg, rgba(255,255,255,0.40) 0%, rgba(252,247,238,0.15) 55%, rgba(145,125,85,0.06) 100%),
-              url(/翻翻乐背面.png) center center / cover no-repeat;
+              url(/翻翻乐背面.png) center center / cover no-repeat,
+              linear-gradient(135deg, #ffffff 0%, #e9ddc8 100%);
+            opacity: 0.96;
             border: 1px solid rgba(177, 147, 111, 0.26);
             box-shadow:
               inset 0 1px 0 rgba(255,255,255,0.82),

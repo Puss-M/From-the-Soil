@@ -178,6 +178,7 @@ export function StationDetail() {
       <div style={{
         position: 'relative',
         overflow: 'hidden',
+        background: activeTab === 'model' ? 'url(/3d模型背景图.jpg) center center / cover no-repeat' : 'inherit',
       }}>
         <AnimatePresence mode="wait" custom={direction}>
           {/* ── Tab 1: 3D 模型 ── */}
@@ -185,7 +186,7 @@ export function StationDetail() {
             <div key="model-wrap" style={{
               position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
               overflow: 'auto',
-              background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0eb 30%, #f0ece6 100%)',
+              background: 'transparent',
             }}>
               <motion.div
                 className="w-full min-h-full"
@@ -199,10 +200,10 @@ export function StationDetail() {
                   
                   <div style={{
                     marginTop: 32,
-                    background: 'rgba(255, 252, 246, 0.9)',
+                    background: 'rgba(255, 252, 246, 0.25)',
                     borderRadius: 16,
-                    border: '1px solid rgba(139, 104, 70, 0.2)',
-                    boxShadow: '0 8px 32px rgba(92, 74, 58, 0.08)',
+                    border: 'none',
+                    boxShadow: 'none',
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
@@ -217,12 +218,11 @@ export function StationDetail() {
                       background: 'rgba(243,232,205,0.42)',
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                     }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <span style={{ fontSize: 18 }}>🏛️</span>
-                        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#3a2a1a', letterSpacing: 1 }}>
-                          3D 建筑场景模拟
-                        </h3>
-                      </div>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#3a2a1a', letterSpacing: 1 }}>
+                            3D 建筑场景模拟
+                          </h3>
+                        </div>
                       <span style={{ fontSize: 11, color: '#a08b73', letterSpacing: 2, textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
                         Interactive Model Viewer
                       </span>

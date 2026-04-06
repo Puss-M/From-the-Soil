@@ -15,7 +15,12 @@ import type { Station } from '@/types';
 
 /* ── 单个 GLB 模型加载组件 ──────────────────────── */
 function GLBModel({ url }: { url: string }) {
-  const { scene } = useGLTF(url);
+  // 中文文件名URL编码修复，解决中文路径无法加载问题
+  const encodedUrl = useMemo(() => {
+    return encodeURI(url);
+  }, [url]);
+  
+  const { scene } = useGLTF(encodedUrl);
   const clonedScene = useMemo(() => {
     const clone = scene.clone(true);
 
@@ -113,7 +118,10 @@ export function ModelViewer({ station }: ModelViewerProps) {
             shadow-mapSize={[2048, 2048]}
           />
           <pointLight position={[-5, 5, -5]} intensity={0.4} color="#d4a574" />
-          <Environment preset="apartment" blur={0.8} />
+          {/* 本地纯色环境，移除外部CDN预设依赖，不再发起网络请求 */}
+          <Environment blur={0.8}>
+            <color attach="background" args={['#f5f0eb']} />
+          </Environment>
           <ContactShadows
             position={[0, -0.01, 0]}
             opacity={0.5}

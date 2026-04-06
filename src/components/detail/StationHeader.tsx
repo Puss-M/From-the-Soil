@@ -20,6 +20,19 @@ function getHeritageBadge(level: string) {
 export function StationHeader({ station, heritage, climate }: Props) {
   const heritageLevel = heritage?.[0]?.level || '';
   const badge = getHeritageBadge(heritageLevel);
+  
+  // 计算实际显示的卡片数量
+  const visibleCardsCount = [
+    !!heritageLevel,
+    !!climate,
+    !!climate,
+    !!climate
+  ].filter(Boolean).length;
+  
+  // 根据卡片数量选择边框图片
+  const borderImage = visibleCardsCount === 4 
+    ? 'url(/容器边框短.png)' 
+    : 'url(/容器边框长.png)';
 
   return (
     <div style={{ marginBottom: 40, paddingTop: 20 }}>
@@ -62,7 +75,6 @@ export function StationHeader({ station, heritage, climate }: Props) {
           borderRadius: 20,
           border: '1px solid rgba(196, 168, 130, 0.3)',
         }}>
-          <span style={{ fontSize: 14 }}>🏠</span>
           <span style={{ fontSize: 14, color: '#8b7355', fontWeight: 500 }}>
             {station.buildingGene}
           </span>
@@ -76,24 +88,28 @@ export function StationHeader({ station, heritage, climate }: Props) {
       {/* 信息卡片行 */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: 16,
+        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gap: 8,
       }}>
         {/* 非遗等级 */}
         {heritageLevel && (
           <div style={{
-            background: badge.bg,
-            border: `1px solid ${badge.border}`,
+            background: 'transparent',
+            border: 'none',
             borderRadius: 14,
             padding: '16px 20px',
+            minHeight: 64,
             display: 'flex',
             alignItems: 'center',
-            gap: 12,
+            justifyContent: 'center',
+            textAlign: 'center',
+            backgroundImage: borderImage,
+            backgroundSize: '100% 100%',
+            backgroundRepeat: 'no-repeat',
           }}>
-            <span style={{ fontSize: 28 }}>{badge.icon}</span>
-            <div>
+            <div style={{ width: '100%' }}>
               <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 500, marginBottom: 2 }}>非遗保护</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: badge.color }}>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#111111' }}>
                 {heritageLevel}
               </div>
               {heritage && heritage.length > 0 && (
@@ -108,18 +124,22 @@ export function StationHeader({ station, heritage, climate }: Props) {
         {/* 地理位置 */}
         {climate && (
           <div style={{
-            background: '#f0f9ff',
-            border: '1px solid #bae6fd',
+            background: 'transparent',
+            border: 'none',
             borderRadius: 14,
             padding: '16px 20px',
+            minHeight: 64,
             display: 'flex',
             alignItems: 'center',
-            gap: 12,
+            justifyContent: 'center',
+            textAlign: 'center',
+            backgroundImage: borderImage,
+            backgroundSize: '100% 100%',
+            backgroundRepeat: 'no-repeat',
           }}>
-            <span style={{ fontSize: 28 }}>📍</span>
-            <div>
+            <div style={{ width: '100%' }}>
               <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 500, marginBottom: 2 }}>具体位置</div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#0369a1', lineHeight: 1.4 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#111111', lineHeight: 1.4 }}>
                 {climate.location.length > 30 ? climate.location.slice(0, 30) + '...' : climate.location}
               </div>
             </div>
@@ -129,18 +149,22 @@ export function StationHeader({ station, heritage, climate }: Props) {
         {/* 气候类型 */}
         {climate && (
           <div style={{
-            background: '#ecfdf5',
-            border: '1px solid #a7f3d0',
+            background: 'transparent',
+            border: 'none',
             borderRadius: 14,
             padding: '16px 20px',
+            minHeight: 64,
             display: 'flex',
             alignItems: 'center',
-            gap: 12,
+            justifyContent: 'center',
+            textAlign: 'center',
+            backgroundImage: borderImage,
+            backgroundSize: '100% 100%',
+            backgroundRepeat: 'no-repeat',
           }}>
-            <span style={{ fontSize: 28 }}>🌤️</span>
-            <div>
+            <div style={{ width: '100%' }}>
               <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 500, marginBottom: 2 }}>气候类型</div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#047857' }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#111111' }}>
                 {climate.climateType}
               </div>
             </div>
@@ -150,18 +174,22 @@ export function StationHeader({ station, heritage, climate }: Props) {
         {/* 海拔 */}
         {climate && (
           <div style={{
-            background: '#faf5ff',
-            border: '1px solid #d8b4fe',
+            background: 'transparent',
+            border: 'none',
             borderRadius: 14,
             padding: '16px 20px',
+            minHeight: 64,
             display: 'flex',
             alignItems: 'center',
-            gap: 12,
+            justifyContent: 'center',
+            textAlign: 'center',
+            backgroundImage: borderImage,
+            backgroundSize: '100% 100%',
+            backgroundRepeat: 'no-repeat',
           }}>
-            <span style={{ fontSize: 28 }}>⛰️</span>
-            <div>
+            <div style={{ width: '100%' }}>
               <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 500, marginBottom: 2 }}>海拔高度</div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: '#7c3aed' }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#111111' }}>
                 {climate.altitude.toFixed(0)} <span style={{ fontSize: 12, fontWeight: 400 }}>m</span>
               </div>
             </div>
