@@ -276,7 +276,7 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
           right: 20,
           bottom: 20,
           style: {
-            text: '中国地图审图号：GS(2019)1719号',
+            text: '中国地图审图号：CS（2024）0650号',
             fill: 'rgba(255, 255, 255, 0.45)',
             fontSize: 10
           }
@@ -288,14 +288,14 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
         zoom: 1.26,
         center: [105, 36],
         label: { show: false },
-        emphasis: { label: { show: false }, itemStyle: { areaColor: '#e3b45c' } },
-        itemStyle: {
-          areaColor: '#dca548',
-          borderColor: '#b98a47',
-          borderWidth: 2.5,
-          shadowColor: 'rgba(255, 245, 220, 0.55)',
-          shadowBlur: 36,
-        },
+          emphasis: { label: { show: false }, itemStyle: { areaColor: '#B8D4F9' } },
+          itemStyle: {
+            areaColor: '#D2E0F7',
+            borderColor: '#A8C6F0',
+            borderWidth: 2.5,
+            shadowColor: 'rgba(210, 224, 247, 0.55)',
+            shadowBlur: 36,
+          },
         regions: data.mapRegions.map((name) => ({
           name,
           itemStyle: { areaColor: '#cf9a43' },
@@ -309,7 +309,7 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
         showEffectOn: 'render',
         rippleEffect: {
           brushType: 'stroke',
-          color: '#9ef0ff',
+          color: '#7FB6FF',
           period: 3.2,
           scale: 6.5,
           number: 3,
@@ -326,9 +326,9 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
           textBorderWidth: 2.5,
         },
         itemStyle: {
-          color: '#9ef0ff',
+          color: '#7FB6FF',
           shadowBlur: 30,
-          shadowColor: 'rgba(158, 240, 255, 0.9)',
+          shadowColor: 'rgba(127, 182, 255, 0.9)',
         },
         zlevel: 1,
       }],

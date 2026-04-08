@@ -1,0 +1,298 @@
+/* 卷轴动画组件样式 */
+
+.scroll-animation-container {
+  --scroll-width: 800px;
+  --scroll-height: 400px;
+  --axis-width: 80px;
+  --paper-min-width: 0px;
+  --paper-max-width: calc(var(--scroll-width) - 2 * var(--axis-width));
+  --animation-duration: 600ms;
+  --content-fade-delay: 300ms;
+  --paper-color: #f7f1e3;
+  --paper-border-color: #8b6846;
+  --paper-shadow: 0 8px 32px rgba(91, 70, 44, 0.15);
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40px 20px;
+  font-family: "Noto Serif SC", "STSong", "SimSun", serif;
+}
+
+/* 卷轴包装器 */
+.scroll-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--scroll-height);
+  cursor: pointer;
+  transition: all var(--animation-duration) cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.scroll-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+.scroll-wrapper.animating {
+  pointer-events: none;
+}
+
+/* 轴样式 */
+.scroll-left-axis,
+.scroll-right-axis {
+  position: relative;
+  width: var(--axis-width);
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--animation-duration) ease;
+}
+
+.scroll-left-axis {
+  transform-origin: right center;
+}
+
+.scroll-right-axis {
+  transform-origin: left center;
+}
+
+.scroll-wrapper:hover .scroll-left-axis {
+  transform: scale(1.05);
+}
+
+.scroll-wrapper:hover .scroll-right-axis {
+  transform: scale(1.05);
+}
+
+.axis-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(2px 4px 8px rgba(91, 70, 44, 0.2));
+  transition: filter 0.3s ease;
+}
+
+.scroll-wrapper:hover .axis-image {
+  filter: drop-shadow(4px 8px 16px rgba(91, 70, 44, 0.3));
+}
+
+/* 中间纸样式 */
+.scroll-middle-paper {
+  position: relative;
+  height: 100%;
+  background-color: var(--paper-color);
+  overflow: hidden;
+  box-shadow: var(--paper-shadow);
+  border: 2px solid var(--paper-border-color);
+  border-left: none;
+  border-right: none;
+  transition: width var(--animation-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 收起状态 */
+.scroll-wrapper.collapsed .scroll-middle-paper {
+  width: var(--paper-min-width);
+  opacity: 0;
+}
+
+/* 展开状态 */
+.scroll-wrapper.expanded .scroll-middle-paper {
+  width: var(--paper-max-width);
+  opacity: 1;
+}
+
+/* 纸张背景 */
+.paper-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.paper-background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/卷轴.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.9;
+}
+
+/* 内容区域 */
+.scroll-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  overflow-y: auto;
+  color: var(--paper-ink, #5b4631);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.scroll-content.hidden {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+.scroll-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation: contentFadeIn 0.5s ease var(--content-fade-delay) both;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 提示文本 */
+.scroll-hint {
+  margin-top: 24px;
+  text-align: center;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.scroll-wrapper:hover ~ .scroll-hint {
+  opacity: 1;
+}
+
+.hint-text {
+  font-size: 14px;
+  color: var(--paper-muted, #8f7556);
+  letter-spacing: 0.1em;
+  padding: 8px 16px;
+  background: rgba(139, 104, 70, 0.08);
+  border-radius: 20px;
+  border: 1px solid rgba(139, 104, 70, 0.16);
+  transition: all 0.3s ease;
+}
+
+.scroll-wrapper:hover ~ .scroll-hint .hint-text {
+  background: rgba(139, 104, 70, 0.12);
+  border-color: rgba(139, 104, 70, 0.24);
+}
+
+/* 纸张纹理效果 */
+.scroll-middle-paper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(184, 138, 59, 0.03) 2px, transparent 2px),
+    radial-gradient(circle at 80% 70%, rgba(91, 70, 44, 0.02) 1px, transparent 1px),
+    linear-gradient(45deg, transparent 49%, rgba(139, 104, 70, 0.03) 50%, transparent 51%);
+  background-size: 100px 100px, 150px 150px, 20px 20px;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 纸张边缘效果 */
+.scroll-middle-paper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid rgba(139, 104, 70, 0.1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 900px) {
+  .scroll-animation-container {
+    --scroll-width: 90vw;
+    --scroll-height: 300px;
+    --axis-width: 60px;
+  }
+  
+  .scroll-content {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .scroll-animation-container {
+    --scroll-width: 95vw;
+    --scroll-height: 250px;
+    --axis-width: 50px;
+  }
+  
+  .scroll-content {
+    padding: 16px;
+    font-size: 14px;
+  }
+  
+  .hint-text {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+/* 动画过程中的特殊效果 */
+.scroll-wrapper.animating .scroll-middle-paper {
+  animation: paperGlow var(--animation-duration) ease;
+}
+
+@keyframes paperGlow {
+  0%, 100% {
+    box-shadow: var(--paper-shadow);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(184, 138, 59, 0.3),
+      var(--paper-shadow);
+  }
+}
+
+/* 键盘焦点样式 */
+.scroll-wrapper:focus-visible {
+  outline: 2px solid var(--paper-gold, #b88a3b);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* 打印样式 */
+@media print {
+  .scroll-animation-container {
+    --paper-shadow: none;
+  }
+  
+  .scroll-wrapper {
+    break-inside: avoid;
+  }
+  
+  .scroll-hint {
+    display: none;
+  }
+}

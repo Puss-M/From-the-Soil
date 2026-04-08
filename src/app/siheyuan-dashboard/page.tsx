@@ -186,7 +186,7 @@ export default function SiheyuanDashboard() {
             right: 20,
             bottom: 20,
             style: {
-              text: '中国地图审图号：GS(2019)1719号',
+              text: '中国地图审图号：CS（2024）0650号',
               fill: 'rgba(255, 255, 255, 0.45)',
               fontSize: 10
             }
@@ -195,12 +195,12 @@ export default function SiheyuanDashboard() {
         geo: {
           map: 'china', roam: false, zoom: 1.26, center: [105, 36],
           label: { show: false },
-          emphasis: { label: { show: false }, itemStyle: { areaColor: '#e3b45c' } },
+          emphasis: { label: { show: false }, itemStyle: { areaColor: '#B8D4F9' } },
           itemStyle: {
-            areaColor: '#dca548',
-            borderColor: '#b98a47',
+            areaColor: '#D2E0F7',
+            borderColor: '#A8C6F0',
             borderWidth: 2.5,
-            shadowColor: 'rgba(255, 245, 220, 0.55)',
+            shadowColor: 'rgba(210, 224, 247, 0.55)',
             shadowBlur: 36
           }
         },
@@ -209,7 +209,7 @@ export default function SiheyuanDashboard() {
           data: [{ name: '北京', value: [116.407, 39.904, 180] }],
           symbolSize: 32, showEffectOn: 'render',
           rippleEffect: {
-            brushType: 'stroke', color: '#9ef0ff',
+            brushType: 'stroke', color: '#7FB6FF',
             period: 3.2, scale: 6.5, number: 3
           },
           label: {
@@ -218,8 +218,8 @@ export default function SiheyuanDashboard() {
             textBorderColor: 'rgba(0,0,0,0.4)', textBorderWidth: 2.5
           },
           itemStyle: {
-            color: '#9ef0ff',
-            shadowBlur: 30, shadowColor: 'rgba(158, 240, 255, 0.9)'
+            color: '#7FB6FF',
+            shadowBlur: 30, shadowColor: 'rgba(127, 182, 255, 0.9)'
           },
           zlevel: 1
         }]

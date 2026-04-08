@@ -21,6 +21,8 @@ type MapEventParams = {
 export function MapScene() {
   const { setPhase, setSelectedStation } = useStore();
   const [hoveredStation, setHoveredStation] = useState<string | null>(null);
+  const [isScrollExpanded, setIsScrollExpanded] = useState(false);
+  const [isScrollAnimating, setIsScrollAnimating] = useState(false);
   const chartRef = useRef<ReactECharts | null>(null);
 
   const hoveredData = useMemo(() => {
@@ -222,6 +224,281 @@ export function MapScene() {
         </p>
       </div>
 
+      {/* 地图正上方 - 民居目录入口 */}
+      <div
+        style={{
+          position: 'fixed',
+          top: isScrollExpanded ? '80px' : '20px', // 展开时往下放一点
+          left: '50%',
+          transform: `translateX(-50%) ${isScrollExpanded ? 'scale(1.5)' : 'scale(1)'}`,
+          zIndex: isScrollExpanded ? 100 : 20, // 展开时在所有图层上面
+          width: isScrollExpanded ? '800px' : '500px',
+          height: isScrollExpanded ? '400px' : '120px',
+          backgroundImage: 'url(/卷轴.png)',
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+          boxShadow: 'none',
+        }}
+        onClick={() => {
+          if (isScrollAnimating) return;
+          if (!isScrollExpanded) {
+            setIsScrollAnimating(true);
+            setIsScrollExpanded(true);
+            setTimeout(() => {
+              setIsScrollAnimating(false);
+            }, 600);
+          }
+        }}
+        onMouseEnter={(e) => {
+          if (!isScrollExpanded && !isScrollAnimating) {
+            e.currentTarget.style.transform = 'translateX(-50%) scale(1.05)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isScrollExpanded && !isScrollAnimating) {
+            e.currentTarget.style.transform = 'translateX(-50%) scale(1)';
+          }
+        }}
+      >
+        <span style={{
+          fontSize: isScrollExpanded ? '28px' : '20px',
+          fontWeight: 700,
+          color: '#3a2a1a',
+          fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), serif',
+          letterSpacing: '0.1em',
+          textShadow: '0 1px 2px rgba(255, 255, 255, 0.5)',
+          padding: '10px 20px',
+          opacity: isScrollExpanded ? 0 : 1,
+          transition: 'opacity 0.3s ease',
+        }}>
+          {isScrollExpanded ? '点击收起卷轴' : '点击可查看民居目录'}
+        </span>
+        
+          {/* 展开后的内容 - 水平滚动，文字垂直排列在一列中 */}
+        {isScrollExpanded && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '80px 70px', // 左右内边距增加，减小小容器宽度
+            opacity: isScrollExpanded ? 1 : 0,
+            transition: 'opacity 0.4s ease 0.2s',
+          }}>
+            {/* 右上角关闭按钮 - 浮动效果，没有滑动 */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '60px',
+                right: '60px', // 调整位置
+                width: '40px',
+                height: '40px',
+                cursor: 'pointer',
+                zIndex: 30,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#8b6846',
+                fontSize: '28px',
+                fontWeight: 'bold',
+                background: 'rgba(255, 248, 234, 0.9)',
+                borderRadius: '50%',
+                boxShadow: '0 4px 12px rgba(91, 70, 44, 0.2)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                animation: 'floatIn 0.4s ease-out forwards',
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isScrollAnimating) return;
+                setIsScrollAnimating(true);
+                setIsScrollExpanded(false);
+                setTimeout(() => {
+                  setIsScrollAnimating(false);
+                }, 600);
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#b88a3b';
+                e.currentTarget.style.transform = 'scale(1.1)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(184, 138, 59, 0.3)';
+                e.currentTarget.style.background = 'rgba(255, 248, 234, 1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#8b6846';
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(91, 70, 44, 0.2)';
+                e.currentTarget.style.background = 'rgba(255, 248, 234, 0.9)';
+              }}
+            >
+              ×
+            </div>
+            
+            {/* 浮动动画样式 */}
+            <style jsx>{`
+              @keyframes floatIn {
+                0% {
+                  opacity: 0;
+                  transform: translateY(-20px) scale(0.8);
+                }
+                100% {
+                  opacity: 1;
+                  transform: translateY(0) scale(1);
+                }
+              }
+              
+              @keyframes floatInContent {
+                0% {
+                  opacity: 0;
+                  transform: translateY(30px);
+                }
+                70% {
+                  opacity: 0.9;
+                  transform: translateY(-5px);
+                }
+                100% {
+                  opacity: 1;
+                  transform: translateY(0);
+                }
+              }
+              
+              /* 文字滑动条浮动效果 */
+              @keyframes floatInText {
+                0% {
+                  opacity: 0;
+                  transform: translateX(20px);
+                }
+                100% {
+                  opacity: 1;
+                  transform: translateX(0);
+                }
+              }
+              
+              /* 自定义滚动条样式 - 小一点，细一点 */
+              .custom-scrollbar::-webkit-scrollbar {
+                height: 6px; /* 滚动条高度 */
+                width: 6px; /* 垂直滚动条宽度 */
+              }
+              
+              .custom-scrollbar::-webkit-scrollbar-track {
+                background: rgba(139, 105, 70, 0.1);
+                border-radius: 3px;
+              }
+              
+              .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: rgba(139, 105, 70, 0.3);
+                border-radius: 3px;
+                transition: all 0.2s ease;
+              }
+              
+              .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: rgba(184, 138, 59, 0.5);
+              }
+              
+              .custom-scrollbar::-webkit-scrollbar-corner {
+                background: transparent;
+              }
+            `}</style>
+            
+            {/* 文字内容容器 - 浮动效果，完全透明，宽度减小，自定义滚动条 */}
+            <div 
+              className="custom-scrollbar"
+              style={{
+                width: 'calc(100% - 140px)', // 左右各减小一点
+                height: 'calc(100% - 80px)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                overflowX: 'auto',
+                overflowY: 'hidden',
+                padding: '20px 15px', // 减小内边距
+                marginTop: '10px',
+                marginBottom: '10px',
+                background: 'transparent',
+                animation: 'floatInContent 0.6s ease-out 0.1s forwards',
+                opacity: 0,
+                transform: 'translateY(30px)',
+              }}
+            >
+              <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                gap: '30px', // 减小两个驿站之间的距离
+                height: '100%',
+                padding: '0 15px',
+                minWidth: 'min-content',
+              }}>
+                {stations.map((station, index) => (
+                  <div
+                    key={station.id}
+                    style={{
+                      padding: '12px 8px', // 减小内边距
+                      background: 'transparent',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
+                      minWidth: '60px', // 减小最小宽度
+                      maxWidth: '75px', // 减小最大宽度
+                      fontFamily: '"KaiTi", "STKaiti", "Noto Serif SC", serif',
+                      flexShrink: 0,
+                      animation: `floatInText 0.5s ease-out ${0.1 + index * 0.05}s forwards`,
+                      opacity: 0,
+                      transform: 'translateX(20px)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#b88a3b';
+                      e.currentTarget.style.transform = 'translateX(0) scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = '#3a2a1a';
+                      e.currentTarget.style.transform = 'translateX(0) scale(1)';
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedStation(station);
+                      setPhase('detail');
+                    }}
+                  >
+                    <div style={{ 
+                      fontSize: '18px', // 调小字体
+                      fontWeight: 600, 
+                      lineHeight: '1.5',
+                      writingMode: 'vertical-rl',
+                      textOrientation: 'mixed',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      letterSpacing: '0.1em',
+                      wordBreak: 'keep-all',
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {station.name}<br />{station.buildingGene}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* 右下角驿站计数 */}
       <div style={{ position: 'fixed', bottom: 20, right: 24, zIndex: 20 }}>
         <div className="guofeng-glass-strong" style={{ padding: '6px 14px' }}>
@@ -244,133 +521,173 @@ export function MapScene() {
         </div>
       </div>
 
-      {/* 匠作志按钮 */}
-      <div style={{ position: 'fixed', top: 20, right: 24, zIndex: 20, display: 'flex', gap: 10 }}>
+      {/* 左侧按钮组 - 山河筑语下方 */}
+      <div style={{ 
+        position: 'fixed', 
+        top: '50%', 
+        left: 120,
+        zIndex: 20, 
+        display: 'flex', 
+        flexDirection: 'column',
+        gap: 80,
+        transform: 'translateY(-50%)'
+      }}>
         <button
-          className="guofeng-glass-strong"
           onClick={() => setPhase('memory-game')}
           style={{
-            padding: '10px 20px',
-            border: '1px solid rgba(139, 105, 70, 0.3)',
-            background: 'linear-gradient(135deg, rgba(157, 112, 66, 0.14) 0%, rgba(111, 73, 35, 0.08) 100%)',
-            color: '#8b6846',
-            fontSize: '14px',
-            fontWeight: 600,
-            borderRadius: '8px',
+            width: 160,
+            height: 160,
+            border: 'none',
+            borderRadius: '0px',
+            backgroundColor: 'transparent',
+            backgroundImage: 'url(/左圆.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            color: '#3a2a1a',
+            fontSize: '16px',
+            fontWeight: 700,
             cursor: 'pointer',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            gap: '8px',
+            justifyContent: 'center',
+            gap: '6px',
             transition: 'all 0.3s ease',
+            boxShadow: 'none',
+            fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), serif',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(157, 112, 66, 0.22) 0%, rgba(111, 73, 35, 0.14) 100%)';
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 6px 16px rgba(139, 105, 70, 0.15)';
+            e.currentTarget.style.transform = 'scale(1.08)';
+            e.currentTarget.style.boxShadow = 'none';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(157, 112, 66, 0.14) 0%, rgba(111, 73, 35, 0.08) 100%)';
-            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.transform = 'scale(1)';
             e.currentTarget.style.boxShadow = 'none';
           }}
         >
-          <span style={{ fontSize: '16px' }}>◈</span>
-          民居翻翻乐
+          <span style={{ paddingLeft: '9px' }}>翻翻乐</span>
         </button>
-          <button
-            className="guofeng-glass-strong"
-            onClick={() => setPhase('craftsmanship')}
-            style={{
-              padding: '10px 20px',
-              border: '1px solid rgba(139, 105, 70, 0.3)',
-              background: 'linear-gradient(135deg, rgba(201, 168, 106, 0.1) 0%, rgba(139, 105, 70, 0.05) 100%)',
-              color: '#8b6846',
-              fontSize: '14px',
-              fontWeight: 600,
-              borderRadius: '8px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              transition: 'all 0.3s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(201, 168, 106, 0.2) 0%, rgba(139, 105, 70, 0.1) 100%)';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 16px rgba(139, 105, 70, 0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(201, 168, 106, 0.1) 0%, rgba(139, 105, 70, 0.05) 100%)';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            <i className="fas fa-hammer" style={{ fontSize: '16px' }}></i>
-            匠作志
-          </button>
-          <button
-            className="guofeng-glass-strong"
-            onClick={() => setPhase('folk-music')}
-            style={{
-              padding: '10px 20px',
-              border: '1px solid rgba(139, 105, 70, 0.3)',
-              background: 'linear-gradient(135deg, rgba(210, 175, 110, 0.15) 0%, rgba(160, 120, 70, 0.08) 100%)',
-              color: '#8b6846',
-              fontSize: '14px',
-              fontWeight: 600,
-              borderRadius: '8px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              transition: 'all 0.3s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(210, 175, 110, 0.25) 0%, rgba(160, 120, 70, 0.15) 100%)';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 16px rgba(180, 130, 60, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(210, 175, 110, 0.15) 0%, rgba(160, 120, 70, 0.08) 100%)';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            <i className="fas fa-music" style={{ fontSize: '16px' }}></i>
-            乡韵集
-          </button>
-         <button
-           className="guofeng-glass-strong"
-           onClick={() => setPhase('landing')}
-           style={{
-             padding: '10px 20px',
-             border: '1px solid rgba(139, 105, 70, 0.3)',
-             background: 'linear-gradient(135deg, rgba(139, 104, 70, 0.12) 0%, rgba(92, 61, 30, 0.07) 100%)',
-             color: '#8b6846',
-             fontSize: '14px',
-             fontWeight: 600,
-             borderRadius: '8px',
-             cursor: 'pointer',
-             display: 'flex',
-             alignItems: 'center',
-             gap: '8px',
-             transition: 'all 0.3s ease',
-           }}
-           onMouseEnter={(e) => {
-             e.currentTarget.style.background = 'linear-gradient(135deg, rgba(139, 104, 70, 0.2) 0%, rgba(92, 61, 30, 0.12) 100%)';
-             e.currentTarget.style.transform = 'translateY(-2px)';
-             e.currentTarget.style.boxShadow = '0 6px 16px rgba(139, 105, 70, 0.15)';
-           }}
-           onMouseLeave={(e) => {
-             e.currentTarget.style.background = 'linear-gradient(135deg, rgba(139, 104, 70, 0.12) 0%, rgba(92, 61, 30, 0.07) 100%)';
-             e.currentTarget.style.transform = 'translateY(0)';
-             e.currentTarget.style.boxShadow = 'none';
-           }}
-         >
-           <span style={{ fontSize: '16px' }}>⌂</span>
-           返回首页
-         </button>
-       </div>
+
+        <button
+          onClick={() => setPhase('craftsmanship')}
+          style={{
+            width: 160,
+            height: 160,
+            border: 'none',
+            borderRadius: '0px',
+            backgroundColor: 'transparent',
+            backgroundImage: 'url(/左圆.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            color: '#3a2a1a',
+            fontSize: '16px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            transition: 'all 0.3s ease',
+            boxShadow: 'none',
+            fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), serif',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.08)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <span style={{ paddingLeft: '9px' }}>匠作志</span>
+        </button>
+      </div>
+
+      {/* 右侧按钮组 */}
+      <div style={{ 
+        position: 'fixed', 
+        top: '50%', 
+        right: 120,
+        zIndex: 20, 
+        display: 'flex', 
+        flexDirection: 'column',
+        gap: 80,
+        transform: 'translateY(-50%)'
+      }}>
+        <button
+          onClick={() => setPhase('folk-music')}
+          style={{
+            width: 160,
+            height: 160,
+            border: 'none',
+            borderRadius: '0px',
+            backgroundColor: 'transparent',
+            backgroundImage: 'url(/右圆.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            color: '#3a2a1a',
+            fontSize: '16px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            transition: 'all 0.3s ease',
+            boxShadow: 'none',
+            fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), serif',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.08)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <span style={{ paddingRight: '9px' }}>乡韵集</span>
+        </button>
+
+        <button
+          onClick={() => setPhase('landing')}
+          style={{
+            width: 160,
+            height: 160,
+            border: 'none',
+            borderRadius: '0px',
+            backgroundColor: 'transparent',
+            backgroundImage: 'url(/右圆.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            color: '#3a2a1a',
+            fontSize: '16px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            transition: 'all 0.3s ease',
+            boxShadow: 'none',
+            fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), serif',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.08)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <span style={{ paddingRight: '9px' }}>返回首页</span>
+        </button>
+      </div>
 
       {/* 悬停信息卡 */}
       {hoveredData && (
