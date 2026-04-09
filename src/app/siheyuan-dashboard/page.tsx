@@ -195,13 +195,13 @@ export default function SiheyuanDashboard() {
         geo: {
           map: 'china', roam: false, zoom: 1.26, center: [105, 36],
           label: { show: false },
-          emphasis: { label: { show: false }, itemStyle: { areaColor: '#B8D4F9' } },
+          emphasis: { label: { show: false }, itemStyle: { areaColor: '#c9dcf7' } },
           itemStyle: {
-            areaColor: '#D2E0F7',
-            borderColor: '#A8C6F0',
+            areaColor: '#dce8f8',
+            borderColor: '#5b9bff',
             borderWidth: 2.5,
-            shadowColor: 'rgba(210, 224, 247, 0.55)',
-            shadowBlur: 36
+            shadowColor: 'rgba(91, 155, 255, 0.22)',
+            shadowBlur: 28
           }
         },
         series: [{
@@ -209,7 +209,7 @@ export default function SiheyuanDashboard() {
           data: [{ name: '北京', value: [116.407, 39.904, 180] }],
           symbolSize: 32, showEffectOn: 'render',
           rippleEffect: {
-            brushType: 'stroke', color: '#7FB6FF',
+            brushType: 'stroke', color: '#5b9bff',
             period: 3.2, scale: 6.5, number: 3
           },
           label: {
@@ -218,8 +218,8 @@ export default function SiheyuanDashboard() {
             textBorderColor: 'rgba(0,0,0,0.4)', textBorderWidth: 2.5
           },
           itemStyle: {
-            color: '#7FB6FF',
-            shadowBlur: 30, shadowColor: 'rgba(127, 182, 255, 0.9)'
+            color: '#5b9bff',
+            shadowBlur: 30, shadowColor: 'rgba(91, 155, 255, 0.55)'
           },
           zlevel: 1
         }]

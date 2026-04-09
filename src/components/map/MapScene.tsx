@@ -72,7 +72,7 @@ export function MapScene() {
       value: [...s.coordinates, s.name],
       id: s.id,
       itemStyle: {
-        color: '#cbbbae',
+        color: '#5b9bff',
         borderColor: '#ffffff',
         borderWidth: 1.5,
       }
@@ -99,15 +99,15 @@ export function MapScene() {
           color: '#5a4d42'
         },
         itemStyle: {
-          areaColor: '#EFD59C4D',
-          borderColor: '#d6cbbd',
-          borderWidth: 1.2,
-          shadowColor: 'rgba(0, 0, 0, 0.05)',
-          shadowBlur: 5
+          areaColor: '#dce8f8',
+          borderColor: '#5b9bff',
+          borderWidth: 1.4,
+          shadowColor: 'rgba(91, 155, 255, 0.18)',
+          shadowBlur: 8
         },
         emphasis: {
           itemStyle: {
-            areaColor: '#EFD59C99',
+            areaColor: '#c9dcf7',
           },
           label: {
             show: false
@@ -142,15 +142,15 @@ export function MapScene() {
             moveOverlap: 'shiftY',
           },
           itemStyle: {
-            color: '#8c221c', // Seal Red
-            shadowBlur: 4,
-            shadowColor: 'rgba(0,0,0,0.2)'
+            color: '#5b9bff',
+            shadowBlur: 8,
+            shadowColor: 'rgba(91, 155, 255, 0.35)'
           },
           emphasis: {
             itemStyle: {
-              color: '#8c221c',
-              shadowBlur: 8,
-              shadowColor: 'rgba(140,34,28,0.28)'
+              color: '#4a88eb',
+              shadowBlur: 12,
+              shadowColor: 'rgba(74, 136, 235, 0.42)'
             },
             scale: true
           },
