@@ -9,7 +9,7 @@ import chinaGeoJson from '../../../public/china.json';
 
 echarts.registerMap('china', chinaGeoJson as never);
 
-const MAP_REVIEW_LABEL = '中国地图审图号：GS(2019)1719号';
+const MAP_REVIEW_LABEL = '中国地图审图号：GS（2024）0650号';
 
 type MapEventParams = {
   seriesType?: string;
@@ -112,7 +112,17 @@ export function MapScene() {
           label: {
             show: false
           }
-        }
+        },
+        // 隐藏南海诸岛区域
+        regions: [{
+          name: '南海诸岛',
+          itemStyle: {
+            opacity: 0  // 完全透明，隐藏该区域
+          },
+          label: {
+            show: false  // 隐藏标签
+          }
+        }]
       },
       series: [
         {

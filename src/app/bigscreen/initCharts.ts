@@ -296,10 +296,23 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
             shadowColor: 'rgba(210, 224, 247, 0.55)',
             shadowBlur: 36,
           },
-        regions: data.mapRegions.map((name) => ({
-          name,
-          itemStyle: { areaColor: '#cf9a43' },
-        })),
+        regions: [
+          // 隐藏南海诸岛区域
+          {
+            name: '南海诸岛',
+            itemStyle: {
+              opacity: 0  // 完全透明，隐藏该区域
+            },
+            label: {
+              show: false  // 隐藏标签
+            }
+          },
+          // 其他区域配置
+          ...data.mapRegions.map((name) => ({
+            name,
+            itemStyle: { areaColor: '#cf9a43' },
+          })),
+        ],
       },
       series: [{
         type: 'effectScatter',
