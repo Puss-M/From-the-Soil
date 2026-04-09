@@ -202,7 +202,16 @@ export default function SiheyuanDashboard() {
             borderWidth: 2.5,
             shadowColor: 'rgba(91, 155, 255, 0.22)',
             shadowBlur: 28
-          }
+          },
+          regions: [{
+            name: '南海诸岛',
+            itemStyle: {
+              opacity: 0
+            },
+            label: {
+              show: false
+            }
+          }]
         },
         series: [{
           type: 'effectScatter', coordinateSystem: 'geo',

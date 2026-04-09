@@ -296,10 +296,21 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
             shadowColor: 'rgba(91, 155, 255, 0.22)',
             shadowBlur: 28,
           },
-        regions: data.mapRegions.map((name) => ({
-          name,
-          itemStyle: { areaColor: '#bcd4fb' },
-        })),
+        regions: [
+          {
+            name: '南海诸岛',
+            itemStyle: {
+              opacity: 0,
+            },
+            label: {
+              show: false,
+            },
+          },
+          ...data.mapRegions.map((name) => ({
+            name,
+            itemStyle: { areaColor: '#bcd4fb' },
+          })),
+        ],
       },
       series: [{
         type: 'effectScatter',

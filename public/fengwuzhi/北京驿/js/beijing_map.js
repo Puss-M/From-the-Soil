@@ -59,7 +59,17 @@
                 },
                 label: {
                     show: false // 不显示省份标签
-                }
+                },
+                // 隐藏南海诸岛区域
+                regions: [{
+                    name: '南海诸岛',
+                    itemStyle: {
+                        opacity: 0  // 完全透明，隐藏该区域
+                    },
+                    label: {
+                        show: false  // 隐藏标签
+                    }
+                }]
             },
             series: [{
                 type: 'scatter',
@@ -105,7 +115,21 @@
             },
             title: {
                 show: false // 不显示标题
-            }
+            },
+            // 审图号标注
+            graphic: [
+                {
+                    type: 'text',
+                    right: 10,
+                    bottom: 10,
+                    style: {
+                        text: '中国地图审图号：GS（2024）0650',
+                        fill: 'rgba(255, 255, 255, 0.7)',
+                        fontSize: 10,
+                        fontFamily: 'Arial, sans-serif'
+                    }
+                }
+            ]
         };
         
         // 设置配置

@@ -112,7 +112,17 @@ export function MapScene() {
           label: {
             show: false
           }
-        }
+        },
+        // 隐藏南海诸岛区域
+        regions: [{
+          name: '南海诸岛',
+          itemStyle: {
+            opacity: 0  // 完全透明，隐藏该区域
+          },
+          label: {
+            show: false  // 隐藏标签
+          }
+        }]
       },
       series: [
         {

@@ -28,7 +28,7 @@ export function FolkMusicPage() {
     'lhasa': '拉萨驿 · 碉房',
     'weihai': '威海驿 · 海草房',
     'kashgar': '喀什驿 · 高台民居',
-    'turpan': '吐鲁番驿 · 阿以旺',
+    'turpan': '和田驿 · 阿以旺',
     'guangzhou': '广州驿 · 镬耳屋',
     'dali': '大理驿 · 土掌房',
     'xishuangbanna': '版纳驿 · 竹楼',
