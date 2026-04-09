@@ -77,12 +77,14 @@ export function FolkMusicPage() {
   }, [volume]);
 
   useEffect(() => {
-    if (audioRef.current) {
+    const audio = audioRef.current;
+
+    if (audio) {
       const wasPlaying = isPlaying;
       setCurrentTime(0);
       setDuration(0);
       
-      audioRef.current.load();
+      audio.load();
       
       // 如果之前正在播放，切换歌曲后继续保持播放状态
       const canPlayHandler = () => {
@@ -91,10 +93,14 @@ export function FolkMusicPage() {
             .then(() => setIsPlaying(true))
             .catch(() => setIsPlaying(false));
         }
-        audioRef.current.removeEventListener('canplay', canPlayHandler);
+        audio.removeEventListener('canplay', canPlayHandler);
       };
       
-      audioRef.current.addEventListener('canplay', canPlayHandler);
+      audio.addEventListener('canplay', canPlayHandler);
+
+      return () => {
+        audio.removeEventListener('canplay', canPlayHandler);
+      };
     }
   }, [currentIndex]);
 
