@@ -11,6 +11,7 @@ import { InfoCards } from './InfoCards';
 import { ModelViewer } from './ModelViewer';
 import { VideoChronicle } from './VideoChronicle';
 import { Cube3D } from '@/components/Cube3D';
+import { Compass } from './Compass';
 import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -260,6 +261,8 @@ export function StationDetail() {
                 }}>
                   <Cube3D stationId={sid} stationName={selectedStation.name} />
                 </div>
+                {/* 罗盘组件 - 固定在右下角 */}
+                <Compass stationName={selectedStation.name} />
               </motion.div>
             </div>
           )}
