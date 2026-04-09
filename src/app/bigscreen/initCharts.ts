@@ -276,7 +276,7 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
           right: 20,
           bottom: 20,
           style: {
-            text: '中国地图审图号：CS（2024）0650号',
+            text: '中国地图审图号：GS（2024）0650号',
             fill: 'rgba(255, 255, 255, 0.45)',
             fontSize: 10
           }
