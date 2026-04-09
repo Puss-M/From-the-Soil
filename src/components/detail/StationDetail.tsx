@@ -10,8 +10,8 @@ import { StationHeader } from './StationHeader';
 import { InfoCards } from './InfoCards';
 import { ModelViewer } from './ModelViewer';
 import { VideoChronicle } from './VideoChronicle';
+import { HeritageDashboard } from './HeritageDashboard';
 import { Cube3D } from '@/components/Cube3D';
-import { Compass } from './Compass';
 import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -242,9 +242,17 @@ export function StationDetail() {
           {activeTab === 'info' && (
             <div key="info-wrap" style={{
               position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-              overflow: 'auto',
-              background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0eb 30%, #f0ece6 100%)',
+              overflow: 'hidden',
+              background: 'url(/建筑档案背景图.png) center center / cover no-repeat',
             }}>
+              {/* 左上角翻折图片组件 */}
+              <FlipImage 
+                frontImage="/zhuyu1.png"
+                backImage="/zhuyu2.png"
+                width={270}
+                height={360}
+                stationName={selectedStation.name}
+              />
               <motion.div
                 custom={direction}
                 initial={{ opacity: 0, x: direction > 0 ? 60 : -60 }}
@@ -271,7 +279,7 @@ export function StationDetail() {
           {activeTab === 'heritage' && (
             <div key="heritage-wrap" style={{
               position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-              overflow: 'hidden',
+              overflow: 'auto',
               background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0eb 30%, #f0ece6 100%)',
             }}>
               <motion.div
@@ -281,33 +289,11 @@ export function StationDetail() {
                 animate={{ opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' } }}
                 exit={{ opacity: 0, x: direction > 0 ? -60 : 60, transition: { duration: 0.2 } }}
               >
-                <div style={{ width: '100%', height: '100%', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+                <div style={{ maxWidth: 1540, height: '100%', margin: '0 auto', padding: '10px 18px 8px', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
                   <div style={{ flex: 1, minHeight: 0 }}>
-                    {sid === 'beijing' ? (
-                      <iframe
-                        src="/siheyuan-dashboard?embedded=1"
-                        title={`${selectedStation.name}风物志大屏`}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          border: 'none',
-                          display: 'block',
-                          background: 'transparent',
-                        }}
-                      />
-                    ) : (
-                      <iframe
-                        src={`/bigscreen/${sid}`}
-                        title={`${selectedStation.name}风物志大屏`}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          border: 'none',
-                          display: 'block',
-                          background: 'transparent',
-                        }}
-                      />
-                    )}
+                    <HeritageDashboard
+                      station={selectedStation}
+                    />
                   </div>
                 </div>
               </motion.div>

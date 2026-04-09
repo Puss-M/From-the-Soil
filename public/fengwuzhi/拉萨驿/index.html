@@ -1,0 +1,988 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>拉萨驿风物志</title>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <link rel="stylesheet" href="css/comon0.css">
+  <!-- ECharts地图相关脚本 -->
+  <script src="js/echarts.min.js"></script>
+  <script src="js/china.js"></script>
+  <script src="js/beijing_map.js"></script>
+  <script src="js/material_pie_chart.js"></script>
+  <script src="js/sankey_chart.js"></script>
+  <script src="js/word_cloud_chart.js"></script>
+<style>
+/* 极简框架样式 */
+body {
+  background: url('images/风物志背景.jpg') center top no-repeat;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+  font-family: "微软雅黑";
+  color: #fff;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100vh; 
+  overflow: hidden;
+}
+
+.header {
+  position: absolute;
+  top: 10px; /* 往上挪10像素 */
+ 
+  width: 100%;
+  text-align: center;
+  z-index: 100;
+}
+
+.header h1 {
+  font-size: 36px;
+  color: #d4a017; /* 土黄色 */
+  text-shadow: none; /* 移除阴影 */
+  margin: 0;
+  padding: 10px;
+  background: transparent; /* 背景透明 */
+  display: inline-block;
+  border-radius: 5px;
+}
+
+.framework-container {
+  position: absolute;
+  top: 80px; /* 上移20像素，因为标题上移了10像素，总共上移30像素 */
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.framework {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* 三列平均分 */
+  grid-gap: 20px;
+  height: 100%;
+  align-items: stretch; /* 确保所有列高度一致 */
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.box {
+  border: 2px solid rgba(212, 160, 23, 0.3); /* 土黄色边框 */
+  background: rgba(212, 160, 23, 0.08); /* 土黄色背景，透明度8% */
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.box-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent; /* 背景透明 */
+  color: #8B4513; /* 褐色文字 */
+  font-size: 16px;
+  padding: 8px;
+  text-align: center;
+  z-index: 5;
+  border-bottom: 1px solid rgba(139, 69, 19, 0.5); /* 褐色边框 */
+}
+
+.box-content {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+}
+
+/* 左侧列 - 2行结构，与右侧列特定对齐 */
+.left-col {
+  display: grid;
+  grid-template-rows: 1fr 0.8fr; /* 2行：第一行1fr（材料环形图+构造桑基图），第二行0.8fr（分布词云图，再短两下） */
+  gap: 20px;
+}
+
+/* 第一行：垂直摆放两个容器 */
+.vertical-distribution-row {
+  display: grid;
+  grid-template-rows: 1.15fr 0.85fr; /* 垂直摆放：材料环形图1.15fr，构造桑基图0.85fr（稍微高一丢丢） */
+  gap: 20px;
+  height: 100%;
+}
+
+.vertical-distribution-row .box {
+  height: 100%;
+}
+
+/* 中间列 - 使用弹性布局确保高度一致 */
+.middle-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.middle-col .box {
+  flex: 1;
+}
+
+/* 调整中间列容器高度比例 - 删除保护状况后，将多出的空间给分布图 */
+.middle-col .box:nth-child(1) { flex: 1; } /* 分布地数据 - 保持压缩高度 */
+.middle-col .box:nth-child(2) { flex: 3; } /* 分布图 - 增加更多高度（删除保护状况后获得更多空间） */
+
+/* 右侧列 - 修改结构，给温雨双折图更多高度 */
+.right-col {
+  display: grid;
+  grid-template-rows: 1fr 0.75fr 1.5fr; /* 3行，历史进程图稍微低一丢丢(0.75fr)，温雨双折图更宽(1.5fr) */
+  gap: 20px;
+}
+
+/* 第一行：左右两个容器 */
+.data-analysis-row1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 左右平均分 */
+  gap: 20px;
+  height: 100%;
+}
+
+.data-analysis-row1 .box {
+  height: 100%;
+}
+
+/* 确保所有列高度一致 */
+.framework > * {
+  height: 100%;
+}
+
+/* 中国地图样式 */
+.china-map-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.china-map {
+  width: 90%;
+  height: 80%;
+  max-width: 500px;
+  max-height: 400px;
+}
+
+.province {
+  cursor: pointer;
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.province:hover {
+  fill: #f0c674; /* 悬停时变为更亮的土黄色 */
+  stroke: #d4a017;
+  stroke-width: 1.5;
+}
+
+.beijing-dot {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { r: 6; }
+  50% { r: 8; }
+  100% { r: 6; }
+}
+
+.province-label {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.map-info {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  padding: 5px;
+}
+
+/* 框架标注 */
+.framework-label {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: rgba(255,255,255,0.5);
+  font-size: 12px;
+  z-index: 100;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+<h1>藏族碉房</h1>
+  </div>
+  
+  <div class="framework-container">
+    <div class="framework">
+      <!-- 左侧列 - 2行结构 -->
+      <div class="left-col">
+        <!-- 第一行：垂直摆放两个容器 -->
+        <div class="vertical-distribution-row">
+          <div class="box">
+            <div class="box-title">材料环形图</div>
+            <div class="box-content">
+              <div id="material-pie-chart" style="width: 100%; height: 100%;"></div>
+            </div>
+          </div>
+          <div class="box">
+            <div class="box-title">构造桑基图</div>
+            <div class="box-content">
+              <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                <div id="sankey-chart" style="width: 50%; height: 90%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 第二行：分布词云图容器（高度压缩） -->
+        <div class="box">
+          <div class="box-title">分布词云图</div>
+          <div class="box-content">
+            <div id="word-cloud-chart" style="width: 100%; height: 100%;"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 中间列 -->
+      <div class="column middle-col">
+        <div class="box">
+          <div class="box-title">分布地数据</div>
+          <div class="box-content">
+            <div class="climate-data-container" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 10px;">
+              <!-- 第一行数据 -->
+              <div class="data-row" style="display: flex; justify-content: space-around; margin-bottom: 10px;">
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">年平均气温</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">11.7823°C</div>
+                  </div>
+                </div>
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">年降水量</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">650mm</div>
+                  </div>
+                </div>
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">平均水压</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">0.7770MPa</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- 第二行数据 -->
+              <div class="data-row" style="display: flex; justify-content: space-around;">
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">地理经度</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">101.8800°E</div>
+                  </div>
+                </div>
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">地理纬度</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">30.8800°N</div>
+                  </div>
+                </div>
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">平均海拔</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">1865.6546m</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 地图容器 - 缩小地图，再向下移动多一点 -->
+        <div class="box" style="flex: 3;">
+          <div class="box-title">分布图</div>
+          <div class="box-content">
+            <div style="width: 100%; height: 100%; display: flex; align-items: flex-start; justify-content: center; padding-top: 30px;">
+              <!-- ECharts地图容器 - 缩小并再向下移动 -->
+              <div id="chart-map-beijing" style="width: 100%; height: 100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 右侧列 -->
+      <div class="right-col">
+        <!-- 第一行：左右两个容器 -->
+        <div class="data-analysis-row1">
+          <div class="box">
+            <div class="box-title">分类</div>
+            <div class="box-content">
+              <div class="intersecting-circles-container" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
+                <!-- 四个相交的圆盘 -->
+                <div class="circle-container" style="position: relative; width: 220px; height: 220px;">
+                  <!-- 碉楼式 -->
+                  <div class="circle" style="position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(255, 107, 107, 0.7); top: 10px; left: 10px; display: flex; align-items: center; justify-content: center; z-index: 1; border: 2px solid rgba(255, 255, 255, 0.5);">
+                    <div class="circle-label" style="color: #fff; font-size: 12px; font-weight: bold; text-align: center; line-height: 1.2;">碉楼式</div>
+                  </div>
+                  
+                  <!-- 平顶式 -->
+                  <div class="circle" style="position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(78, 205, 196, 0.7); top: 10px; right: 10px; display: flex; align-items: center; justify-content: center; z-index: 2; border: 2px solid rgba(255, 255, 255, 0.5);">
+                    <div class="circle-label" style="color: #fff; font-size: 12px; font-weight: bold; text-align: center; line-height: 1.2;">平顶式</div>
+                  </div>
+                  
+                  <!-- 复合型 -->
+                  <div class="circle" style="position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(255, 209, 102, 0.7); bottom: 10px; left: 10px; display: flex; align-items: center; justify-content: center; z-index: 3; border: 2px solid rgba(255, 255, 255, 0.5);">
+                    <div class="circle-label" style="color: #fff; font-size: 12px; font-weight: bold; text-align: center; line-height: 1.2;">复合型</div>
+                  </div>
+                  
+                  <!-- 庄园式 -->
+                  <div class="circle" style="position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(6, 214, 160, 0.7); bottom: 10px; right: 10px; display: flex; align-items: center; justify-content: center; z-index: 4; border: 2px solid rgba(255, 255, 255, 0.5);">
+                    <div class="circle-label" style="color: #fff; font-size: 12px; font-weight: bold; text-align: center; line-height: 1.2;">庄园式</div>
+                  </div>
+                  
+                  <!-- 相交区域指示 -->
+                  <div class="intersection-hint" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); z-index: 0;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="box">
+            <div class="box-title">防御指数</div>
+            <div class="box-content">
+              <!-- ECharts雷达图容器 -->
+              <div id="radar-chart" style="width: 100%; height: 100%;"></div>
+            </div>
+          </div>
+        </div>
+        <!-- 第二行 -->
+        <div class="box">
+          <div class="box-title">历史进程图</div>
+          <div class="box-content">
+            <!-- 历史进程时间线 - 名词交互 -->
+            <div class="timeline-container" style="width: 100%; height: 100%; padding: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+              <!-- 时间线条容器 -->
+              <div class="timeline-wrapper" style="position: relative; width: 90%; height: 80px;">
+                <!-- 时间线背景 -->
+                <div class="timeline-background" style="position: absolute; top: 50%; left: 0; right: 0; height: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 6px; transform: translateY(-50%);"></div>
+                
+                <!-- 连接的时间线条 - 无交互 -->
+                <div class="connected-timeline" style="position: absolute; top: 50%; left: 0; right: 0; height: 12px; transform: translateY(-50%); display: flex; border-radius: 6px; overflow: hidden;">
+                  <!-- 商周时期线段 - 无交互 -->
+                  <div class="timeline-segment zhou" style="flex: 1; height: 100%; background: linear-gradient(90deg, #8B4513, #A0522D);">
+                  </div>
+                  
+                  <!-- 汉唐时期线段 - 无交互 -->
+                  <div class="timeline-segment han-tang" style="flex: 1.2; height: 100%; background: linear-gradient(90deg, #D2691E, #CD853F);">
+                  </div>
+                  
+                  <!-- 明清时期线段 - 无交互 -->
+                  <div class="timeline-segment ming-qing" style="flex: 1; height: 100%; background: linear-gradient(90deg, #D4A017, #F4A460);">
+                  </div>
+                </div>
+                
+                <!-- 名词标签 - 在线条下面，有交互 -->
+                <div class="timeline-labels" style="position: absolute; top: calc(50% + 20px); left: 0; right: 0; display: flex; justify-content: space-between;">
+                  <div class="timeline-label zhou-label" 
+                       style="flex: 1; text-align: center; color: #8B4513; font-size: 12px; font-weight: bold; cursor: pointer; padding: 5px 0;"
+                       data-period="吐蕃" 
+                       data-description="碉房建筑雏形出现">
+                    吐蕃时期
+                  </div>
+                  <div class="timeline-label han-tang-label" 
+                       style="flex: 1.2; text-align: center; color: #D2691E; font-size: 12px; font-weight: bold; cursor: pointer; padding: 5px 0;"
+                       data-period="宋元" 
+                       data-description="碉房建筑形式定型">
+                    宋元
+                  </div>
+                  <div class="timeline-label ming-qing-label" 
+                       style="flex: 1; text-align: center; color: #D4A017; font-size: 12px; font-weight: bold; cursor: pointer; padding: 5px 0;"
+                       data-period="明清至今" 
+                       data-description="碉房建筑完善与保护">
+                    明清至今
+                  </div>
+                </div>
+              </div>
+              
+              <!-- 浮动提示框容器 -->
+              <div id="timeline-tooltip" style="position: absolute; display: none; z-index: 1000; pointer-events: none;"></div>
+            </div>
+          </div>
+        </div>
+        <!-- 第三行 -->
+        <div class="box">
+          <div class="box-title">温雨双折图</div>
+          <div class="box-content">
+            <!-- ECharts温雨双折图容器 -->
+            <div id="temperature-rain-chart" style="width: 100%; height: 100%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<script>
+$(document).ready(function(){
+  // 移除简单的交互效果，保持8%透明度不变
+  // 不要有鼠标监听变颜色，不要有蒙版感觉
+
+  // 初始化ECharts雷达图
+  function initRadarChart() {
+    var radarChart = echarts.init(document.getElementById('radar-chart'));
+    
+    // 雷达图配置
+    var option = {
+      // 背景透明
+      backgroundColor: 'transparent',
+      
+      // 雷达图坐标系配置
+      radar: {
+        // 形状：多边形
+        shape: 'polygon',
+        
+        // 指示器（维度）配置
+        indicator: [
+          { name: '防火', max: 100 },
+          { name: '防盗', max: 100 },
+          { name: '防匪', max: 100 },
+          { name: '防水', max: 100 },
+          { name: '防恶劣天气', max: 100 }
+        ],
+        
+        // 雷达图中心位置和半径 - 稍微放大一点
+        center: ['50%', '50%'],
+        radius: '60%',
+        
+        // 分割线样式 - 改为棕色
+        splitLine: {
+          lineStyle: {
+            color: '#8B4513', // 深棕色
+            opacity: 0.3,
+            width: 1
+          }
+        },
+        
+        // 轴线样式 - 改为棕色
+        axisLine: {
+          lineStyle: {
+            color: '#8B4513', // 深棕色
+            opacity: 0.5,
+            width: 1
+          }
+        },
+        
+        // 分割区域样式
+        splitArea: {
+          areaStyle: {
+            color: ['transparent', 'transparent', 'transparent']
+          }
+        },
+        
+        // 刻度标签 - 更小字体，深棕色
+        axisName: {
+          color: '#5D4037', // 深棕色
+          fontSize: 8,      // 更小字体
+          fontWeight: 'bold'
+        }
+      },
+      
+      // 系列配置
+      series: [{
+        type: 'radar',
+        
+        // 数据 - 藏族碉房防御指数
+        data: [{
+          value: [95, 95, 100, 95, 80],
+          name: '防御指数',
+          
+          // 数据区域样式 - 改为棕色
+          areaStyle: {
+            color: 'rgba(139, 69, 19, 0.3)' // 棕色半透明
+          },
+          
+          // 线条样式 - 改为棕色
+          lineStyle: {
+            color: '#8B4513', // 深棕色
+            width: 2
+          },
+          
+          // 数据点样式 - 改为棕色
+          itemStyle: {
+            color: '#8B4513' // 深棕色
+          },
+          
+          // 标签样式 - 移除直接展示的数值
+          label: {
+            show: false  // 不直接显示数值
+          }
+        }]
+      }],
+      
+      // 禁用工具提示
+      tooltip: {
+        show: false
+      },
+      
+      // 禁用图例
+      legend: {
+        show: false
+      },
+      
+      // 禁用网格
+      grid: {
+        show: false
+      }
+    };
+    
+    // 应用配置
+    radarChart.setOption(option);
+    
+    // 窗口大小变化时重绘
+    window.addEventListener('resize', function() {
+      radarChart.resize();
+    });
+  }
+  
+  // 页面加载完成后初始化雷达图
+  initRadarChart();
+
+  // 历史进程时间线交互功能 - 名词标签浮动容器交互
+  function initTimelineInteraction() {
+    // 获取所有名词标签
+    var timelineLabels = $('.timeline-label');
+    
+    // 创建浮动容器
+    function createFloatingContainer(period, description, labelElement) {
+      // 移除现有的浮动容器
+      $('.floating-explanation-container').remove();
+      
+      // 获取标签位置和尺寸
+      var labelOffset = labelElement.offset();
+      var labelWidth = labelElement.outerWidth();
+      var labelHeight = labelElement.outerHeight();
+      
+      // 创建浮动容器
+      var floatingContainer = $('<div class="floating-explanation-container"></div>');
+      floatingContainer.css({
+        'position': 'absolute',
+        'background': 'rgba(255, 255, 255, 0.95)',
+        'border': '1px solid rgba(212, 160, 23, 0.7)',
+        'border-radius': '8px',
+        'padding': '12px',
+        'box-shadow': '0 6px 20px rgba(0, 0, 0, 0.15)',
+        'min-width': '200px',
+        'max-width': '250px',
+        'color': '#000',
+        'font-family': '微软雅黑',
+        'z-index': '1000',
+        'pointer-events': 'none',
+        'transition': 'all 0.3s ease'
+      });
+      
+      // 添加标题
+      var title = $('<div class="floating-title"></div>');
+      title.css({
+        'color': '#d4a017',
+        'font-size': '16px',
+        'font-weight': 'bold',
+        'margin-bottom': '10px',
+        'border-bottom': '2px solid rgba(212, 160, 23, 0.3)',
+        'padding-bottom': '8px',
+        'text-align': 'center'
+      });
+      title.text(period + '时期');
+      
+      // 添加描述
+      var desc = $('<div class="floating-description"></div>');
+      desc.css({
+        'font-size': '13px',
+        'line-height': '1.6',
+        'color': '#333',
+        'text-align': 'left'
+      });
+      desc.text(description);
+      
+      // 组装浮动容器
+      floatingContainer.append(title);
+      floatingContainer.append(desc);
+      $('body').append(floatingContainer);
+      
+      // 计算位置 - 显示在名词标签上方
+      var containerWidth = floatingContainer.outerWidth();
+      var containerHeight = floatingContainer.outerHeight();
+      
+      // 位置计算：显示在名词标签正上方
+      var posX = labelOffset.left + (labelWidth / 2) - (containerWidth / 2);
+      var posY = labelOffset.top - containerHeight - 15;
+      
+      // 如果浮动容器超出左侧边界，向右偏移
+      if (posX < 10) {
+        posX = 10;
+      }
+      
+      // 如果浮动容器超出右侧边界，向左偏移
+      if (posX + containerWidth > $(window).width() - 10) {
+        posX = $(window).width() - containerWidth - 10;
+      }
+      
+      // 如果浮动容器超出顶部边界，显示在名词标签下方
+      if (posY < 10) {
+        posY = labelOffset.top + labelHeight + 15;
+      }
+      
+      // 设置初始位置（稍微偏移，用于动画效果）
+      floatingContainer.css({
+        'left': (posX + 20) + 'px',
+        'top': (posY + 20) + 'px',
+        'opacity': '0',
+        'transform': 'translateY(10px)'
+      });
+      
+      // 动画显示
+      setTimeout(function() {
+        floatingContainer.css({
+          'left': posX + 'px',
+          'top': posY + 'px',
+          'opacity': '1',
+          'transform': 'translateY(0)'
+        });
+      }, 10);
+      
+      return floatingContainer;
+    }
+    
+    // 鼠标悬停事件 - 名词标签交互
+    timelineLabels.hover(
+      function() {
+        var $this = $(this);
+        // 获取数据
+        var period = $this.data('period');
+        var description = $this.data('description');
+        
+        // 添加悬停效果 - 名词标签变亮
+        $this.css({
+          'text-shadow': '0 0 12px rgba(255, 255, 255, 0.9)',
+          'transform': 'scale(1.15)',
+          'transition': 'all 0.3s ease',
+          'z-index': '100'
+        });
+        
+        // 创建浮动容器
+        createFloatingContainer(period, description, $this);
+      },
+      function() {
+        var $this = $(this);
+        // 移除悬停效果
+        $this.css({
+          'text-shadow': 'none',
+          'transform': 'scale(1)',
+          'transition': 'all 0.3s ease',
+          'z-index': '1'
+        });
+        
+        // 移除浮动容器（带淡出动画）
+        var floatingContainer = $('.floating-explanation-container');
+        if (floatingContainer.length) {
+          floatingContainer.css({
+            'opacity': '0',
+            'transform': 'translateY(10px)',
+            'transition': 'all 0.3s ease'
+          });
+          
+          setTimeout(function() {
+            floatingContainer.remove();
+          }, 300);
+        }
+      }
+    );
+    
+    // 鼠标移动事件 - 更新浮动容器位置（如果需要）
+    timelineLabels.on('mousemove', function() {
+      // 浮动容器位置固定，不需要跟随鼠标移动
+    });
+    
+    // 点击事件 - 保持选中状态和浮动容器
+    timelineLabels.click(function(e) {
+      var $this = $(this);
+      // 获取数据
+      var period = $this.data('period');
+      var description = $this.data('description');
+      
+      // 移除所有标签的选中状态
+      timelineLabels.css({
+        'text-shadow': 'none',
+        'transform': 'scale(1)',
+        'background': 'transparent',
+        'border-radius': '0',
+        'z-index': '1'
+      });
+      
+      // 添加当前标签的选中状态
+      $this.css({
+        'text-shadow': '0 0 15px rgba(255, 255, 255, 1)',
+        'transform': 'scale(1.2)',
+        'background': 'rgba(255, 255, 255, 0.15)',
+        'border-radius': '5px',
+        'z-index': '200'
+      });
+      
+      // 移除现有的浮动容器
+      $('.floating-explanation-container').remove();
+      
+      // 创建并保持浮动容器（带"已选中"标记）
+      var floatingContainer = createFloatingContainer(period + '（已选中）', description, $this);
+      
+      // 修改选中状态的浮动容器样式
+      floatingContainer.css({
+        'border': '2px solid rgba(212, 160, 23, 0.9)',
+        'box-shadow': '0 8px 25px rgba(0, 0, 0, 0.2)'
+      });
+      
+      // 阻止事件冒泡
+      e.stopPropagation();
+    });
+    
+    // 点击页面其他位置隐藏浮动容器
+    $(document).click(function(e) {
+      if (!$(e.target).closest('.timeline-label').length) {
+        // 移除浮动容器
+        $('.floating-explanation-container').remove();
+        
+        // 移除所有标签的选中状态
+        timelineLabels.css({
+          'text-shadow': 'none',
+          'transform': 'scale(1)',
+          'background': 'transparent',
+          'border-radius': '0',
+          'z-index': '1'
+        });
+      }
+    });
+  }
+  
+  // 初始化时间线交互
+  initTimelineInteraction();
+
+  // 初始化ECharts温雨双折图（降雨柱状图 + 温度折线图）
+  function initTemperatureRainChart() {
+    var temperatureRainChart = echarts.init(document.getElementById('temperature-rain-chart'));
+    
+    // 月份数据
+    var months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+    
+    // 月降水量数据 (mm) - 藏族碉房数据
+    var rainfallData = [2.5, 3.8, 8.5, 15.2, 30.5, 50.8, 70.6, 60.4, 30.9, 15.2, 5.7, 2.1];
+    
+    // 月均温度数据 (℃) - 藏族碉房数据
+    var temperatureData = [-8.5, -5.2, 0.5, 6.5, 12.8, 16.5, 18.9, 17.2, 12.5, 6.2, 0.5, -5.8];
+    
+    // 温雨双折图配置（降雨柱状图 + 温度折线图）
+    var option = {
+      // 背景透明
+      backgroundColor: 'transparent',
+      
+      // 移除标题配置
+      
+      // 工具提示配置
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: 'rgba(212, 160, 23, 0.7)',
+        textStyle: {
+          color: '#000'
+        },
+        formatter: function(params) {
+          var result = params[0].name + '<br/>';
+          for (var i = 0; i < params.length; i++) {
+            var series = params[i];
+            var value = series.value;
+            var unit = series.seriesName.includes('温度') ? '℃' : 'mm';
+            var color = series.color;
+            
+            result += '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;background-color:' + color + '"></span>';
+            result += series.seriesName + ': ' + value + unit + '<br/>';
+          }
+          return result;
+        }
+      },
+      
+      // 图例配置
+      legend: {
+        data: ['月降水量', '月均温度'],
+        top: 10,
+        textStyle: {
+          color: 'rgba(255, 255, 255, 0.8)',
+          fontSize: 11
+        }
+      },
+      
+      // 网格配置
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        top: '40px',
+        containLabel: true
+      },
+      
+// X轴配置
+      xAxis: {
+        type: 'category',
+        boundaryGap: true,
+        data: months,
+        axisLine: {
+          lineStyle: {
+            color: '#ffffff',
+            width: 2
+          }
+        },
+        axisLabel: {
+          color: '#ffffff',
+          fontSize: 10
+        }
+      },
+      
+// Y轴配置 - 左侧为降水量
+      yAxis: [
+        {
+          type: 'value',
+          name: '降水量 (mm)',
+          nameTextStyle: {
+            color: '#1E90FF',
+            fontSize: 11
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#1E90FF',
+              opacity: 1,
+              width: 2
+            }
+          },
+          axisLabel: {
+            color: '#1E90FF',
+            fontSize: 10
+          },
+          splitLine: {
+            lineStyle: {
+              color: 'rgba(30, 144, 255, 0.3)',
+              type: 'dashed'
+            }
+          }
+        },
+        {
+          type: 'value',
+          name: '温度 (℃)',
+          nameTextStyle: {
+            color: '#DC143C',
+            fontSize: 11
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#DC143C',
+              opacity: 1,
+              width: 2
+            }
+          },
+          axisLabel: {
+            color: '#DC143C',
+            fontSize: 10
+          },
+          splitLine: {
+            show: false
+          }
+        }
+      ],
+      
+      // 系列配置 - 降雨柱状图 + 温度折线图
+      series: [
+        {
+          name: '月降水量',
+          type: 'bar', // 柱状图
+          yAxisIndex: 0,
+          data: rainfallData,
+          itemStyle: {
+            color: '#b0e0e6', // 浅蓝色，不要渐变色
+            borderRadius: [12, 12, 0, 0] // 圆矩形 - 更大的圆角
+          },
+          emphasis: {
+            itemStyle: {
+              color: '#b0e0e6', // 悬停时保持相同颜色
+              borderRadius: [15, 15, 0, 0] // 悬停时更大的圆角
+            }
+          },
+          barWidth: '60%' // 柱状图宽度
+        },
+        {
+          name: '月均温度',
+          type: 'line',
+          yAxisIndex: 1,
+          data: temperatureData,
+          smooth: true,
+          lineStyle: {
+            color: '#FFA07A', // 浅珊瑚色
+            width: 3
+          },
+          itemStyle: {
+            color: '#FFA07A' // 浅珊瑚色
+          },
+          symbol: 'circle',
+          symbolSize: 6,
+          emphasis: {
+            focus: 'series',
+            itemStyle: {
+              borderColor: '#fff',
+              borderWidth: 2
+            }
+          }
+        }
+      ]
+    };
+    
+    // 应用配置
+    temperatureRainChart.setOption(option);
+    
+    // 窗口大小变化时重绘
+    window.addEventListener('resize', function() {
+      temperatureRainChart.resize();
+    });
+  }
+  
+  // 页面加载完成后初始化温雨双折图
+  initTemperatureRainChart();
+
+  // 初始化词云图
+  if (typeof initWordCloudChart === 'function') {
+    initWordCloudChart();
+  }
+
+  // 注意：原有的SVG地图交互代码已移除，因为已替换为ECharts交互式地图
+  // ECharts地图的交互功能在beijing_map.js中实现
+});
+</script>
+</body>
+</html>

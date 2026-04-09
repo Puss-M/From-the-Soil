@@ -30,7 +30,8 @@ const stationIdToFolderMap: Record<string, string> = {
   'xishuangbanna': '版纳驿',
   'xilingol': '草原驿',
   'guangzhou': '广州驿',
-  'turpan': '和田驿',
+  // 和田驿的影像志资源仍保留历史目录名，先兼容到旧目录
+  'turpan': '吐鲁番驿',
 };
 
 export function VideoChronicle({ station }: Props) {

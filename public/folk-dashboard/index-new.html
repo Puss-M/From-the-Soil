@@ -1,0 +1,509 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>风物志大屏模板</title>
+<script type="text/javascript" src="../beijing-dashboard/js/jquery.js"></script>
+<link rel="stylesheet" href="../beijing-dashboard/css/comon0.css">
+<style>
+/* 三列布局样式 - 仿照延安驿影像志 */
+.mainbox {
+  padding: 0.1rem 0.1rem 0rem 0.1rem;
+  width: 100%;
+  height: calc(100% - 1.05rem);
+  position: absolute;
+  top: 1.05rem;
+  left: 0;
+}
+
+.mainbox>ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.clearfix:after, .clearfix:before {
+  display: table;
+  content: " ";
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.mainbox>ul>li {
+  float: left;
+  padding: 0 0.1rem;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.mainbox>ul>li {
+  width: 30%;
+}
+
+.mainbox>ul>li:nth-child(2) {
+  width: 40%;
+  padding: 0;
+}
+
+/* 头部样式 */
+.head {
+  height: 1.05rem;
+  background: url(../beijing-dashboard/images/head_bg.png) no-repeat center center;
+  background-size: 100% 100%;
+  position: relative;
+  z-index: 100;
+}
+
+.head h1 {
+  color: #fff;
+  text-align: center;
+  font-size: 0.4rem;
+  line-height: 0.8rem;
+}
+
+/* 容器样式 */
+.boxall {
+  border: 1px solid rgba(25,186,139,.17);
+  padding: 0 0.2rem 0.4rem 0.15rem;
+  background: rgba(0, 255, 255, 0.15);
+  position: relative;
+  margin-bottom: 0.15rem;
+  z-index: 10;
+  height: auto;
+}
+
+.boxall:before,
+.boxall:after {
+  position: absolute;
+  width: 0.1rem;
+  height: 0.1rem;
+  content: "";
+  border-top: 2px solid #d4a017;
+  top: 0;
+}
+
+.boxall:before {
+  border-left: 2px solid #d4a017;
+  left: 0;
+}
+
+.boxall:after {
+  border-right: 2px solid #d4a017;
+  right: 0;
+}
+
+.alltitle {
+  font-size: 0.2rem;
+  color: #003366;
+  text-align: center;
+  line-height: 0.5rem;
+  font-weight: bold;
+}
+
+.boxfoot {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  height: 0.1rem;
+}
+
+.boxfoot:before,
+.boxfoot:after {
+  position: absolute;
+  width: 0.1rem;
+  height: 0.1rem;
+  content: "";
+  border-bottom: 2px solid #d4a017;
+  bottom: 0;
+}
+
+.boxfoot:before {
+  border-left: 2px solid #d4a017;
+  left: 0;
+}
+
+.boxfoot:after {
+  border-right: 2px solid #d4a017;
+  right: 0;
+}
+
+/* 中间列样式 */
+.middle-section {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+/* 数据卡片容器 */
+.data-cards-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.15rem;
+  height: 1.5rem;
+}
+
+.data-card {
+  flex: 1;
+  border: 1px solid rgba(25,186,139,.17);
+  background: rgba(0, 255, 255, 0.15);
+  padding: 0.15rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.data-card:before,
+.data-card:after {
+  position: absolute;
+  width: 0.08rem;
+  height: 0.08rem;
+  content: "";
+  border-top: 2px solid #d4a017;
+  top: 0;
+}
+
+.data-card:before {
+  border-left: 2px solid #d4a017;
+  left: 0;
+}
+
+.data-card:after {
+  border-right: 2px solid #d4a017;
+  right: 0;
+}
+
+.data-card .card-title {
+  font-size: 0.18rem;
+  color: #003366;
+  text-align: center;
+  margin-bottom: 0.1rem;
+  width: 100%;
+  font-weight: bold;
+}
+
+.data-card .card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.data-card .card-value {
+  font-size: 0.38rem;
+  color: #ffcc00;
+  font-family: "Microsoft YaHei";
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.data-card .card-label {
+  font-size: 0.14rem;
+  color: #000;
+  margin-top: 0.05rem;
+  font-weight: bold;
+}
+
+/* 图表容器 */
+.chart-container {
+  border: 1px solid rgba(25,186,139,.17);
+  background: rgba(0, 255, 255, 0.15);
+  position: relative;
+  height: 100%;
+}
+
+.chart-container:before,
+.chart-container:after {
+  position: absolute;
+  width: 0.1rem;
+  height: 0.1rem;
+  content: "";
+  border-top: 2px solid #d4a017;
+  top: 0;
+}
+
+.chart-container:before {
+  border-left: 2px solid #d4a017;
+  left: 0;
+}
+
+.chart-container:after {
+  border-right: 2px solid #d4a017;
+  right: 0;
+}
+
+.chart-container .chart-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  height: 0.1rem;
+}
+
+.chart-container .chart-footer:before,
+.chart-container .chart-footer:after {
+  position: absolute;
+  width: 0.1rem;
+  height: 0.1rem;
+  content: "";
+  border-bottom: 2px solid #d4a017;
+  bottom: 0;
+}
+
+.chart-container .chart-footer:before {
+  border-left: 2px solid #d4a017;
+  left: 0;
+}
+
+.chart-container .chart-footer:after {
+  border-right: 2px solid #d4a017;
+  right: 0;
+}
+
+/* 调整图表高度 */
+#chart-line, #chart-pie, #chart-map, #chart-sankey, #chart-wordcloud,
+#chart-category, #chart-radar, #chart-g1, #chart-g2, #chart-g3 {
+  height: calc(100% - 0.5rem);
+  width: 100%;
+  position: absolute;
+  top: 0.5rem;
+  left: 0;
+}
+
+/* 标题板样式 */
+.title-board {
+  position: absolute;
+  left: 50%;
+  top: 0.2rem;
+  transform: translateX(-50%);
+  width: 4.7rem;
+  height: 1rem;
+  line-height: 1rem;
+  text-align: center;
+  font-family: "STKaiti", "KaiTi", "华文楷体", serif;
+  font-size: 0.46rem;
+  font-weight: 700;
+  color: #a96d17;
+  letter-spacing: 0.01rem;
+  padding: 0;
+  border: 1px solid rgba(212, 197, 163, 0.9);
+  background: linear-gradient(180deg, rgba(245, 232, 199, 0.24), rgba(244, 232, 200, 0.14));
+  z-index: 15;
+}
+
+/* 整体页面样式 */
+body {
+  background: #000d4a;
+  color: #666;
+  font-size: 0.1rem;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#screen {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.bg-layer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(244, 228, 188, 0.35), rgba(244, 228, 188, 0.35)),
+              url('../../风物志背景.jpeg') center/cover no-repeat;
+  opacity: 0.96;
+  z-index: 1;
+}
+
+.share-btn {
+  position: absolute;
+  right: 0.3rem;
+  top: 0.25rem;
+  width: 0.36rem;
+  height: 0.36rem;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(139, 91, 31, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 30;
+}
+
+.share-btn::before {
+  content: '⚙';
+  font-size: 0.18rem;
+  color: #6b4423;
+}
+</style>
+</head>
+<body>
+  <div id="app">
+    <div id="screen" class="screen">
+      <div class="bg-layer"></div>
+      <div class="share-btn" title="设置"></div>
+
+      <!-- 头部 -->
+      <div class="head">
+        <h1>风物志</h1>
+      </div>
+
+      <!-- 三列布局主内容 -->
+      <div class="mainbox">
+        <ul class="clearfix">
+          <!-- 左列 -->
+          <li>
+            <div class="boxall" style="height: 2.2rem">
+              <div class="alltitle">温雨双折图</div>
+              <div class="chart-container">
+                <div class="chart" id="chart-line"></div>
+                <div class="chart-footer"></div>
+              </div>
+            </div>
+            <div class="boxall" style="height: 2.4rem">
+              <div class="alltitle">建材环形图</div>
+              <div class="chart-container">
+                <div class="chart" id="chart-pie"></div>
+                <div class="chart-footer"></div>
+              </div>
+            </div>
+            <div class="boxall" style="height: 3.14rem">
+              <div class="alltitle">构造桑基图</div>
+              <div class="chart-container">
+                <div class="chart" id="chart-sankey"></div>
+                <div class="chart-footer"></div>
+              </div>
+            </div>
+          </li>
+
+          <!-- 中列 -->
+          <li>
+            <div class="middle-section">
+              <!-- 顶部三个数据卡片 -->
+              <div class="data-cards-container">
+                <div class="data-card">
+                  <div class="card-title">建筑数量</div>
+                  <div class="card-content">
+                    <div class="card-value">586</div>
+                    <div class="card-label">总建筑数</div>
+                  </div>
+                  <div class="card-footer"></div>
+                </div>
+                <div class="data-card">
+                  <div class="card-title">保护等级</div>
+                  <div class="card-content">
+                    <div class="card-value">A级</div>
+                    <div class="card-label">平均等级</div>
+                  </div>
+                  <div class="card-footer"></div>
+                </div>
+                <div class="data-card">
+                  <div class="card-title">年代分布</div>
+                  <div class="card-content">
+                    <div class="card-value">明清</div>
+                    <div class="card-label">主要年代</div>
+                  </div>
+                  <div class="card-footer"></div>
+                </div>
+              </div>
+
+              <!-- 地图 -->
+              <div class="boxall" style="height: 4.2rem">
+                <div class="alltitle">分布图</div>
+                <div class="chart-container">
+                  <div class="chart" id="chart-map"></div>
+                  <div class="chart-footer"></div>
+                </div>
+              </div>
+
+              <!-- 仪表盘 -->
+              <div class="boxall" style="height: 1.34rem">
+                <div class="alltitle">保护状况</div>
+                <div class="chart-container">
+                  <div class="gauge-left">
+                    <div class="gauge-title">保护状况</div>
+                    <div class="gauge-date" id="currentDate"></div>
+                    <div class="gauge-big" id="preserve-range"></div>
+                    <div class="gauge-sub" id="preserve-count"></div>
+                  </div>
+                  <div class="gauge-right">
+                    <div class="chart gauge-item" id="chart-g1"></div>
+                    <div class="chart gauge-item" id="chart-g2"></div>
+                    <div class="chart gauge-item" id="chart-g3"></div>
+                  </div>
+                  <div class="chart-footer"></div>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <!-- 右列 -->
+          <li>
+            <div class="boxall" style="height: 1.6rem">
+              <div class="alltitle">指标网格</div>
+              <div class="chart-container">
+                <div class="metric-grid" id="metric-grid"></div>
+                <div class="chart-footer"></div>
+              </div>
+            </div>
+            <div class="boxall" style="height: 2.2rem">
+              <div class="alltitle">分类与防御指数</div>
+              <div class="chart-container">
+                <div class="chart-category" id="chart-category"></div>
+                <div class="chart-radar" id="chart-radar"></div>
+                <div class="chart-footer"></div>
+              </div>
+            </div>
+            <div class="boxall" style="height: 1.7rem">
+              <div class="alltitle">历史进程图</div>
+              <div class="chart-container">
+                <div class="history-box">
+                  <div class="history-notes" id="history-notes"></div>
+                  <div class="history-axis">
+                    <span class="seg seg-a"></span>
+                    <span class="seg seg-b"></span>
+                    <span class="seg seg-c"></span>
+                  </div>
+                  <div class="history-labels" id="history-labels"></div>
+                </div>
+                <div class="chart-footer"></div>
+              </div>
+            </div>
+            <div class="boxall" style="height: 3.84rem">
+              <div class="alltitle">分布词云图</div>
+              <div class="chart-container">
+                <div class="chart" id="chart-wordcloud"></div>
+                <div class="chart-footer"></div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="../beijing-dashboard/js/echarts.min.js"></script>
+  <script src="../beijing-dashboard/js/echarts-wordcloud.min.js"></script>
+  <script src="../beijing-dashboard/js/china.js"></script>
+  <script src="js/template.js"></script>
+</body>
+</html>
