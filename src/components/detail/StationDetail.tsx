@@ -12,6 +12,7 @@ import { ModelViewer } from './ModelViewer';
 import { VideoChronicle } from './VideoChronicle';
 import { HeritageDashboard } from './HeritageDashboard';
 import { Cube3D } from '@/components/Cube3D';
+import FlipImage from './FlipImage';
 import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -245,6 +246,14 @@ export function StationDetail() {
               overflow: 'hidden',
               background: 'url(/建筑档案背景图.png) center center / cover no-repeat',
             }}>
+              {/* 左上角翻折图片组件 */}
+              <FlipImage 
+                frontImage="/zhuyu1.png"
+                backImage="/zhuyu2.png"
+                width={270}
+                height={360}
+                stationName={selectedStation.name}
+              />
               <motion.div
                 custom={direction}
                 initial={{ opacity: 0, x: direction > 0 ? 60 : -60 }}
