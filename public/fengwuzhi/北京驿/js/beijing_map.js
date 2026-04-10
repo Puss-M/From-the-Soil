@@ -60,11 +60,13 @@
                 label: {
                     show: false // 不显示省份标签
                 },
-                // 隐藏南海诸岛区域
+                // 保留九段线，只隐藏南海诸岛填充色和标签
                 regions: [{
                     name: '南海诸岛',
                     itemStyle: {
-                        opacity: 0  // 完全透明，隐藏该区域
+                        areaColor: 'transparent', // 隐藏填充色，只保留边框（九段线）
+                        borderColor: 'rgba(255,255,255,0.8)', // 边框颜色和其他省份一致
+                        borderWidth: 1.2
                     },
                     label: {
                         show: false  // 隐藏标签
