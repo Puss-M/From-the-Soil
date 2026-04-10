@@ -12,6 +12,8 @@ import { ModelViewer } from './ModelViewer';
 import { VideoChronicle } from './VideoChronicle';
 import { HeritageDashboard } from './HeritageDashboard';
 import { Cube3D } from '@/components/Cube3D';
+import FlipImage from './FlipImage';
+import { Compass } from './Compass';
 import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
