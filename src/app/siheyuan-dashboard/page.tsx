@@ -186,7 +186,7 @@ export default function SiheyuanDashboard() {
             right: 20,
             bottom: 20,
             style: {
-              text: '中国地图审图号：GS（2024）0650号',
+              text: '中国地图审图号：CS（2024）0650号',
               fill: 'rgba(255, 255, 255, 0.45)',
               fontSize: 10
             }
@@ -195,21 +195,22 @@ export default function SiheyuanDashboard() {
         geo: {
           map: 'china', roam: false, zoom: 1.26, center: [105, 36],
           label: { show: false },
-          emphasis: { label: { show: false }, itemStyle: { areaColor: '#c9dcf7' } },
+          emphasis: { label: { show: false }, itemStyle: { areaColor: '#B8D4F9' } },
           itemStyle: {
-            areaColor: '#dce8f8',
-            borderColor: '#5b9bff',
+            areaColor: '#D2E0F7',
+            borderColor: '#A8C6F0',
             borderWidth: 2.5,
-            shadowColor: 'rgba(91, 155, 255, 0.22)',
-            shadowBlur: 28
+            shadowColor: 'rgba(210, 224, 247, 0.55)',
+            shadowBlur: 36
           },
+          // 隐藏南海诸岛区域
           regions: [{
             name: '南海诸岛',
             itemStyle: {
-              opacity: 0
+              opacity: 0  // 完全透明，隐藏该区域
             },
             label: {
-              show: false
+              show: false  // 隐藏标签
             }
           }]
         },
@@ -218,7 +219,7 @@ export default function SiheyuanDashboard() {
           data: [{ name: '北京', value: [116.407, 39.904, 180] }],
           symbolSize: 32, showEffectOn: 'render',
           rippleEffect: {
-            brushType: 'stroke', color: '#5b9bff',
+            brushType: 'stroke', color: '#7FB6FF',
             period: 3.2, scale: 6.5, number: 3
           },
           label: {
@@ -227,8 +228,8 @@ export default function SiheyuanDashboard() {
             textBorderColor: 'rgba(0,0,0,0.4)', textBorderWidth: 2.5
           },
           itemStyle: {
-            color: '#5b9bff',
-            shadowBlur: 30, shadowColor: 'rgba(91, 155, 255, 0.55)'
+            color: '#7FB6FF',
+            shadowBlur: 30, shadowColor: 'rgba(127, 182, 255, 0.9)'
           },
           zlevel: 1
         }]

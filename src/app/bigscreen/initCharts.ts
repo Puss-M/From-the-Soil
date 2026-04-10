@@ -276,7 +276,7 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
           right: 20,
           bottom: 20,
           style: {
-            text: '中国地图审图号：GS（2024）0650号',
+            text: '中国地图审图号：CS（2024）0650号',
             fill: 'rgba(255, 255, 255, 0.45)',
             fontSize: 10
           }
@@ -288,27 +288,29 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
         zoom: 1.26,
         center: [105, 36],
         label: { show: false },
-          emphasis: { label: { show: false }, itemStyle: { areaColor: '#c9dcf7' } },
+          emphasis: { label: { show: false }, itemStyle: { areaColor: '#B8D4F9' } },
           itemStyle: {
-            areaColor: '#dce8f8',
-            borderColor: '#5b9bff',
+            areaColor: '#D2E0F7',
+            borderColor: '#A8C6F0',
             borderWidth: 2.5,
-            shadowColor: 'rgba(91, 155, 255, 0.22)',
-            shadowBlur: 28,
+            shadowColor: 'rgba(210, 224, 247, 0.55)',
+            shadowBlur: 36,
           },
         regions: [
+          // 隐藏南海诸岛区域
           {
             name: '南海诸岛',
             itemStyle: {
-              opacity: 0,
+              opacity: 0  // 完全透明，隐藏该区域
             },
             label: {
-              show: false,
-            },
+              show: false  // 隐藏标签
+            }
           },
+          // 其他区域配置
           ...data.mapRegions.map((name) => ({
             name,
-            itemStyle: { areaColor: '#bcd4fb' },
+            itemStyle: { areaColor: '#cf9a43' },
           })),
         ],
       },
@@ -320,7 +322,7 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
         showEffectOn: 'render',
         rippleEffect: {
           brushType: 'stroke',
-          color: '#5b9bff',
+          color: '#7FB6FF',
           period: 3.2,
           scale: 6.5,
           number: 3,
@@ -337,9 +339,9 @@ export async function initBigscreenCharts(data: HeritageDashboardData) {
           textBorderWidth: 2.5,
         },
         itemStyle: {
-          color: '#5b9bff',
+          color: '#7FB6FF',
           shadowBlur: 30,
-          shadowColor: 'rgba(91, 155, 255, 0.55)',
+          shadowColor: 'rgba(127, 182, 255, 0.9)',
         },
         zlevel: 1,
       }],
