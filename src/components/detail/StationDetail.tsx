@@ -14,6 +14,8 @@ import { HeritageDashboard } from './HeritageDashboard';
 import { Cube3D } from '@/components/Cube3D';
 import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Compass } from './Compass';
+import FlipImage from './FlipImage';
 
 /* ── Tab 定义 ──────────────────────────────── */
 const TABS = [
@@ -245,6 +247,13 @@ export function StationDetail() {
               overflow: 'hidden',
               background: 'url(/建筑档案背景图.png) center center / cover no-repeat',
             }}>
+              <FlipImage
+                frontImage="/zhuyu1.png"
+                backImage="/zhuyu2.png"
+                width={270}
+                height={360}
+                stationName={selectedStation.name}
+              />
               <motion.div
                 custom={direction}
                 initial={{ opacity: 0, x: direction > 0 ? 60 : -60 }}
@@ -261,6 +270,7 @@ export function StationDetail() {
                 }}>
                   <Cube3D stationId={sid} stationName={selectedStation.name} />
                 </div>
+                <Compass stationName={selectedStation.name} />
               </motion.div>
             </div>
           )}
