@@ -154,7 +154,7 @@
                     label: {
                         show: true, // 显示节点标签
                         color: '#ffffff', // 白色文字
-                        fontSize: node.depth === 0 ? 10 : 8, // 左边节点10像素，右边节点8像素
+                        fontSize: node.depth === 0 ? 14 : 14, // 左边节点10像素，右边节点8像素
                         fontWeight: 'normal', // 不要加粗
                         position: node.depth === 0 ? 'right' : 'inside', // 左边节点文字在右边，右边节点文字在内部
                         distance: node.depth === 0 ? 5 : 0, // 左边节点距离5像素，右边节点无距离
@@ -174,7 +174,7 @@
                         label: {
                             show: true, // 悬停时也显示标签
                             color: '#ffffff', // 白色文字
-                            fontSize: node.depth === 0 ? 11 : 9, // 左边节点11像素，右边节点9像素
+                            fontSize: node.depth === 0 ? 13 : 11, // 左边节点11像素，右边节点9像素
                             fontWeight: 'normal', // 不要加粗
                             position: node.depth === 0 ? 'right' : 'inside' // 保持位置一致
                         }

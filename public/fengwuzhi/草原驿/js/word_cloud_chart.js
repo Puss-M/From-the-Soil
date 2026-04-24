@@ -111,6 +111,9 @@ function initWordCloudChart() {
         info.element.style.top = info.y + 'px';
     });
     
+    // 手动调整特定地名位置（偏移量）
+    applyManualOffsets(wordElements);
+    
     // 鼠标悬停效果 - 只浮动一下（稍微放大）
     wordElements.forEach(function(info) {
         info.element.addEventListener('mouseenter', function() {
@@ -145,8 +148,52 @@ function initWordCloudChart() {
                 info.element.style.left = info.x + 'px';
                 info.element.style.top = info.y + 'px';
             });
+            
+            // 重新应用手动偏移
+            applyManualOffsets(wordElements);
         }, 250);
     });
+}
+
+// 手动调整特定地名的偏移量
+function applyManualOffsets(wordElements) {
+    // 偏移量配置：{ 地名: { leftOffset: 偏移量(正数右移，负数左移) } }
+    var offsets = {
+        '甘肃肃北县': 20,         // 右移20px
+        '赤峰市': 20,             // 右移20px
+        '乌兰察布市': 20,         // 右移20px
+        '巴彦淖尔市': -20,        // 左移20px
+        '兴安盟': -20,            // 左移20px
+        '新疆巴音郭楞州': -20     // 左移20px
+    };
+    
+    wordElements.forEach(function(info) {
+        var offset = offsets[info.name];
+        if (offset !== undefined) {
+            var currentLeft = parseFloat(info.element.style.left) || 0;
+            info.element.style.left = (currentLeft + offset) + 'px';
+        }
+    });
+    
+    // 固定鄂尔多斯市在锡林郭勒盟左边85px、下面50px位置
+    var xilinLeft = null, xilinTop = null;
+    var ordosElement = null;
+    
+    wordElements.forEach(function(info) {
+        if (info.name === '锡林郭勒盟') {
+            xilinLeft = parseFloat(info.element.style.left) || 0;
+            xilinTop = parseFloat(info.element.style.top) || 0;
+        }
+        if (info.name === '鄂尔多斯市') {
+            ordosElement = info.element;
+        }
+    });
+    
+    if (xilinLeft !== null && xilinTop !== null && ordosElement) {
+        var ordosWidth = parseFloat(ordosElement.style.width) || estimateTextWidth('鄂尔多斯市', parseFloat(ordosElement.style.fontSize) || 16);
+        ordosElement.style.left = (xilinLeft - 85) + 'px';
+        ordosElement.style.top = (xilinTop + 50) + 'px';
+    }
 }
 
 // 估算文本宽度
