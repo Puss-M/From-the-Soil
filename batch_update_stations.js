@@ -44,53 +44,51 @@ Object.keys(stations).forEach(station => {
     // 初始化中国地图
     var chinaMapChart = echarts.init(document.getElementById('china-map-container'));
     
-    // 重庆坐标（作为中心点，用于固定地图位置）
-    const chongqingCoords = [106.55, 29.57];
     // 当前驿坐标
     const stationCoords = [${stations[station][0]}, ${stations[station][1]}];
     
     var mapOption = {
+      backgroundColor: 'transparent',
       geo: {
         map: 'china',
         roam: false,
          zoom: 2.0,
-         center: [103.8, 36.5],
+         center: [103.8, 32.5],
          layoutCenter: ['50%', '50%'],
          layoutSize: '105%',
+        label: {
+          show: false,
+          color: '#25180d',
+          fontSize: 11,
+          fontWeight: 600
+        },
         itemStyle: {
           areaColor: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 1,
-            y2: 1,
+            type: 'radial',
+            x: 0.5,
+            y: 0.5,
+            r: 0.8,
             colorStops: [
-              {offset: 0, color: '#D2AB72'},
-              {offset: 0.5, color: '#E0BC85'},
-              {offset: 1, color: '#C49A5F'}
+              { offset: 0, color: '#F0E2C5' },
+              { offset: 0.5, color: '#E8D4A9' },
+              { offset: 1, color: '#E6D0A7' }
             ]
           },
-          borderColor: 'rgba(255,255,255,0.8)',
-          borderWidth: 1.2
+          borderColor: '#D4A017',
+          borderWidth: 1.2,
+          shadowColor: 'rgba(0, 0, 0, 0.06)',
+          shadowBlur: 4
         },
         emphasis: {
           itemStyle: {
-            areaColor: {
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 1,
-              y2: 1,
-              colorStops: [
-                {offset: 0, color: '#C49A5F'},
-                {offset: 0.5, color: '#D2AB72'},
-                {offset: 1, color: '#B6894D'}
-              ]
-            }
+            areaColor: '#DBC496',
+          },
+          label: {
+            show: true,
+            color: '#1a0f06',
+            fontSize: 12,
+            fontWeight: 700
           }
-        },
-        label: {
-          show: false
         },
         regions: [{
           name: '南海诸岛',
@@ -103,40 +101,48 @@ Object.keys(stations).forEach(station => {
         }]
       },
       series: [{
-        type: 'scatter',
+        type: 'effectScatter',
         coordinateSystem: 'geo',
-        symbolSize: 20,
+        symbolSize: 10,
+        showEffectOn: 'render',
+        rippleEffect: {
+          brushType: 'stroke',
+          scale: 3,
+          period: 4
+        },
         data: [
           {
             name: '${station.replace('驿', '')}',
             value: stationCoords.concat([100])
           }
         ],
-        itemStyle: {
-          color: '#ff6b6b',
-          borderColor: '#fff',
-          borderWidth: 2
-        },
         label: {
-          show: false
+          show: true,
+          formatter: '{b}',
+          position: 'top',
+          color: '#5a4d42',
+          fontSize: 12,
+          fontWeight: 'bold',
+          distance: 5,
+          backgroundColor: 'transparent',
+          textBorderColor: 'transparent'
+        },
+        itemStyle: {
+          color: '#8c221c',
+          borderColor: '#ffffff',
+          borderWidth: 1.5,
+          shadowBlur: 4,
+          shadowColor: 'rgba(0,0,0,0.2)'
         },
         emphasis: {
-          scale: true,
-          scaleSize: 5,
-          label: {
-            show: true,
-            formatter: '${station.replace('驿', '')}',
-            position: 'right',
-            color: '#ff6b6b',
-            fontSize: 14,
-            fontWeight: 'bold',
-            backgroundColor: 'rgba(255,255,255,0.9)',
-            padding: [4, 8],
-            borderRadius: 4,
-            borderColor: '#d4a017',
-            borderWidth: 1
-          }
-        }
+          itemStyle: {
+            color: '#8c221c',
+            shadowBlur: 8,
+            shadowColor: 'rgba(140,34,28,0.28)'
+          },
+          scale: true
+        },
+        zlevel: 1
       }],
       tooltip: {
         show: false
@@ -149,7 +155,7 @@ Object.keys(stations).forEach(station => {
           bottom: 10,
           style: {
             text: '中国地图审图号：GS（2024）0650',
-            fill: 'rgba(255,255,255,0.7)',
+            fill: 'rgba(138,125,115,0.7)',
             fontSize: 10,
             fontFamily: 'Arial, sans-serif'
           }

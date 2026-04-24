@@ -9,6 +9,7 @@ import { StationDetail } from '@/components/detail/StationDetail';
 import CraftsmanshipPage from '@/components/craftsmanship/CraftsmanshipPage';
 import MemoryGamePage from '@/components/game/MemoryGamePage';
 import { FolkMusicPage } from '@/components/folk-music/FolkMusicPage';
+import { HomologyPage } from '@/components/HomologyPage';
 
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
 
@@ -79,6 +80,13 @@ export default function Home() {
             variants={sceneVariants} initial="initial" animate="animate" exit="exit"
           >
             <FolkMusicPage />
+          </motion.div>
+        )}
+        {phase === 'homology' && (
+          <motion.div key="homology" className="w-full h-full"
+            variants={sceneVariants} initial="initial" animate="animate" exit="exit"
+          >
+            <HomologyPage />
           </motion.div>
         )}
       </AnimatePresence>

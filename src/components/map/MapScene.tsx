@@ -234,6 +234,39 @@ export function MapScene() {
         </p>
       </div>
 
+      {/* 右上角返回首页按钮 */}
+      <div 
+        className="guofeng-glass-strong" 
+        style={{ 
+          position: 'fixed', 
+          top: 20, 
+          right: 22, 
+          zIndex: 20, 
+          padding: '12px 20px',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+        }}
+        onClick={() => setPhase('landing')}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.05)';
+          e.currentTarget.style.background = 'rgba(255, 248, 234, 0.95)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.background = '';
+        }}
+      >
+        <span style={{
+          fontSize: '1rem',
+          fontWeight: 700,
+          color: '#3a2a1a',
+          fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), serif',
+          letterSpacing: '0.1em',
+        }}>
+          返回首页
+        </span>
+      </div>
+
       {/* 地图正上方 - 民居目录入口 */}
       <div
         style={{
@@ -662,41 +695,41 @@ export function MapScene() {
           <span style={{ paddingRight: '9px' }}>乡韵集</span>
         </button>
 
-        <button
-          onClick={() => setPhase('landing')}
-          style={{
-            width: 160,
-            height: 160,
-            border: 'none',
-            borderRadius: '0px',
-            backgroundColor: 'transparent',
-            backgroundImage: 'url(/右圆.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            color: '#3a2a1a',
-            fontSize: '16px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-            transition: 'all 0.3s ease',
-            boxShadow: 'none',
-            fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), serif',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.08)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <span style={{ paddingRight: '9px' }}>返回首页</span>
-        </button>
+         <button
+           onClick={() => setPhase('homology')}
+           style={{
+             width: 160,
+             height: 160,
+             border: 'none',
+             borderRadius: '0px',
+             backgroundColor: 'transparent',
+             backgroundImage: 'url(/右圆.png)',
+             backgroundSize: 'cover',
+             backgroundPosition: 'center',
+             color: '#3a2a1a',
+             fontSize: '16px',
+             fontWeight: 700,
+             cursor: 'pointer',
+             display: 'flex',
+             flexDirection: 'column',
+             alignItems: 'center',
+             justifyContent: 'center',
+             gap: '6px',
+             transition: 'all 0.3s ease',
+             boxShadow: 'none',
+             fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), serif',
+           }}
+           onMouseEnter={(e) => {
+             e.currentTarget.style.transform = 'scale(1.08)';
+             e.currentTarget.style.boxShadow = 'none';
+           }}
+           onMouseLeave={(e) => {
+             e.currentTarget.style.transform = 'scale(1)';
+             e.currentTarget.style.boxShadow = 'none';
+           }}
+         >
+           <span style={{ paddingRight: '9px' }}>同源录</span>
+         </button>
       </div>
 
       {/* 悬停信息卡 */}
