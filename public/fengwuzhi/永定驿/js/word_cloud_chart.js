@@ -111,6 +111,9 @@ function initWordCloudChart() {
         info.element.style.top = info.y + 'px';
     });
     
+    // 手动调整特定地名位置（偏移量）
+    applyManualOffsets(wordElements);
+    
     // 鼠标悬停效果 - 只浮动一下（稍微放大）
     wordElements.forEach(function(info) {
         info.element.addEventListener('mouseenter', function() {
@@ -145,7 +148,35 @@ function initWordCloudChart() {
                 info.element.style.left = info.x + 'px';
                 info.element.style.top = info.y + 'px';
             });
+            
+            // 重新应用手动偏移
+            applyManualOffsets(wordElements);
         }, 250);
+    });
+}
+
+// 手动调整特定地名的偏移量
+function applyManualOffsets(wordElements) {
+    // 偏移量配置：{ 地名: { left: 水平偏移(正数右移，负数左移), top: 垂直偏移(正数下移，负数上移) } }
+    var offsets = {
+        '张家港市': { left: 40, top: -20 },   // 右移40px、上移20px
+        '常州市': { left: 40, top: 0 },       // 右移40px
+        '常熟市': { left: 40, top: 0 },       // 右移40px
+        '漳州平和县': { left: 30, top: 0 },   // 右移30px
+        '梅州蕉岭县': { left: -30, top: 0 },  // 左移30px
+        '漳州诏安县': { left: -30, top: 20 },  // 左移30px、下移20px
+        '无锡市': { left: -10, top: 0 },       // 左移10px
+        '赣州赣县区': { left: -20, top: 0 }    // 左移20px
+    };
+    
+    wordElements.forEach(function(info) {
+        var offset = offsets[info.name];
+        if (offset !== undefined) {
+            var currentLeft = parseFloat(info.element.style.left) || 0;
+            var currentTop = parseFloat(info.element.style.top) || 0;
+            info.element.style.left = (currentLeft + offset.left) + 'px';
+            info.element.style.top = (currentTop + offset.top) + 'px';
+        }
     });
 }
 

@@ -26,12 +26,13 @@ function initWordCloudChart() {
         'rgba(77, 171, 247, 0.9)',   // 蓝色
         'rgba(255, 107, 107, 0.9)',  // 红色
         'rgba(107, 207, 127, 0.9)',  // 绿色
-        'rgba(255, 209, 102, 0.9)',  // 黄色
+        'rgba(255, 180, 0, 1)',      // 黄色（加深）
         'rgba(164, 99, 242, 0.9)',   // 紫色
         'rgba(6, 214, 160, 0.9)',    // 青色
         'rgba(239, 71, 111, 0.9)',   // 粉色
         'rgba(17, 138, 178, 0.9)',   // 深蓝
-        'rgba(255, 154, 118, 0.9)',  // 橙色
+        'rgba(230, 100, 50, 1)',     // 橙色（加深）
+
         'rgba(157, 78, 221, 0.9)',   // 深紫
         'rgba(255, 89, 94, 0.9)',    // 亮红
         'rgba(25, 130, 196, 0.9)'    // 天蓝
@@ -108,6 +109,9 @@ function initWordCloudChart() {
         info.element.style.top = info.y + 'px';
     });
     
+    // 手动调整特定地名位置（偏移量）
+    applyManualOffsets(wordElements);
+    
     // 鼠标悬停效果 - 只浮动一下（稍微放大）
     wordElements.forEach(function(info) {
         info.element.addEventListener('mouseenter', function() {
@@ -142,7 +146,28 @@ function initWordCloudChart() {
                 info.element.style.left = info.x + 'px';
                 info.element.style.top = info.y + 'px';
             });
+            
+            // 重新应用手动偏移
+            applyManualOffsets(wordElements);
         }, 250);
+    });
+}
+
+// 手动调整特定地名的偏移量
+function applyManualOffsets(wordElements) {
+    // 偏移量配置：{ 地名: 水平偏移(正数右移，负数左移) }
+    var offsets = {
+        '安徽安庆': 40,       // 右移40px
+        '江西景德镇': 40,     // 右移40px
+        '江西上饶': -20       // 左移20px
+    };
+    
+    wordElements.forEach(function(info) {
+        var offset = offsets[info.name];
+        if (offset !== undefined) {
+            var currentLeft = parseFloat(info.element.style.left) || 0;
+            info.element.style.left = (currentLeft + offset) + 'px';
+        }
     });
 }
 
@@ -213,7 +238,7 @@ function optimizeLayoutNoOverlap(wordElements, containerWidth, containerHeight) 
         var angleStep = Math.PI / 6; // 30度步长
         var maxRadius = Math.min(containerWidth, containerHeight) * 0.4; // 最大半径增加到40%
         
-        // 对于权重特别小的元素（顺义区0.8，河北正定1.2），强制从更大的半径开始
+        // 对于权重特别小的元素，强制从更大的半径开始
         if (current.value <= 1.2) {
             radius = Math.max(radius, baseRadius * 2);
         }

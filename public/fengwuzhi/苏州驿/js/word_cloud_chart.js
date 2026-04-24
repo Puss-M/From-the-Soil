@@ -111,6 +111,9 @@ function initWordCloudChart() {
         info.element.style.top = info.y + 'px';
     });
     
+    // 手动调整特定地名位置（偏移量）
+    applyManualOffsets(wordElements);
+    
     // 鼠标悬停效果 - 只浮动一下（稍微放大）
     wordElements.forEach(function(info) {
         info.element.addEventListener('mouseenter', function() {
@@ -145,7 +148,32 @@ function initWordCloudChart() {
                 info.element.style.left = info.x + 'px';
                 info.element.style.top = info.y + 'px';
             });
+            
+            // 重新应用手动偏移
+            applyManualOffsets(wordElements);
         }, 250);
+    });
+}
+
+// 手动调整特定地名的偏移量
+function applyManualOffsets(wordElements) {
+    // 偏移量配置：{ 地名: 水平偏移(正数右移，负数左移) }
+    var offsets = {
+        '昆山市': 30,       // 右移30px
+        '吴中区': 20,       // 右移20px
+        '张家港市': 30,     // 右移30px
+        '无锡市': -10,      // 左移10px
+        '相城区': -10,      // 左移10px
+        '常州市': -10,      // 左移10px
+        '常熟市': -20       // 左移20px
+    };
+    
+    wordElements.forEach(function(info) {
+        var offset = offsets[info.name];
+        if (offset !== undefined) {
+            var currentLeft = parseFloat(info.element.style.left) || 0;
+            info.element.style.left = (currentLeft + offset) + 'px';
+        }
     });
 }
 
