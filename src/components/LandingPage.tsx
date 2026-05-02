@@ -9,6 +9,8 @@ import {
 } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 
+const VIDEO_PATH = '/cover_animation.mp4';
+
 type Particle = {
   x: number;
   y: number;
@@ -231,8 +233,10 @@ export function LandingPage() {
   const [contentExited, setContentExited] = useState(false);
   const [buttonRippleOrigin, setButtonRippleOrigin] = useState({ x: 0, y: 0 });
   const [parallaxOffset, setParallaxOffset] = useState({ x: 0, y: 0 });
+  const [videoEnded, setVideoEnded] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const overlayControls = useAnimationControls();
 
   useParticleCanvas(canvasRef, Boolean(prefersReducedMotion));
@@ -305,13 +309,24 @@ export function LandingPage() {
         position: 'fixed',
         inset: 0,
         zIndex: 0,
-        backgroundImage: 'url("/fengmian/di.png")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
         fontFamily: '"演示秋鸿楷", "YanShi QiuHongKai", var(--font-serif), "Noto Serif SC", SimSun, STSong, serif',
       }}
     >
+      {/* 静态背景图 - 视频播放期间透明，视频结束后淡入 */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
+          backgroundImage: 'url("/fengmian/di.png")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          opacity: videoEnded ? 1 : 0,
+          transition: 'opacity 1s ease',
+        }}
+      />
       <style>{`
         @keyframes inkPulseSlow {
           0%, 100% { transform: scale(0.9); opacity: 0.03; }
@@ -333,6 +348,28 @@ export function LandingPage() {
         }
       `}</style>
 
+      <video
+        ref={videoRef}
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        onEnded={() => setVideoEnded(true)}
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1,
+          pointerEvents: 'none',
+          opacity: videoEnded ? 0 : 1,
+          transition: 'opacity 1s ease',
+        }}
+      >
+        <source src={VIDEO_PATH} type="video/mp4" />
+      </video>
       <canvas
         ref={canvasRef}
         aria-hidden="true"
@@ -521,6 +558,8 @@ export function LandingPage() {
           initial="initial"
           animate={contentExited ? 'exit' : 'initial'}
         >
+          {/* 视频播放期间隐藏所有文字内容 */}
+          <div style={{ visibility: videoEnded ? 'visible' : 'hidden' }}>
           <motion.div
           initial="hidden"
           animate="visible"
@@ -699,11 +738,9 @@ export function LandingPage() {
             穿越山川河谷与气候分界线，在温度、湿度与风向的变化中，观察民居形态如何顺应环境细腻生长。
           </p>
         </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 1.9, ease: 'easeOut' }}
+        <div
           style={{
             display: 'inline-flex',
             flexDirection: 'column',
@@ -800,7 +837,7 @@ export function LandingPage() {
           >
             点击开启你的建筑探索之旅
           </div>
-        </motion.div>
+        </div>
         </motion.div>
       </div>
 
