@@ -1,0 +1,1121 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>苏州驿风物志</title>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <link rel="stylesheet" href="css/comon0.css">
+  
+  <script src="js/echarts.min.js"></script>
+    <script src="js/material_pie_chart.js"></script>
+  <script src="js/sankey_chart.js"></script>
+  <script src="js/word_cloud_chart.js"></script>
+<style>
+
+body {
+  background: url('images/风物志背景.jpg') center top no-repeat;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+  font-family: "微软雅黑";
+  color: #fff;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100vh; 
+  overflow: hidden;
+}
+
+.header {
+  position: absolute;
+  top: 10px; 
+ 
+  width: 100%;
+  text-align: center;
+  z-index: 100;
+}
+
+.header h1 {
+  font-size: 36px;
+  color: #d4a017; 
+  text-shadow: none; 
+  margin: 0;
+  padding: 10px;
+  background: transparent; 
+  display: inline-block;
+  border-radius: 5px;
+}
+
+.framework-container {
+  position: absolute;
+  top: 80px; 
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.framework {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; 
+  grid-gap: 20px;
+  height: 100%;
+  align-items: stretch; 
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.box {
+  border: 2px solid rgba(212, 160, 23, 0.3); 
+  background: rgba(212, 160, 23, 0.08); 
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.box-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent; 
+  color: #8B4513; 
+  font-size: 16px;
+  padding: 8px;
+  text-align: center;
+  z-index: 5;
+  border-bottom: 1px solid rgba(139, 69, 19, 0.5); 
+}
+
+.box-content {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+}
+
+
+.left-col {
+  display: grid;
+  grid-template-rows: 1fr 0.8fr; 
+  gap: 20px;
+}
+
+
+.vertical-distribution-row {
+  display: grid;
+  grid-template-rows: 1.15fr 0.85fr; 
+  gap: 20px;
+  height: 100%;
+}
+
+.vertical-distribution-row .box {
+  height: 100%;
+}
+
+
+.middle-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.middle-col .box {
+  flex: 1;
+}
+
+
+.middle-col .box:nth-child(1) { flex: 1; } 
+.middle-col .box:nth-child(2) { flex: 3; } 
+
+
+.right-col {
+  display: grid;
+  grid-template-rows: 1fr 0.75fr 1.5fr; 
+  gap: 20px;
+}
+
+
+.data-analysis-row1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  gap: 20px;
+  height: 100%;
+}
+
+.data-analysis-row1 .box {
+  height: 100%;
+}
+
+
+.framework > * {
+  height: 100%;
+}
+
+
+.china-map-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.china-map {
+  width: 90%;
+  height: 80%;
+  max-width: 500px;
+  max-height: 400px;
+}
+
+.province {
+  cursor: pointer;
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.province:hover {
+  fill: #f0c674; 
+  stroke: #d4a017;
+  stroke-width: 1.5;
+}
+
+.beijing-dot {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { r: 6; }
+  50% { r: 8; }
+  100% { r: 6; }
+}
+
+.province-label {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.map-info {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  padding: 5px;
+}
+
+
+.framework-label {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: rgba(255,255,255,0.5);
+  font-size: 12px;
+  z-index: 100;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+<h1>苏州民居</h1>
+  </div>
+  
+  <div class="framework-container">
+    <div class="framework">
+      
+      <div class="left-col">
+        
+        <div class="vertical-distribution-row">
+          <div class="box">
+            <div class="box-title">材料环形图</div>
+            <div class="box-content">
+              <div id="material-pie-chart" style="width: 100%; height: 100%;"></div>
+            </div>
+          </div>
+          <div class="box">
+            <div class="box-title">构造桑基图</div>
+            <div class="box-content">
+              <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                <div id="sankey-chart" style="width: 50%; height: 90%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="box">
+          <div class="box-title">分布词云图</div>
+          <div class="box-content">
+            <div id="word-cloud-chart" style="width: 100%; height: 100%;"></div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="column middle-col">
+        <div class="box">
+          <div class="box-title">分布地数据</div>
+          <div class="box-content">
+            <div class="climate-data-container" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 10px;">
+              
+              <div class="data-row" style="display: flex; justify-content: space-around; margin-bottom: 10px;">
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">年平均气温</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">16.37°C</div>
+                  </div>
+                </div>
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">年降水量</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">967mm</div>
+                  </div>
+                </div>
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">平均水压</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">1.57MPa</div>
+                  </div>
+                </div>
+              </div>
+              
+              
+              <div class="data-row" style="display: flex; justify-content: space-around;">
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">地理经度</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">120.63°E</div>
+                  </div>
+                </div>
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">地理纬度</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">31.31°N</div>
+                  </div>
+                </div>
+                <div class="data-item" style="text-align: center;">
+                  <div class="data-label" style="color: #000000; font-size: 16px; margin-bottom: 3px; font-weight: bold;">平均海拔</div>
+                  <div class="data-value-container" style="background: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 6px 10px; min-width: 70px;">
+<div class="data-value" style="color: #4dabf7; font-size: 22px; font-weight: bold;">12.6m</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="box" style="flex: 3;">
+          <div class="box-title">分布图</div>
+          <div class="box-content">
+            <div style="width: 100%; height: 100%; display: flex; align-items: flex-start; justify-content: center; padding-top: 30px;">
+              
+              <div id="china-map-container" style="width: 100%; height: 100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="right-col">
+        
+        <div class="data-analysis-row1">
+          <div class="box">
+            <div class="box-title">分类</div>
+            <div class="box-content">
+              <div class="intersecting-circles-container" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
+                
+                <div class="circle-container" style="position: relative; width: 220px; height: 220px;">
+                  
+                  <div class="circle" style="position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(255, 107, 107, 0.7); top: 10px; left: 10px; display: flex; align-items: center; justify-content: center; z-index: 1; border: 2px solid rgba(255, 255, 255, 0.5);">
+                    <div class="circle-label" style="color: #fff; font-size: 14px; font-weight: bold; text-align: center; line-height: 1.2;">临河<br>民居</div>
+                  </div>
+                  
+                  
+                  <div class="circle" style="position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(78, 205, 196, 0.7); top: 10px; right: 10px; display: flex; align-items: center; justify-content: center; z-index: 2; border: 2px solid rgba(255, 255, 255, 0.5);">
+                    <div class="circle-label" style="color: #fff; font-size: 14px; font-weight: bold; text-align: center; line-height: 1.2;">巷弄<br>民居</div>
+                  </div>
+                  
+                  
+                  <div class="circle" style="position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(255, 209, 102, 0.7); bottom: 10px; left: 10px; display: flex; align-items: center; justify-content: center; z-index: 3; border: 2px solid rgba(255, 255, 255, 0.5);">
+                    <div class="circle-label" style="color: #fff; font-size: 14px; font-weight: bold; text-align: center; line-height: 1.2;">庭院<br>宅院</div>
+                  </div>
+                  
+                  
+                  <div class="circle" style="position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(6, 214, 160, 0.7); bottom: 10px; right: 10px; display: flex; align-items: center; justify-content: center; z-index: 4; border: 2px solid rgba(255, 255, 255, 0.5);">
+                    <div class="circle-label" style="color: #fff; font-size: 14px; font-weight: bold; text-align: center; line-height: 1.2;">园林<br>宅第</div>
+                  </div>
+                  
+                  
+                  <div class="intersection-hint" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); z-index: 0;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="box">
+            <div class="box-title">防御指数</div>
+            <div class="box-content">
+              
+              <div id="radar-chart" style="width: 100%; height: 100%;"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="box">
+          <div class="box-title">历史进程图</div>
+          <div class="box-content">
+            
+            <div class="timeline-container" style="width: 100%; height: 100%; padding: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+              
+              <div class="timeline-wrapper" style="position: relative; width: 90%; height: 80px;">
+                
+                <div class="timeline-background" style="position: absolute; top: 50%; left: 0; right: 0; height: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 6px; transform: translateY(-50%);"></div>
+                
+                
+                <div class="connected-timeline" style="position: absolute; top: 50%; left: 0; right: 0; height: 12px; transform: translateY(-50%); display: flex; border-radius: 6px; overflow: hidden;">
+                  
+                  <div class="timeline-segment zhou" style="flex: 1; height: 100%; background: linear-gradient(90deg, #8B4513, #A0522D);">
+                  </div>
+                  
+                  
+                  <div class="timeline-segment han-tang" style="flex: 1.2; height: 100%; background: linear-gradient(90deg, #D2691E, #CD853F);">
+                  </div>
+                  
+                  
+                  <div class="timeline-segment ming-qing" style="flex: 1; height: 100%; background: linear-gradient(90deg, #D4A017, #F4A460);">
+                  </div>
+                </div>
+                
+                
+                <div class="timeline-labels" style="position: absolute; top: calc(50% + 20px); left: 0; right: 0; display: flex; justify-content: space-between;">
+                  <div class="timeline-label zhou-label" 
+                       style="flex: 1; text-align: center; color: #8B4513; font-size: 12px; font-weight: bold; cursor: pointer; padding: 5px 0;"
+                       data-period="唐宋" 
+                       data-description="临水而建、院落雏形">
+                    唐宋
+                  </div>
+                  <div class="timeline-label han-tang-label" 
+                       style="flex: 1.2; text-align: center; color: #D2691E; font-size: 12px; font-weight: bold; cursor: pointer; padding: 5px 0;"
+                       data-period="明清" 
+                       data-description="宅园合一、街巷格局定型、砖木结构成熟">
+                    明清
+                  </div>
+                  <div class="timeline-label ming-qing-label" 
+                       style="flex: 1; text-align: center; color: #D4A017; font-size: 12px; font-weight: bold; cursor: pointer; padding: 5px 0;"
+                       data-period="近现代" 
+                       data-description="修旧如旧、保留水乡特色">
+                    近现代
+                  </div>
+                </div>
+              </div>
+              
+              
+              <div id="timeline-tooltip" style="position: absolute; display: none; z-index: 1000; pointer-events: none;"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="box">
+          <div class="box-title">温雨双折图</div>
+          <div class="box-content">
+            
+            <div id="temperature-rain-chart" style="width: 100%; height: 100%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<script>
+$(document).ready(function(){
+  
+  
+
+  
+  function initRadarChart() {
+    var radarChart = echarts.init(document.getElementById('radar-chart'));
+    
+    
+    var option = {
+      
+      backgroundColor: 'transparent',
+      
+      
+      radar: {
+        
+        shape: 'polygon',
+        
+        
+        indicator: [
+          { name: '防火', max: 100 },
+          { name: '防盗', max: 100 },
+          { name: '防匪', max: 100 },
+          { name: '防水', max: 100 },
+          { name: '防恶劣天气', max: 100 }
+        ],
+        
+        
+        center: ['50%', '50%'],
+        radius: '60%',
+        
+        
+        splitLine: {
+          lineStyle: {
+            color: '#8B4513', 
+            opacity: 0.3,
+            width: 1
+          }
+        },
+        
+        
+        axisLine: {
+          lineStyle: {
+            color: '#8B4513', 
+            opacity: 0.5,
+            width: 1
+          }
+        },
+        
+        
+        splitArea: {
+          areaStyle: {
+            color: ['transparent', 'transparent', 'transparent']
+          }
+        },
+        
+        
+        axisName: {
+          color: '#000000', 
+          fontSize: 8,      
+          fontWeight: 'bold'
+        }
+      },
+      
+      
+      series: [{
+        type: 'radar',
+        
+        
+        data: [{
+          value: [90, 80, 70, 95, 85],
+          name: '防御指数',
+          
+          
+          areaStyle: {
+            color: 'rgba(139, 69, 19, 0.3)' 
+          },
+          
+          
+          lineStyle: {
+            color: '#8B4513', 
+            width: 2
+          },
+          
+          
+          itemStyle: {
+            color: '#8B4513' 
+          },
+          
+          
+          label: {
+            show: false  
+          }
+        }]
+      }],
+      
+      
+      tooltip: {
+        show: false
+      },
+      
+      
+      legend: {
+        show: false
+      },
+      
+      
+      grid: {
+        show: false
+      }
+    };
+    
+    
+    radarChart.setOption(option);
+    
+    
+    window.addEventListener('resize', function() {
+      radarChart.resize();
+    });
+  }
+  
+  
+  initRadarChart();
+
+  
+  function initTimelineInteraction() {
+    
+    var timelineLabels = $('.timeline-label');
+    
+    
+    function createFloatingContainer(period, description, labelElement) {
+      
+      $('.floating-explanation-container').remove();
+      
+      
+      var labelOffset = labelElement.offset();
+      var labelWidth = labelElement.outerWidth();
+      var labelHeight = labelElement.outerHeight();
+      
+      
+      var floatingContainer = $('<div class="floating-explanation-container"></div>');
+      floatingContainer.css({
+        'position': 'absolute',
+        'background': 'rgba(255, 255, 255, 0.95)',
+        'border': '1px solid rgba(212, 160, 23, 0.7)',
+        'border-radius': '8px',
+        'padding': '12px',
+        'box-shadow': '0 6px 20px rgba(0, 0, 0, 0.15)',
+        'min-width': '200px',
+        'max-width': '250px',
+        'color': '#000',
+        'font-family': '微软雅黑',
+        'z-index': '1000',
+        'pointer-events': 'none',
+        'transition': 'all 0.3s ease'
+      });
+      
+      
+      var title = $('<div class="floating-title"></div>');
+      title.css({
+        'color': '#d4a017',
+        'font-size': '16px',
+        'font-weight': 'bold',
+        'margin-bottom': '10px',
+        'border-bottom': '2px solid rgba(212, 160, 23, 0.3)',
+        'padding-bottom': '8px',
+        'text-align': 'center'
+      });
+      title.text(period + '时期');
+      
+      
+      var desc = $('<div class="floating-description"></div>');
+      desc.css({
+        'font-size': '13px',
+        'line-height': '1.6',
+        'color': '#333',
+        'text-align': 'left'
+      });
+      desc.text(description);
+      
+      
+      floatingContainer.append(title);
+      floatingContainer.append(desc);
+      $('body').append(floatingContainer);
+      
+      
+      var containerWidth = floatingContainer.outerWidth();
+      var containerHeight = floatingContainer.outerHeight();
+      
+      
+      var posX = labelOffset.left + (labelWidth / 2) - (containerWidth / 2);
+      var posY = labelOffset.top - containerHeight - 15;
+      
+      
+      if (posX < 10) {
+        posX = 10;
+      }
+      
+      
+      if (posX + containerWidth > $(window).width() - 10) {
+        posX = $(window).width() - containerWidth - 10;
+      }
+      
+      
+      if (posY < 10) {
+        posY = labelOffset.top + labelHeight + 15;
+      }
+      
+      
+      floatingContainer.css({
+        'left': (posX + 20) + 'px',
+        'top': (posY + 20) + 'px',
+        'opacity': '0',
+        'transform': 'translateY(10px)'
+      });
+      
+      
+      setTimeout(function() {
+        floatingContainer.css({
+          'left': posX + 'px',
+          'top': posY + 'px',
+          'opacity': '1',
+          'transform': 'translateY(0)'
+        });
+      }, 10);
+      
+      return floatingContainer;
+    }
+    
+    
+    timelineLabels.hover(
+      function() {
+        var $this = $(this);
+        
+        var period = $this.data('period');
+        var description = $this.data('description');
+        
+        
+        $this.css({
+          'text-shadow': '0 0 12px rgba(255, 255, 255, 0.9)',
+          'transform': 'scale(1.15)',
+          'transition': 'all 0.3s ease',
+          'z-index': '100'
+        });
+        
+        
+        createFloatingContainer(period, description, $this);
+      },
+      function() {
+        var $this = $(this);
+        
+        $this.css({
+          'text-shadow': 'none',
+          'transform': 'scale(1)',
+          'transition': 'all 0.3s ease',
+          'z-index': '1'
+        });
+        
+        
+        var floatingContainer = $('.floating-explanation-container');
+        if (floatingContainer.length) {
+          floatingContainer.css({
+            'opacity': '0',
+            'transform': 'translateY(10px)',
+            'transition': 'all 0.3s ease'
+          });
+          
+          setTimeout(function() {
+            floatingContainer.remove();
+          }, 300);
+        }
+      }
+    );
+    
+    
+    timelineLabels.on('mousemove', function() {
+      
+    });
+    
+    
+    timelineLabels.click(function(e) {
+      var $this = $(this);
+      
+      var period = $this.data('period');
+      var description = $this.data('description');
+      
+      
+      timelineLabels.css({
+        'text-shadow': 'none',
+        'transform': 'scale(1)',
+        'background': 'transparent',
+        'border-radius': '0',
+        'z-index': '1'
+      });
+      
+      
+      $this.css({
+        'text-shadow': '0 0 15px rgba(255, 255, 255, 1)',
+        'transform': 'scale(1.2)',
+        'background': 'rgba(255, 255, 255, 0.15)',
+        'border-radius': '5px',
+        'z-index': '200'
+      });
+      
+      
+      $('.floating-explanation-container').remove();
+      
+      
+      var floatingContainer = createFloatingContainer(period + '（已选中）', description, $this);
+      
+      
+      floatingContainer.css({
+        'border': '2px solid rgba(212, 160, 23, 0.9)',
+        'box-shadow': '0 8px 25px rgba(0, 0, 0, 0.2)'
+      });
+      
+      
+      e.stopPropagation();
+    });
+    
+    
+    $(document).click(function(e) {
+      if (!$(e.target).closest('.timeline-label').length) {
+        
+        $('.floating-explanation-container').remove();
+        
+        
+        timelineLabels.css({
+          'text-shadow': 'none',
+          'transform': 'scale(1)',
+          'background': 'transparent',
+          'border-radius': '0',
+          'z-index': '1'
+        });
+      }
+    });
+  }
+  
+  
+  initTimelineInteraction();
+
+  
+  function initTemperatureRainChart() {
+    var temperatureRainChart = echarts.init(document.getElementById('temperature-rain-chart'));
+    
+    
+    var months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+    
+    
+    var rainfallData = [45.2, 52.8, 88.5, 95.7, 120.3, 210.8, 225.6, 185.4, 105.9, 78.2, 56.7, 42.1];
+    
+    
+    var temperatureData = [3.2, 5.8, 10.5, 17.3, 22.6, 26.1, 28.9, 28.2, 24.5, 18.7, 12.4, 5.6];
+    
+    
+    var option = {
+      
+      backgroundColor: 'transparent',
+      
+      
+      
+      
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: 'rgba(212, 160, 23, 0.7)',
+        textStyle: {
+          color: '#000'
+        },
+        formatter: function(params) {
+          var result = params[0].name + '<br/>';
+          for (var i = 0; i < params.length; i++) {
+            var series = params[i];
+            var value = series.value;
+            var unit = series.seriesName.includes('温度') ? '℃' : 'mm';
+            var color = series.color;
+            
+            result += '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;background-color:' + color + '"></span>';
+            result += series.seriesName + ': ' + value + unit + '<br/>';
+          }
+          return result;
+        }
+      },
+      
+      
+      legend: {
+        data: ['月降水量', '月均温度'],
+        top: 10,
+        textStyle: {
+          color: 'rgba(255, 255, 255, 0.8)',
+          fontSize: 11
+        }
+      },
+      
+      
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        top: '40px',
+        containLabel: true
+      },
+      
+
+      xAxis: {
+        type: 'category',
+        boundaryGap: true,
+        data: months,
+        axisLine: {
+          lineStyle: {
+            color: '#ffffff',
+            width: 2
+          }
+        },
+        axisLabel: {
+          color: '#ffffff',
+          fontSize: 10
+        }
+      },
+      
+
+      yAxis: [
+        {
+          type: 'value',
+          name: '降水量 (mm)',
+          nameTextStyle: {
+            color: '#1E90FF',
+            fontSize: 11
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#1E90FF',
+              opacity: 1,
+              width: 2
+            }
+          },
+          axisLabel: {
+            color: '#1E90FF',
+            fontSize: 10
+          },
+          splitLine: {
+            lineStyle: {
+              color: 'rgba(30, 144, 255, 0.3)',
+              type: 'dashed'
+            }
+          }
+        },
+        {
+          type: 'value',
+          name: '温度 (℃)',
+          nameTextStyle: {
+            color: '#DC143C',
+            fontSize: 11
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#DC143C',
+              opacity: 1,
+              width: 2
+            }
+          },
+          axisLabel: {
+            color: '#DC143C',
+            fontSize: 10
+          },
+          splitLine: {
+            show: false
+          }
+        }
+      ],
+      
+      
+      series: [
+        {
+          name: '月降水量',
+          type: 'bar', 
+          yAxisIndex: 0,
+          data: rainfallData,
+          itemStyle: {
+            color: '#b0e0e6', 
+            borderRadius: [12, 12, 0, 0] 
+          },
+          emphasis: {
+            itemStyle: {
+              color: '#b0e0e6', 
+              borderRadius: [15, 15, 0, 0] 
+            }
+          },
+          barWidth: '60%' 
+        },
+        {
+          name: '月均温度',
+          type: 'line',
+          yAxisIndex: 1,
+          data: temperatureData,
+          smooth: true,
+          lineStyle: {
+            color: '#FFA07A', 
+            width: 3
+          },
+          itemStyle: {
+            color: '#FFA07A' 
+          },
+          symbol: 'circle',
+          symbolSize: 6,
+          emphasis: {
+            focus: 'series',
+            itemStyle: {
+              borderColor: '#fff',
+              borderWidth: 2
+            }
+          }
+        }
+      ]
+    };
+    
+    
+    temperatureRainChart.setOption(option);
+    
+    
+    window.addEventListener('resize', function() {
+      temperatureRainChart.resize();
+    });
+  }
+  
+  
+  initTemperatureRainChart();
+
+  
+  if (typeof initWordCloudChart === 'function') {
+    initWordCloudChart();
+  }
+
+  
+
+  
+   $.getJSON('/china.json', function (chinaJson) {
+    echarts.registerMap('china', chinaJson);
+    
+    
+    var chinaMapChart = echarts.init(document.getElementById('china-map-container'));
+    
+    
+    const stationCoords = [120.62, 31.32];
+    
+    var mapOption = {
+      backgroundColor: 'transparent',
+      geo: {
+        map: 'china',
+        roam: false,
+         zoom: 2.0,
+         center: [103.8, 32.5],
+         layoutCenter: ['50%', '50%'],
+         layoutSize: '105%',
+        label: {
+          show: false,
+          color: '#25180d',
+          fontSize: 11,
+          fontWeight: 600
+        },
+        itemStyle: {
+          areaColor: {
+            type: 'radial',
+            x: 0.5,
+            y: 0.5,
+            r: 0.8,
+            colorStops: [
+              { offset: 0, color: '#F0E2C5' },
+              { offset: 0.5, color: '#E8D4A9' },
+              { offset: 1, color: '#E6D0A7' }
+            ]
+          },
+          borderColor: '#D4A017',
+          borderWidth: 1.2,
+          shadowColor: 'rgba(0, 0, 0, 0.06)',
+          shadowBlur: 4
+        },
+        emphasis: {
+          itemStyle: {
+            areaColor: '#DBC496',
+          },
+          label: {
+            show: true,
+            color: '#1a0f06',
+            fontSize: 12,
+            fontWeight: 700
+          }
+        },
+        regions: [{
+          name: '南海诸岛',
+          itemStyle: {
+            opacity: 0
+          },
+          label: {
+            show: false
+          }
+        }]
+      },
+      series: [{
+        type: 'effectScatter',
+        coordinateSystem: 'geo',
+        symbolSize: 10,
+        showEffectOn: 'render',
+        rippleEffect: {
+          brushType: 'stroke',
+          scale: 3,
+          period: 4
+        },
+        data: [
+          {
+            name: '苏州',
+            value: stationCoords.concat([100])
+          }
+        ],
+        label: {
+          show: true,
+          formatter: '{b}',
+          position: 'top',
+          color: '#5a4d42',
+          fontSize: 12,
+          fontWeight: 'bold',
+          distance: 5,
+          backgroundColor: 'transparent',
+          textBorderColor: 'transparent'
+        },
+        itemStyle: {
+          color: '#8c221c',
+          borderColor: '#ffffff',
+          borderWidth: 1.5,
+          shadowBlur: 4,
+          shadowColor: 'rgba(0,0,0,0.2)'
+        },
+        emphasis: {
+          itemStyle: {
+            color: '#8c221c',
+            shadowBlur: 8,
+            shadowColor: 'rgba(140,34,28,0.28)'
+          },
+          scale: true
+        },
+        zlevel: 1
+      }],
+      tooltip: {
+        show: false
+      },
+      
+      graphic: [
+        {
+          type: 'text',
+          right: 10,
+          bottom: 10,
+          style: {
+            text: '中国地图审图号：GS（2024）0650号',
+            fill: 'rgba(138,125,115,0.7)',
+            fontSize: 10,
+            fontFamily: 'Arial, sans-serif'
+          }
+        }
+      ]
+    };
+    
+    chinaMapChart.setOption(mapOption);
+    
+    
+    window.addEventListener('resize', function() {
+      chinaMapChart.resize();
+    });
+  });
+
+});
+</script>
+</body>
+</html>
+

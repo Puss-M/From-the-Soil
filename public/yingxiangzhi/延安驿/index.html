@@ -1,0 +1,260 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>index</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/comon0.css">
+</head>
+	<script>
+	$(window).load(function(){  
+             $(".loading").fadeOut()
+            })  
+			
+/****/
+$(document).ready(function(){
+	var whei=$(window).width()
+	$("html").css({fontSize:whei/20})
+	$(window).resize(function(){
+		var whei=$(window).width()
+	 $("html").css({fontSize:whei/20})
+});
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script> 
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script> 
+	<script language="JavaScript" src="js/js.js"></script> 
+<body>
+<div class="canvas" style="opacity: .2">
+	<iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
+	</div>
+<div class="loading">
+  <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+</div>
+<div class="head">
+  <h1>窑洞</h1>
+  <div class="weather"><!--<img src="picture/weather.png"><span>多云转小雨</span>--><span id="showTime"></span></div>
+	
+	<script>
+var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+		var y=dt.getFullYear();
+		var mt=dt.getMonth()+1;
+		var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行     
+    } 
+
+</script>
+	
+	
+</div>
+<div class="mainbox">
+  <ul class="clearfix">
+    <li>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频基础信息</div>
+        <div class="video-info-container">
+          <div class="video-image-container">
+            <img src="/yingxiangzhi-covers/延安驿.jpg" onerror="this.onerror=null;this.src='/风物志背景.jpeg';" alt="视频封面" class="video-cover">
+          </div>
+          <div class="video-text-container">
+            <div class="video-info-item">时长 01:34 / 播放量 1.5w</div>
+            <div class="video-info-item">发布时间 2022-01-21 08:00:05</div>
+          </div>
+        </div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频类型占比</div>
+        <div class="allnav" id="echart2"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">评论时段趋势：24小时分布</div>
+        <div class="allnav" id="echart7"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+    <li>
+      <!-- 顶部三个数据卡片 -->
+      <div class="middle-section">
+        <div class="data-cards-container">
+          <div class="data-card">
+            <div class="card-title">播放数据</div>
+            <div class="card-content">
+              <div class="card-value">586.89万</div>
+              <div class="card-label">总播放量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">互动数据</div>
+            <div class="card-content">
+              <div class="card-value">19.65万</div>
+              <div class="card-label">总点赞量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">评论数据</div>
+            <div class="card-content">
+              <div class="card-value">6945</div>
+              <div class="card-label">总评论量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+        </div>
+
+        <!-- B站视频嵌入 -->
+        <div class="video-container">
+          <div class="video-title">视频内容</div>
+          <div class="video-iframe-wrapper">
+            <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=723155227&bvid=BV1AS4y1f7pj&cid=486791232&p=1"
+                    frameborder="0" 
+                    allowfullscreen="true"
+                    allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope; clipboard-write; encrypted-media; web-share"
+                    class="bilibili-video"
+                    id="bilibili-player"
+                    title="B站窑洞视频"
+                    loading="lazy"
+                    style="cursor: pointer !important; pointer-events: auto !important; z-index: 10000;">
+            </iframe>
+          </div>
+          <div class="video-footer"></div>
+        </div>
+
+        <!-- 热评滚动条 -->
+        <div class="hot-comments-container">
+          <div class="comments-title">热评滚动</div>
+          <div class="comments-scroll-wrapper">
+            <div class="comments-scroll-content">
+  <div class="comment-item">
+    <div class="comment-text">我陇东庆阳，我们这叫地坑庄，塬上的庄大多有一边邻坡的，这样风和阳光就能通透一点。黄土高原非常大，其实每个地方窑洞的风格也都有很多差别。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">想起来一道地理题，为什么地坑院里面要种树，答案居然是防止行人掉落。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">地下四合院中间种棵树的目的这辈子都不会忘。。。防止外人跌入。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">这门一进去，先是一股阴凉给人提个精神，然后再有一股柴火味伴着老汉抽的旱烟味扑面而来，一把就把人拉回童年了。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">家里就黄土高坡的，说点各位不知道的，这边结婚的时候，除了正常吃席，拜亲，有一点不一样的，就是挖窑洞。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">这集真的长知识了，从来不知道原来还有住在"地下小院"的方式，当奶奶说"人走了，没有生气了，房子会败的很快"时，有点破防。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">这期质量很高，可以当民俗纪录片看。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">人是窑的柱子，这句话非常的有哲理，老一辈人说话朴实但是富含阅历和智慧。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">喜欢看你们一路上和当地人交谈，感觉通过这些交谈更能走近当地，了解那里的风土人情。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">我老家住的就是这种地窑，冬暖夏凉，住起来确实很舒服。自己习以为常的东西在别人看来这么新奇。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">老有人问下雨怎么办，有没有一种可能，黄土高坡之所以叫黄土高坡，有一个很大的原因就是当地降雨少。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">好棒的片子！去年就一直想去三门峡看一看地坑院。一直希望北方的特色传统民居都能够发展起来，或者保存下来，这些都是文化的烙印。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">黄土具有直立性，土壤的纹理是垂直方向的，对于窑洞，具有直立性的黄土在垂直方向上承压能力更强。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">在干燥少雨的地方，窑洞确实很方便，保暖性能好，冬暖夏凉，而且施工简单，花不了多少时间就能有个很舒适的窝。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">平凡的世界来的，南方人长见识了。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">这种古村落真应该好好保护下，不比那些仿古建筑有味道多了。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">作为秦人的我看到这么棒的介绍简直激动又自豪。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">我从陕北走来，在繁华魔都感到的是眩晕，看到陕北的窑洞，虬曲的枣树，乡愁涌上心头，那是陕北人的根，陕北人灵的归宿。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">窑洞是中国西北黄土高原上居民的古老居住形式，这一"穴居式"民居的历史可以追溯到四千多年前。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">小时候回乡下老家，大人们最重要的提醒就是，看路，别摔地坑院儿了。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">好多村落渐渐的消失了。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">喜欢住窑洞，冬暖夏凉。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">只要土层厚，别墅都能从里面挖出来。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">这么人性化的民居希望能够传承，这是中国人的骄傲。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">在没有机械的年代，徒手挖出一个地坑院，那可是相当大的工程呀！</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">自然环境冷热，黄土隔热功能好，当地缺乏建筑材料，朝南，冬暖夏凉，防噪防火防风。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">画质又好，讲的又细，我留下做地理教学素材了。谢谢！太棒了！</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">南方人看着很神奇，有种古建筑的时空感。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">人活下去其实很简单，之所以活的累就是要的太多。</div>
+  </div>
+  <div class="comment-item">
+    <div class="comment-text">一定要保护好啊！希望将来自己有能力能把房子好好翻新维护一下，真的太喜欢有历史感的房子了！</div>
+  </div>
+</div>
+          </div>
+          <div class="comments-footer"></div>
+        </div>
+      </div>
+    </li>
+    <li>
+          <div class="boxall" style="height:3.4rem">
+        <div class="alltitle">评论情感</div>
+        <div class="allnav" id="echart4"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3rem">
+        <div class="alltitle">评论词云</div>
+        <div class="allnav" id="echart5"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">知网相关主题发表论文数</div>
+        <div class="allnav" id="echart8"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="back"></div>
+
+
+<script type="text/javascript" src="js/china.js"></script> 
+<script type="text/javascript" src="js/area_echarts.js"></script> 
+</body>
+</html>

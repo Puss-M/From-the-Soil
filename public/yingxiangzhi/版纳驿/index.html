@@ -1,0 +1,257 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>竹楼可视化大屏</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/comon0.css">
+</head>
+	<script>
+	$(window).load(function(){  
+             $(".loading").fadeOut()
+            })  
+			
+/****/
+$(document).ready(function(){
+	var whei=$(window).width()
+	$("html").css({fontSize:whei/20})
+	$(window).resize(function(){
+		var whei=$(window).width()
+	 $("html").css({fontSize:whei/20})
+});
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script> 
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script> 
+	<script language="JavaScript" src="js/js.js"></script> 
+<body>
+<div class="canvas" style="opacity: .2">
+	<iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
+	</div>
+<div class="loading">
+  <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+</div>
+<div class="head">
+  <h1>竹楼</h1>
+  <div class="weather"><!--<img src="picture/weather.png"><span>多云转小雨</span>--><span id="showTime"></span></div>
+	
+	<script>
+var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+		var y=dt.getFullYear();
+		var mt=dt.getMonth()+1;
+		var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行     
+    } 
+
+</script>
+	
+	
+</div>
+<div class="mainbox">
+  <ul class="clearfix">
+    <li>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频基础信息</div>
+        <div class="video-info-container">
+          <div class="video-image-container">
+            <img src="/yingxiangzhi-covers/版纳驿.jpg" onerror="this.onerror=null;this.src='/风物志背景.jpeg';" alt="视频封面" class="video-cover">
+          </div>
+          <div class="video-text-container">
+            <div class="video-info-item">时长 01:39 / 播放量 2179</div>
+            <div class="video-info-item">发布时间 2023-10-30 08:07:59</div>
+          </div>
+        </div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频类型占比</div>
+        <div class="allnav" id="echart2"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">评论时段趋势：24小时分布</div>
+        <div class="allnav" id="echart7"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+    <li>
+      <!-- 顶部三个数据卡片 -->
+      <div class="middle-section">
+        <div class="data-cards-container">
+          <div class="data-card">
+            <div class="card-title">播放数据</div>
+            <div class="card-content">
+              <div class="card-value">495.53万</div>
+              <div class="card-label">总播放量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">互动数据</div>
+            <div class="card-content">
+              <div class="card-value">21.96万</div>
+              <div class="card-label">总点赞量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">评论数据</div>
+            <div class="card-content">
+              <div class="card-value">4616</div>
+              <div class="card-label">总评论量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+        </div>
+
+        <!-- B站视频嵌入 -->
+        <div class="video-container">
+          <div class="video-title">视频内容</div>
+          <div class="video-iframe-wrapper">
+            <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=662868090&bvid=BV1Ca4y1X7bx&cid=1315490889&p=1" 
+                    frameborder="0" 
+                    allowfullscreen="true"
+                    allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope; clipboard-write; encrypted-media; web-share"
+                    class="bilibili-video"
+                    id="bilibili-player"
+                    title="B站竹楼视频"
+                    loading="lazy"
+                    style="cursor: pointer !important; pointer-events: auto !important; z-index: 10000;">
+            </iframe>
+          </div>
+          <div class="video-footer"></div>
+        </div>
+
+        <!-- 热评滚动条 -->
+        <div class="hot-comments-container">
+          <div class="comments-title">热评滚动</div>
+          <div class="comments-scroll-wrapper">
+            <div class="comments-scroll-content">
+              <div class="comment-item">
+                <div class="comment-text">我真得关注你了！你怎么知道我正等着竹建筑呢</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">小竹楼教程来了！第一步，先放入收藏夹 第二步，吃灰 第三步，想了想回来三连并发条评论</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">太好啦！！是竹建筑！刚好最近的湖心钓鱼小屋需要！好耶！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">玉清滴风小竹楼</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">眼睛：好，看清了 脑子：好，记住了 意识：好，学会了 我：材料也很便宜 手：竹什么楼啊？</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">耗时五天终于做出来了，有好几次都是做错了拆了重做，做制作好了就是不会装修，up 主能不能出一个这个小竹楼内饰的视频教程啊求求了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">交作业啦，建在竹林里面好好看</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">竹楼听雨，世间仙居也。up 加油</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">傣族吊脚楼太漂亮了，还有竹屋，其实挺好的，环保，而且竹子生长快，不会造成砍伐问题！当然他们也有缺点，但是这是一种艺术设计，古代缺乏钢筋混凝土的情况用竹子和木头设计出屋子的人太厉害了，很漂亮，很艺术还能住，和大自然融为一体</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">我的民族的民居</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">住这样的房子真的好舒服呀</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">不错，怀恋在版纳的傣族村生活</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">为做设计提供很多的素材，非常感谢了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">一定会传承下去的！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">住起来是相当舒服</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这种材质住着舒服，就是用不了太久</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">很想去的地方 - 西双版纳</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">动手能力很强</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">太棒了，从内容和画质等技术指标上，身为同行深感不易，投币了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">给作者每个民族视频都点赞投币 是很好的素材 感谢作者不辞辛苦走遍这么多地方创作这么高质量的视频！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">高质量视频，赶紧一键三连，关注 up 了</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">好棒的视频！内容画面配音节奏都很舒服</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">真正做教程其实挺花心思的，既要保持流畅又要保证准确，后期剪辑也不容易</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">up 主看着就知道花了好多功夫，真的很厉害，让更多人了解到我国关于少数民族的更多的文化</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">老师，请您一定要继续更新下去呀！！人类民族学爱好者真的太喜欢您的视频了！！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">支持多多科普传统古建</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">不得不佩服咱老祖宗们的聪明智慧啊</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这个跟河姆渡遗址的干栏式建筑设计思路一致</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">上住人下养猪、防潮、防蚊虫，高中地理还没忘</div>
+              </div>
+            </div>
+          </div>
+          <div class="comments-footer"></div>
+        </div>
+      </div>
+    </li>
+    <li>
+          <div class="boxall" style="height:3.4rem">
+        <div class="alltitle">评论情感</div>
+        <div class="allnav" id="echart4"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3rem">
+        <div class="alltitle">评论词云</div>
+        <div class="allnav" id="echart5"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">知网相关主题发表论文数</div>
+        <div class="allnav" id="echart8"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="back"></div>
+
+
+<script type="text/javascript" src="js/china.js"></script> 
+<script type="text/javascript" src="js/area_echarts.js"></script> 
+</body>
+</html>

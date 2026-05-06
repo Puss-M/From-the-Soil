@@ -1,0 +1,260 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>index</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/comon0.css">
+</head>
+	<script>
+	$(window).load(function(){  
+             $(".loading").fadeOut()
+            })  
+			
+/****/
+$(document).ready(function(){
+	var whei=$(window).width()
+	$("html").css({fontSize:whei/20})
+	$(window).resize(function(){
+		var whei=$(window).width()
+	 $("html").css({fontSize:whei/20})
+});
+	});
+	</script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script> 
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script> 
+	<script language="JavaScript" src="js/js.js"></script> 
+<body>
+<div class="canvas" style="opacity: .2">
+	<iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
+	</div>
+<div class="loading">
+  <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+</div>
+<div class="head">
+  <h1>镬耳屋</h1>
+  <div class="weather"><!--<img src="picture/weather.png"><span>多云转小雨</span>--><span id="showTime"></span></div>
+	
+	<script>
+var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+		var y=dt.getFullYear();
+		var mt=dt.getMonth()+1;
+		var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行     
+    } 
+
+</script>
+	
+	
+</div>
+<div class="mainbox">
+  <ul class="clearfix">
+    <li>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频基础信息</div>
+        <div class="video-info-container">
+          <div class="video-image-container">
+            <img src="/yingxiangzhi-covers/广州驿.jpg" onerror="this.onerror=null;this.src='/风物志背景.jpeg';" alt="视频封面" class="video-cover">
+          </div>
+          <div class="video-text-container">
+            <div class="video-info-item">时长 03:41 / 播放量 4169</div>
+            <div class="video-info-item">发布时间 2020-03-11 21:03:31</div>
+          </div>
+        </div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">视频类型占比</div>
+        <div class="allnav" id="echart2"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">评论时段趋势：24小时分布</div>
+        <div class="allnav" id="echart7"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+    <li>
+      <!-- 顶部三个数据卡片 -->
+      <div class="middle-section">
+        <div class="data-cards-container">
+          <div class="data-card">
+            <div class="card-title">播放数据</div>
+            <div class="card-content">
+              <div class="card-value">16.77万</div>
+              <div class="card-label">总播放量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">互动数据</div>
+            <div class="card-content">
+              <div class="card-value">0.61万</div>
+              <div class="card-label">总点赞量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+          <div class="data-card">
+            <div class="card-title">评论数据</div>
+            <div class="card-content">
+              <div class="card-value">602</div>
+              <div class="card-label">总评论量</div>
+            </div>
+            <div class="card-footer"></div>
+          </div>
+        </div>
+
+        <!-- B站视频嵌入 -->
+        <div class="video-container">
+          <div class="video-title">视频内容</div>
+          <div class="video-iframe-wrapper">
+            <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=95281339&bvid=BV1gE411K7v9&cid=162661862&p=1" 
+                    frameborder="0" 
+                    allowfullscreen="true"
+                    allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope; clipboard-write; encrypted-media; web-share"
+                    class="bilibili-video"
+                    id="bilibili-player"
+                    title="B站镬耳屋视频"
+                    loading="lazy"
+                    style="cursor: pointer !important; pointer-events: auto !important; z-index: 10000;">
+            </iframe>
+          </div>
+          <div class="video-footer"></div>
+        </div>
+
+        <!-- 热评滚动条 -->
+        <div class="hot-comments-container">
+          <div class="comments-title">热评滚动</div>
+          <div class="comments-scroll-wrapper">
+            <div class="comments-scroll-content">
+              <div class="comment-item">
+                <div class="comment-text">镬耳山墙可挡风入巷，让风通过门、窗流入屋内；火灾时，山墙可有效阻止火势蔓延和侵入。挺神奇的</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">广东四大民居 其中广府 潮州 雷州的民居都有五行山墙 但三种山墙又各有特色 线条区别很明显 大家合在一起就构成了岭南建筑流派</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">五行山墙在闽粤地区都有，但是每个地方都不太一样，闽南风格，潮汕风格，广府风格，四邑风格等等</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">其实这类建筑从长江流域一直到广东福建，都只是有装饰上的一些变化，风火墙马头墙一类建筑有好几个版本。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">视频质量好高呀，难以理解为什么不火</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">本潮汕人住着这种房子的长大的，我都不知道。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">我们佛山农村的宗族大祠堂就是这种镬耳屋，以前问我奶奶为什么这么建，她说不知道看上去气派就行，原来有防风防火的功能啊！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">up 是怎么获得这些知识的啊 好看爱看</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">呜呜是我们历史老师上课推荐的！内容丰富 bgm 也很应景！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">汕尾现在的老旧房屋有这样的山墙，不过我看到的都比较简单，刚好看到视频可以补补知识</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这种是硬山还是歇山，这种出檐很小、或者山墙完全封住出檐的是硬山顶吧，雨水、日晒都会直接侵蚀墙体</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">前年在揭阳博物馆学到的，回家看看自己墙头是啥属性</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">居然有参考文献，我很看好你！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">广东三大民系的传统建筑都很有特色</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">广西的钦北防地区也有大量的镬耳楼，镬耳的造型是地位和身份的象征，家里有朝廷钦点的进士以上才可以修建，广西保存比较完整的镬耳楼建筑群在灵山县的大芦村的劳氏古宅，并且大户人家都修建有七星伴月的风水格局。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">马头墙变体</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">听老一辈的说过，火的厝尾角比较难修建，比其他的尾角要贵一些</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">这个我见过，我们广西也有，我们村祠堂就是这种样子的，两边这个耳朵是用来防火的</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">還是希望在義務教育階段應該教一些方言、當地鄉土知識吧，現在的年青人連方言都說得不知所謂，氛圍都無了，地域文化又能知多少？</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">学习，谢谢分享。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">新會司前也很多鑊耳屋</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">结课作业整这个，感谢 up 的砖墙结构科普</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">视频质量超高！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">讲解得好好啊</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">当地土著解答下，为了防止火灾蔓延，这种镬耳式山墙能够有效地将火焰和热气隔离开来，同时还有助于引导和分散雨水和视线</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">up 真系有心咯，帮呢 D 古老的楼影相拍视频，未来的人可能就系靠呢 d 去知道从前。其实五邑地区有好多呢 d 旧楼，只能慢慢被时间风化佢地咯～系好可惜噶，不过无办法。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">中式建筑无论哪个地区的，最美的都是屋顶和大门</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">作为一个潮汕人还真不知道这个，有注意到不一样，但是不理解含义。点赞点赞。</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">很好的科普！</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-text">原来这么多学问</div>
+              </div>
+            </div>
+          </div>
+          <div class="comments-footer"></div>
+        </div>
+      </div>
+    </li>
+    <li>
+          <div class="boxall" style="height:3.4rem">
+        <div class="alltitle">评论情感</div>
+        <div class="allnav" id="echart4"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3rem">
+        <div class="alltitle">评论词云</div>
+        <div class="allnav" id="echart5"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div class="alltitle">知网相关主题发表论文数</div>
+        <div class="allnav" id="echart8"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="back"></div>
+
+
+<script type="text/javascript" src="js/china.js"></script> 
+<script type="text/javascript" src="js/area_echarts.js"></script> 
+</body>
+</html>
