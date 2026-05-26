@@ -1,4 +1,4 @@
-/* 1:1 port of 北京四合院/css/comon0.css */
+
 
 .container {
   width: 100vw;
@@ -117,7 +117,7 @@
   background: #efe2b7;
 }
 
-/* 背景层 - 宣纸+水墨感 */
+
 .bgLayer {
   position: absolute;
   inset: 0;
@@ -129,7 +129,7 @@
   z-index: 1;
 }
 
-/* 主舞台 */
+
 .mainStage {
   position: absolute;
   left: 20px;
@@ -168,7 +168,7 @@
   font-size: 13px;
 }
 
-/* 面板通用样式 - 比赛大屏级发光 */
+
 .panel {
   position: absolute;
   border: 2px solid rgba(92, 223, 215, 0.95);
@@ -180,7 +180,7 @@
   border-radius: 0;
 }
 
-/* 角标装饰 */
+
 .panel::before,
 .panel::after {
   content: "";
@@ -220,7 +220,7 @@
   inset: 12px;
 }
 
-/* 雷达图区专用布局 */
+
 .chartCategory {
   position: absolute;
   left: 18px;
@@ -236,7 +236,7 @@
   height: calc(100% - 12px);
 }
 
-/* 标题牌匾 - 视觉居中 */
+
 .titleBoard {
   position: absolute;
   left: 50%;
@@ -261,7 +261,7 @@
   z-index: 15;
 }
 
-/* 精确坐标定位表 */
+
 .panelLine      { left: 55px;   top: 48px;   width: 390px; height: 220px; }
 .panelMetrics   { left: 475px;  top: 114px;  width: 600px; height: 160px; }
 .panelRadar     { left: 1105px; top: 48px;   width: 720px; height: 220px; }
@@ -272,7 +272,7 @@
 .panelGauge     { left: 475px;  top: 748px;  width: 600px; height: 134px; }
 .panelWordcloud { left: 1105px; top: 498px;  width: 720px; height: 384px; }
 
-/* 指标网格样式 */
+
 .metricGrid {
   position: absolute;
   left: 14px;
@@ -322,7 +322,7 @@
   font-weight: 600;
 }
 
-/* 历史轴样式 */
+
 .historyBox {
   position: absolute;
   inset: 20px 20px 16px 20px;
@@ -358,13 +358,13 @@
   font-weight: 700;
 }
 
-/* 保持状况/仪表盘样式 */
+
 .panelGauge {
   display: flex;
   align-items: stretch;
   padding: 12px 14px 12px;
 }
-/* 覆盖 panel 的 ::before 不显示 */
+
 .panelGauge::before {
   content: none !important;
 }
@@ -419,12 +419,12 @@
   outline-offset: 2px;
 }
 
-/* 图表容器过渡 */
+
 .chart {
   transition: opacity 0.3s ease;
 }
 
-/* 分类/雷达子标题 */
+
 .radarSubTitle {
   position: absolute;
   top: -30px;

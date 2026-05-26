@@ -1,188 +1,169 @@
-﻿
 $(function () {
-// echarts_1(); // Removed - component deleted
-echarts_2(); // Restored - component exists
-echarts_4();
-echarts_5(); // 启用词云图组件
-// echarts_6(); // 图表容器已移除
-echarts_7();
-echarts_8(); // 知网论文数柱状图
-function echarts_1() {
-        // 基于准备好的dom，初始化echarts实例
+    echarts_2();
+    echarts_4();
+    echarts_5();
+    echarts_7();
+    echarts_8();
+    function echarts_1() {
         var myChart = echarts.init(document.getElementById('echart1'));
-
-       option = {
-  //  backgroundColor: '#00265f',
-    tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-            type: 'shadow'
-        }
-    },
-    grid: {
-        left: '0%',
-		top:'10px',
-        right: '0%',
-        bottom: '4%',
-       containLabel: true
-    },
-    xAxis: [{
-        type: 'category',
-      		data: ['商超门店', '教育培训', '房地产', '生活服务', '汽车销售', '旅游酒店', '五金建材'],
-        axisLine: {
-            show: true,
-         lineStyle: {
-                color: "rgba(255,255,255,.1)",
-                width: 1,
-                type: "solid"
+        option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
             },
-        },
-		
-        axisTick: {
-            show: false,
-        },
-		axisLabel:  {
-                interval: 0,
-               // rotate:50,
-                show: true,
-                splitNumber: 15,
-                textStyle: {
- 					color: "rgba(255,255,255,.6)",
-                    fontSize: '12',
-                },
+            grid: {
+                left: '0%',
+                top: '10px',
+                right: '0%',
+                bottom: '4%',
+                containLabel: true
             },
-    }],
-    yAxis: [{
-        type: 'value',
-        axisLabel: {
-           //formatter: '{value} %'
-			show:true,
-			 textStyle: {
- 					color: "rgba(255,255,255,.6)",
-                    fontSize: '12',
-                },
-        },
-        axisTick: {
-            show: false,
-        },
-        axisLine: {
-            show: true,
-            lineStyle: {
-                color: "rgba(255,255,255,.1	)",
-                width: 1,
-                type: "solid"
-            },
-        },
-        splitLine: {
-            lineStyle: {
-               color: "rgba(255,255,255,.1)",
-            }
-        }
-    }],
-    series: [
-		{
-        type: 'bar',
-        data: [200, 300, 300, 900, 1500, 1200, 600],
-        barWidth:'35%', //柱子宽度
-       // barGap: 1, //柱子之间间距
-        itemStyle: {
-            normal: {
-                color:'#2f89cf',
-                opacity: 1,
-				barBorderRadius: 5,
-            }
-        }
-    }
-		
-	]
-};
-      
-        // 使用刚指定的配置项和数据显示图表。
+            xAxis: [{
+                    type: 'category',
+                    data: ['商超门店', '教育培训', '房地产', '生活服务', '汽车销售', '旅游酒店', '五金建材'],
+                    axisLine: {
+                        show: true,
+                        lineStyle: {
+                            color: "rgba(255,255,255,.1)",
+                            width: 1,
+                            type: "solid"
+                        },
+                    },
+                    axisTick: {
+                        show: false,
+                    },
+                    axisLabel: {
+                        interval: 0,
+                        show: true,
+                        splitNumber: 15,
+                        textStyle: {
+                            color: "rgba(255,255,255,.6)",
+                            fontSize: '12',
+                        },
+                    },
+                }],
+            yAxis: [{
+                    type: 'value',
+                    axisLabel: {
+                        show: true,
+                        textStyle: {
+                            color: "rgba(255,255,255,.6)",
+                            fontSize: '12',
+                        },
+                    },
+                    axisTick: {
+                        show: false,
+                    },
+                    axisLine: {
+                        show: true,
+                        lineStyle: {
+                            color: "rgba(255,255,255,.1	)",
+                            width: 1,
+                            type: "solid"
+                        },
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: "rgba(255,255,255,.1)",
+                        }
+                    }
+                }],
+            series: [
+                {
+                    type: 'bar',
+                    data: [200, 300, 300, 900, 1500, 1200, 600],
+                    barWidth: '35%',
+                    itemStyle: {
+                        normal: {
+                            color: '#2f89cf',
+                            opacity: 1,
+                            barBorderRadius: 5,
+                        }
+                    }
+                }
+            ]
+        };
         myChart.setOption(option);
-        window.addEventListener("resize",function(){
+        window.addEventListener("resize", function () {
             myChart.resize();
         });
     }
-function echarts_2() {
-        // 基于准备好的dom，初始化echarts实例
+    function echarts_2() {
         var myChart = echarts.init(document.getElementById('echart2'));
-
-       option = {
-    tooltip: {
-        trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)"
-    },
-        legend: {
-        top: '5%',
-        left: 'center',
-        itemWidth: 10,
-        itemHeight: 10,
-        textStyle: {
-            color: '#000',
-            fontSize: '12',
-        }
-    },
-    series: [
-        {
-            name: '视频类型占比',
-            type: 'pie',
-            radius: ['40%', '60%'],
-            center: ['50%', '55%'],
-            avoidLabelOverlap: true,
-            itemStyle: {
-                borderRadius: 8,
-                borderColor: '#fff',
-                borderWidth: 2
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
             },
-            label: {
-                show: true,
-                formatter: function(params) {
-                    var percent = params.percent;
-                    var value = params.value;
-                    var name = params.name;
-                    // 显示名称、值和百分比
-                    return name + '\n' + value + ' (' + percent.toFixed(1) + '%)';
-                },
-                color: '#000',
-                fontSize: 12,
-                fontWeight: 'normal'
-            },
-            labelLine: {
-                show: true,
-                length: 10,
-                length2: 15,
-                lineStyle: {
-                    color: 'rgba(255,255,255,.3)'
+            legend: {
+                top: '5%',
+                left: 'center',
+                itemWidth: 10,
+                itemHeight: 10,
+                textStyle: {
+                    color: '#000',
+                    fontSize: '12',
                 }
             },
-            emphasis: {
-                label: {
-                    show: true,
-                    fontSize: 14,
-                    fontWeight: 'bold'
+            series: [
+                {
+                    name: '视频类型占比',
+                    type: 'pie',
+                    radius: ['40%', '60%'],
+                    center: ['50%', '55%'],
+                    avoidLabelOverlap: true,
+                    itemStyle: {
+                        borderRadius: 8,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: true,
+                        formatter: function (params) {
+                            var percent = params.percent;
+                            var value = params.value;
+                            var name = params.name;
+                            return name + '\n' + value + ' (' + percent.toFixed(1) + '%)';
+                        },
+                        color: '#000',
+                        fontSize: 12,
+                        fontWeight: 'normal'
+                    },
+                    labelLine: {
+                        show: true,
+                        length: 10,
+                        length2: 15,
+                        lineStyle: {
+                            color: 'rgba(255,255,255,.3)'
+                        }
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: 14,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    data: [
+                        { value: 19, name: '建筑科普' },
+                        { value: 12, name: '文化历史' },
+                        { value: 0, name: '旅游实拍' },
+                        { value: 3, name: '生活体验' },
+                        { value: 6, name: '房产介绍' },
+                        { value: 20, name: '其他' }
+                    ],
+                    color: ['#4a9eff', '#2de69e', '#ffb399', '#ffe29e', '#b3adff', '#8fd4ff']
                 }
-            },
-            data: [
-                { value: 19, name: '建筑科普' },
-                { value: 12, name: '文化历史' },
-                { value: 0, name: '旅游实拍' },
-                { value: 3, name: '生活体验' },
-                { value: 6, name: '房产介绍' },
-                { value: 20, name: '其他' }
-            ],
-            color: ['#4a9eff', '#2de69e', '#ffb399', '#ffe29e', '#b3adff', '#8fd4ff']
-        }
-    ]
-};
-      
-        // 使用刚指定的配置项和数据显示图表。
+            ]
+        };
         myChart.setOption(option);
-        window.addEventListener("resize",function(){
+        window.addEventListener("resize", function () {
             myChart.resize();
         });
     }
-function echarts_5() {
-        // 基于准备好的dom，初始化echarts实例
+    function echarts_5() {
         console.log('开始初始化词云图...');
         var container = document.getElementById('echart5');
         if (!container) {
@@ -190,157 +171,144 @@ function echarts_5() {
             return;
         }
         console.log('词云图容器找到:', container);
-        
-        // 检查ECharts是否可用
         if (typeof echarts === 'undefined') {
             console.error('ECharts未定义，请检查加载顺序');
             return;
         }
-        
-        // 调试：检查wordCloud插件是否已注册
         console.log('检查wordCloud系列类型...');
         console.log('echarts对象:', echarts);
         console.log('echarts.seriesTypes:', echarts.seriesTypes);
-        
         try {
             var myChart = echarts.init(container);
             console.log('ECharts实例创建成功');
-        } catch (error) {
+        }
+        catch (error) {
             console.error('创建ECharts实例失败:', error);
             return;
         }
-
-       option = {
-    backgroundColor: 'transparent',
-    tooltip: {
-        trigger: 'item',
-        formatter: function(params) {
-            return params.name + ': ' + params.value + '次';
-        }
-    },
-    series: [{
-        type: 'wordCloud',
-        // 优化词云配置：更多颜色，圆形布局
-        left: 'center',
-        top: 'center',
-        width: '100%',
-        height: '100%',
-        sizeRange: [14, 46], // 稍微增加最大字体
-        rotationRange: [0, 0], // 完全禁用旋转，所有词汇水平显示
-        rotationStep: 0, // 无旋转步长
-        gridSize: 10, // 减小网格大小，让词更紧凑
-        drawOutOfBound: false,
-        textStyle: {
-            fontFamily: '"Microsoft YaHei", "Segoe UI", Arial, sans-serif',
-            fontWeight: 'normal',
-            color: function (params) {
-                // 调亮的颜色方案 - 比之前的深色亮，比原始颜色稍深
-                var value = params.value;
-                var colors = [
-                    '#FF8A8A', '#6DD9CF', '#68B0E0', '#9CD9B9', '#FFE699', '#C9A3D9',
-                    '#9CD9D9', '#F0C566', '#C3A3D9', '#8AA0E0', '#F08A8A', '#9CD9B0',
-                    '#FFD966', '#9CB0E0', '#F0B38A', '#A38AD9', '#8AD9CF', '#FFD98A',
-                    '#C9A3B9', '#8A9AE0', '#FFB3B3', '#9CD9C3', '#FFF0A3', '#C9A3A3'
-                ];
-                
-                // 根据词频分配颜色，高频词用前面鲜艳的颜色
-                if (value > 40) return colors[0]; // 土楼: 亮红色 #FF7F7F
-                if (value > 30) return colors[1]; // 客家人: 亮青色 #4DC9B9
-                if (value > 20) return colors[2]; // 客家、建筑: 亮蓝色 #4A99D1
-                if (value > 10) return colors[3]; // 大鱼海棠、中国等: 亮绿色 #7DC99D
-                if (value > 5) return colors[4]; // 梅州、地理等: 亮黄色 #FFD97F
-                if (value > 2) return colors[5]; // 福建土楼、龙岩等: 亮紫色 #B38CB8
-                
-                // 低频词随机分配其他亮色
-                var index = Math.floor(Math.random() * (colors.length - 6)) + 6;
-                return colors[index];
-            }
-        },
-        emphasis: {
-            focus: 'self',
-            textStyle: {
-                shadowBlur: 8,
-                shadowColor: 'rgba(0,0,0,0.3)',
-                fontWeight: 'bold',
-                textShadowColor: 'rgba(255,255,255,0.8)',
-                textShadowBlur: 10
-            }
-        },
-        // 优化布局参数：保持原始模板布局风格
-        layoutAnimation: false, // 禁用动画，布局更稳定
-        ellipticity: 0.65, // 椭圆形状，创造一圈一圈的感觉但不是严格方形
-        shape: 'circle', // 圆形形状，但通过ellipticity控制扁平度
-        // 权重因子
-        weightFactor: function (size) {
-            return size * 0.8;
-        },
-        data: [
-            { name: '土楼', value: 43 },
-            { name: '客家人', value: 35 },
-            { name: '客家', value: 25 },
-            { name: '建筑', value: 25 },
-            { name: '民居', value: 21 },
-            { name: '围屋', value: 10 },
-            { name: '纪录片', value: 11 },
-            { name: '大鱼海棠', value: 12 },
-            { name: '中国', value: 14 },
-            { name: '梅州', value: 7 },
-            { name: '地理', value: 6 },
-            { name: '文化', value: 6 },
-            { name: '传统', value: 6 },
-            { name: '客家文化', value: 6 },
-            { name: '航拍', value: 6 },
-            { name: '福建土楼', value: 4 },
-            { name: '龙岩', value: 4 },
-            { name: '永定', value: 5 },
-            { name: '围楼', value: 3 },
-            { name: '闽西', value: 3 },
-            { name: '历史', value: 3 },
-            { name: '客家话', value: 2 },
-            { name: '排水系统', value: 2 },
-            { name: '方圆', value: 2 },
-            { name: '古民居', value: 3 },
-            { name: '保护', value: 2 },
-            { name: '南下', value: 2 },
-            { name: '风水', value: 2 },
-            { name: '古建筑', value: 1 },
-            { name: '古色古香', value: 1 },
-            { name: '结构', value: 1 },
-            { name: '布局', value: 1 },
-            { name: '对称', value: 1 },
-            { name: '宏伟', value: 1 },
-            { name: '防御', value: 1 },
-            { name: '宗族', value: 1 },
-            { name: '耕读', value: 1 },
-            { name: '中原', value: 1 },
-            { name: '团结', value: 1 },
-            { name: '凝聚力', value: 1 },
-            { name: '中华文化', value: 1 },
-            { name: '瑰宝', value: 1 },
-            { name: '传承', value: 1 },
-            { name: '方形', value: 1 },
-            { name: '民俗风情', value: 1 },
-            { name: '建筑系', value: 1 },
-            { name: '承启楼', value: 1 }
-        ]
-    }]
-};
-      
-        // 使用刚指定的配置项和数据显示图表。
+        option = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    return params.name + ': ' + params.value + '次';
+                }
+            },
+            series: [{
+                    type: 'wordCloud',
+                    left: 'center',
+                    top: 'center',
+                    width: '100%',
+                    height: '100%',
+                    sizeRange: [14, 46],
+                    rotationRange: [0, 0],
+                    rotationStep: 0,
+                    gridSize: 10,
+                    drawOutOfBound: false,
+                    textStyle: {
+                        fontFamily: '"Microsoft YaHei", "Segoe UI", Arial, sans-serif',
+                        fontWeight: 'normal',
+                        color: function (params) {
+                            var value = params.value;
+                            var colors = [
+                                '#FF8A8A', '#6DD9CF', '#68B0E0', '#9CD9B9', '#FFE699', '#C9A3D9',
+                                '#9CD9D9', '#F0C566', '#C3A3D9', '#8AA0E0', '#F08A8A', '#9CD9B0',
+                                '#FFD966', '#9CB0E0', '#F0B38A', '#A38AD9', '#8AD9CF', '#FFD98A',
+                                '#C9A3B9', '#8A9AE0', '#FFB3B3', '#9CD9C3', '#FFF0A3', '#C9A3A3'
+                            ];
+                            if (value > 40)
+                                return colors[0];
+                            if (value > 30)
+                                return colors[1];
+                            if (value > 20)
+                                return colors[2];
+                            if (value > 10)
+                                return colors[3];
+                            if (value > 5)
+                                return colors[4];
+                            if (value > 2)
+                                return colors[5];
+                            var index = Math.floor(Math.random() * (colors.length - 6)) + 6;
+                            return colors[index];
+                        }
+                    },
+                    emphasis: {
+                        focus: 'self',
+                        textStyle: {
+                            shadowBlur: 8,
+                            shadowColor: 'rgba(0,0,0,0.3)',
+                            fontWeight: 'bold',
+                            textShadowColor: 'rgba(255,255,255,0.8)',
+                            textShadowBlur: 10
+                        }
+                    },
+                    layoutAnimation: false,
+                    ellipticity: 0.65,
+                    shape: 'circle',
+                    weightFactor: function (size) {
+                        return size * 0.8;
+                    },
+                    data: [
+                        { name: '土楼', value: 43 },
+                        { name: '客家人', value: 35 },
+                        { name: '客家', value: 25 },
+                        { name: '建筑', value: 25 },
+                        { name: '民居', value: 21 },
+                        { name: '围屋', value: 10 },
+                        { name: '纪录片', value: 11 },
+                        { name: '大鱼海棠', value: 12 },
+                        { name: '中国', value: 14 },
+                        { name: '梅州', value: 7 },
+                        { name: '地理', value: 6 },
+                        { name: '文化', value: 6 },
+                        { name: '传统', value: 6 },
+                        { name: '客家文化', value: 6 },
+                        { name: '航拍', value: 6 },
+                        { name: '福建土楼', value: 4 },
+                        { name: '龙岩', value: 4 },
+                        { name: '永定', value: 5 },
+                        { name: '围楼', value: 3 },
+                        { name: '闽西', value: 3 },
+                        { name: '历史', value: 3 },
+                        { name: '客家话', value: 2 },
+                        { name: '排水系统', value: 2 },
+                        { name: '方圆', value: 2 },
+                        { name: '古民居', value: 3 },
+                        { name: '保护', value: 2 },
+                        { name: '南下', value: 2 },
+                        { name: '风水', value: 2 },
+                        { name: '古建筑', value: 1 },
+                        { name: '古色古香', value: 1 },
+                        { name: '结构', value: 1 },
+                        { name: '布局', value: 1 },
+                        { name: '对称', value: 1 },
+                        { name: '宏伟', value: 1 },
+                        { name: '防御', value: 1 },
+                        { name: '宗族', value: 1 },
+                        { name: '耕读', value: 1 },
+                        { name: '中原', value: 1 },
+                        { name: '团结', value: 1 },
+                        { name: '凝聚力', value: 1 },
+                        { name: '中华文化', value: 1 },
+                        { name: '瑰宝', value: 1 },
+                        { name: '传承', value: 1 },
+                        { name: '方形', value: 1 },
+                        { name: '民俗风情', value: 1 },
+                        { name: '建筑系', value: 1 },
+                        { name: '承启楼', value: 1 }
+                    ]
+                }]
+        };
         try {
             myChart.setOption(option);
             console.log('词云图配置设置成功');
-            
-            // 添加resize监听
-            window.addEventListener("resize",function(){
+            window.addEventListener("resize", function () {
                 myChart.resize();
             });
-            
-        } catch (error) {
+        }
+        catch (error) {
             console.error('设置词云图选项失败:', error);
             console.error('错误详情:', error.message, error.stack);
-            
-            // 如果wordCloud失败，直接使用简单的文本显示
             console.log('尝试使用文本显示数据...');
             container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">' +
                 '<h3>评论高频词汇</h3>' +
@@ -353,710 +321,648 @@ function echarts_5() {
                 '</div></div>';
         }
     }
-	
-function echarts_4() {
-        // 基于准备好的dom，初始化echarts实例
+    function echarts_4() {
         var myChart = echarts.init(document.getElementById('echart4'));
-
-    option = {
-    tooltip: {
-        trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)"
-    },
-    legend: {
-        top: '5%',
-        left: 'center',
-        itemWidth: 10,
-        itemHeight: 10,
-        textStyle: {
-            color: '#000',
-            fontSize: '12',
-        },
-        data: ['正面', '中性', '负面']
-    },
-    series: [
-        {
-            name: '评论情感',
-            type: 'pie',
-            radius: ['40%', '60%'],
-            center: ['50%', '55%'],
-            avoidLabelOverlap: true,
-            itemStyle: {
-                borderRadius: 8,
-                borderColor: '#fff',
-                borderWidth: 2
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
             },
-            label: {
-                show: true,
-                formatter: function(params) {
-                    var percent = params.percent;
-                    var value = params.value;
-                    var name = params.name;
-                    // 显示名称、值和百分比
-                    return name + '\n' + value + ' (' + percent.toFixed(1) + '%)';
+            legend: {
+                top: '5%',
+                left: 'center',
+                itemWidth: 10,
+                itemHeight: 10,
+                textStyle: {
+                    color: '#000',
+                    fontSize: '12',
                 },
-                color: '#000',
-                fontSize: 12,
-                fontWeight: 'normal'
+                data: ['正面', '中性', '负面']
             },
-            labelLine: {
-                show: true,
-                length: 10,
-                length2: 15,
-                lineStyle: {
-                    color: 'rgba(255,255,255,.3)'
+            series: [
+                {
+                    name: '评论情感',
+                    type: 'pie',
+                    radius: ['40%', '60%'],
+                    center: ['50%', '55%'],
+                    avoidLabelOverlap: true,
+                    itemStyle: {
+                        borderRadius: 8,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: true,
+                        formatter: function (params) {
+                            var percent = params.percent;
+                            var value = params.value;
+                            var name = params.name;
+                            return name + '\n' + value + ' (' + percent.toFixed(1) + '%)';
+                        },
+                        color: '#000',
+                        fontSize: 12,
+                        fontWeight: 'normal'
+                    },
+                    labelLine: {
+                        show: true,
+                        length: 10,
+                        length2: 15,
+                        lineStyle: {
+                            color: 'rgba(255,255,255,.3)'
+                        }
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: 14,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    data: [
+                        { value: 146, name: '正面' },
+                        { value: 214, name: '中性' },
+                        { value: 39, name: '负面' }
+                    ],
+                    color: ['#4cd08a', '#4a9eff', '#ff8b7b']
                 }
+            ]
+        };
+        myChart.setOption(option);
+        window.addEventListener("resize", function () {
+            myChart.resize();
+        });
+    }
+    function echarts_6() {
+        var myChart = echarts.init(document.getElementById('echart6'));
+        var dataStyle = {
+            normal: {
+                label: {
+                    show: false
+                },
+                labelLine: {
+                    show: false
+                },
+            }
+        };
+        var placeHolderStyle = {
+            normal: {
+                color: 'rgba(255,255,255,.05)',
+                label: { show: false, },
+                labelLine: { show: false }
             },
             emphasis: {
-                label: {
-                    show: true,
-                    fontSize: 14,
-                    fontWeight: 'bold'
-                }
+                color: 'rgba(0,0,0,0)'
+            }
+        };
+        option = {
+            color: ['#0f63d6', '#0f78d6', '#0f8cd6', '#0fa0d6', '#0fb4d6'],
+            tooltip: {
+                show: true,
+                formatter: "{a} : {c} "
             },
-            data: [
-                { value: 146, name: '正面' },
-                { value: 214, name: '中性' },
-                { value: 39, name: '负面' }
-            ],
-            color: ['#4cd08a', '#4a9eff', '#ff8b7b']
-        }
-    ]
-};
-      
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
-        window.addEventListener("resize",function(){
-            myChart.resize();
-        });
-    }
-function echarts_6() {
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echart6'));
-
-        var dataStyle = {
-	normal: {
-		label: {
-			show: false
-		},
-		labelLine: {
-			show: false
-		},
-		//shadowBlur: 40,
-		//shadowColor: 'rgba(40, 40, 40, 1)',
-	}
-};
-var placeHolderStyle = {
-	normal: {
-		color: 'rgba(255,255,255,.05)',
-		label: {show: false,},
-		labelLine: {show: false}
-	},
-	emphasis: {
-		color: 'rgba(0,0,0,0)'
-	}
-};
-option = {
-	color: ['#0f63d6', '#0f78d6', '#0f8cd6', '#0fa0d6', '#0fb4d6'],
-	tooltip: {
-		show: true,
-		formatter: "{a} : {c} "
-	},
-	legend: {
-		itemWidth: 10,
-        itemHeight: 10,
-		itemGap: 12,
-		bottom: '3%',
-		
-		data: ['浙江', '上海', '广东', '北京', '深圳'],
-		textStyle: {
+            legend: {
+                itemWidth: 10,
+                itemHeight: 10,
+                itemGap: 12,
+                bottom: '3%',
+                data: ['浙江', '上海', '广东', '北京', '深圳'],
+                textStyle: {
                     color: 'rgba(255,255,255,.6)',
                 }
-	},
-	
-	series: [
-		{
-		name: '浙江',
-		type: 'pie',
-		clockWise: false,
-		center: ['50%', '42%'],
-		radius: ['59%', '70%'],
-		itemStyle: dataStyle,
-		hoverAnimation: false,
-		data: [{
-			value: 80,
-			name: '01'
-		}, {
-			value: 20,
-			name: 'invisible',
-			tooltip: {show: false},
-			itemStyle: placeHolderStyle
-		}]
-	},
-		{
-		name: '上海',
-		type: 'pie',
-		clockWise: false,
-		center: ['50%', '42%'],
-		radius: ['49%', '60%'],
-		itemStyle: dataStyle,
-		hoverAnimation: false,
-		data: [{
-			value: 70,
-			name: '02'
-		}, {
-			value: 30,
-			name: 'invisible',
-			tooltip: {show: false},
-			itemStyle: placeHolderStyle
-		}]
-	}, 
-		{
-		name: '广东',
-		type: 'pie',
-		clockWise: false,
-		hoverAnimation: false,
-		center: ['50%', '42%'],
-		radius: ['39%', '50%'],
-		itemStyle: dataStyle,
-		data: [{
-			value: 65,
-			name: '03'
-		}, {
-			value: 35,
-			name: 'invisible',
-			tooltip: {show: false},
-			itemStyle: placeHolderStyle
-		}]
-	},
-		{
-		name: '北京',
-		type: 'pie',
-		clockWise: false,
-		hoverAnimation: false,
-		center: ['50%', '42%'],
-		radius: ['29%', '40%'],
-		itemStyle: dataStyle,
-		data: [{
-			value: 60,
-			name: '04'
-		}, {
-			value: 40,
-			name: 'invisible',
-			tooltip: {show: false},
-			itemStyle: placeHolderStyle
-		}]
-	}, 
-		{
-		name: '深圳',
-		type: 'pie',
-		clockWise: false,
-		hoverAnimation: false,
-		center: ['50%', '42%'],
-		radius: ['20%', '30%'],
-		itemStyle: dataStyle,
-		data: [{
-			value: 50,
-			name: '05'
-		}, {
-			value: 50,
-			name: 'invisible',
-			tooltip: {show: false},
-			itemStyle: placeHolderStyle
-		}]
-	}, ]
-};
-      
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
-        window.addEventListener("resize",function(){
-            myChart.resize();
-        });
-    }
-function echarts_31() {
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('fb1')); 
-option = {
-   
-	    title: [{
-        text: '年龄分布',
-        left: 'center',
-        textStyle: {
-            color: '#fff',
-			fontSize:'16'
-        }
-
-    }],
-    tooltip: {
-        trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)",
-position:function(p){   //其中p为当前鼠标的位置
-            return [p[0] + 10, p[1] - 10];
-        }
-    },
-    legend: {
-        
-top:'70%',
-       itemWidth: 10,
-        itemHeight: 10,
-        data:['0岁以下','20-29岁','30-39岁','40-49岁','50岁以上'],
-                textStyle: {
-            color: 'rgba(255,255,255,.5)',
-			fontSize:'12',
-        }
-    },
-    series: [
-        {
-        	name:'年龄分布',
-            type:'pie',
-			center: ['50%', '42%'],
-            radius: ['40%', '60%'],
-                  color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab','#06b4ab','#06c8ab','#06dcab','#06f0ab'],	
-            label: {show:false},
-			labelLine: {show:false},
-            data:[
-                {value:1, name:'0岁以下'},
-                {value:4, name:'20-29岁'},
-                {value:2, name:'30-39岁'},
-                {value:2, name:'40-49岁'},
-                {value:1, name:'50岁以上'},
-            ]
-        }
-    ]
-};
-      
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
-        window.addEventListener("resize",function(){
-            myChart.resize();
-        });
-    }
-function echarts_32() {
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('fb2'));
-option = {
-   
-	    title: [{
-        text: '职业分布',
-        left: 'center',
-        textStyle: {
-            color: '#fff',
-			fontSize:'16'
-        }
-
-    }],
-    tooltip: {
-        trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)",
-position:function(p){   //其中p为当前鼠标的位置
-            return [p[0] + 10, p[1] - 10];
-        }
-    },
-    legend: {
-        
-    top:'70%',
-       itemWidth: 10,
-        itemHeight: 10,
-        data:['电子商务','教育','IT/互联网','金融','学生','其他'],
-                textStyle: {
-           color: 'rgba(255,255,255,.5)',
-			fontSize:'12',
-        }
-    },
-    series: [
-        {
-        	name:'年龄分布',
-            type:'pie',
-			center: ['50%', '42%'],
-            radius: ['40%', '60%'],
-            color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab','#06b4ab','#06c8ab','#06dcab','#06f0ab'],	
-            label: {show:false},
-			labelLine: {show:false},
-            data:[
-                {value:5, name:'电子商务'},
-                {value:1, name:'教育'},
-                {value:6, name:'IT/互联网'},
-                {value:2, name:'金融'},
-                {value:1, name:'学生'},
-                {value:1, name:'其他'},
-            ]
-        }
-    ]
-};
-      
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
-        window.addEventListener("resize",function(){
-            myChart.resize();
-        });
-    }
-function echarts_33() {
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('fb3'));
-option = {
-	    title: [{
-        text: '兴趣分布',
-        left: 'center',
-        textStyle: {
-            color: '#fff',
-			fontSize:'16'
-        }
-
-    }],
-    tooltip: {
-        trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)",
-position:function(p){   //其中p为当前鼠标的位置
-            return [p[0] + 10, p[1] - 10];
-        }
-    },
-    legend: {
-    top:'70%',
-       itemWidth: 10,
-        itemHeight: 10,
-        data:['汽车','旅游','财经','教育','软件','其他'],
-                textStyle: {
-            color: 'rgba(255,255,255,.5)',
-			fontSize:'12',
-        }
-    },
-    series: [
-        {
-        	name:'兴趣分布',
-            type:'pie',
-			center: ['50%', '42%'],
-            radius: ['40%', '60%'],
-                   color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab','#06b4ab','#06c8ab','#06dcab','#06f0ab'],	
-            label: {show:false},
-			labelLine: {show:false},
-            data:[
-                {value:2, name:'汽车'},
-                {value:3, name:'旅游'},
-                {value:1, name:'财经'},
-                {value:4, name:'教育'},
-                {value:8, name:'软件'},
-                {value:1, name:'其他'},
-            ]
-        }
-    ]
-};
-      
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
-        window.addEventListener("resize",function(){
-            myChart.resize();
-        });
-    }
-
-function echarts_7() {
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('echart7'));
-
-    option = {
-	    tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-            lineStyle: {
-                color: '#dddc6b'
-            }
-        }
-    },
-    grid: {
-        left: '3%',
-		top: '30',
-        right: '65',
-        bottom: '20',
-        containLabel: true
-    },
-
-      xAxis: [{
-          type: 'category',
-          boundaryGap: false,
-          name: '时间',
-          nameGap: 20,
-          nameTextStyle: {
-              color: '#000',
-              fontSize: 12
-          },
-          axisLabel:  {
-                  interval: 4,
-                  textStyle: {
-                                        color: "#000",
-                                        fontSize:12,
-                  },
-              },
-          axisLine: {
-                        lineStyle: {
-                                color: '#000'
-                        }
-          },
-          data: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
-      }],
-
-    yAxis: [{
-        type: 'value',
-        name: '评论数',
-        nameTextStyle: {
-            color: '#000',
-            fontSize: 12
-        },
-        axisTick: {
-            show: true,
-            lineStyle: {
-                color: '#000',
-                width: 1
-            }
-        },
-        axisLine: {
-            show: true,
-            lineStyle: {
-                color: '#000',
-                width: 1
-            }
-        },
-        axisLabel: {
-            show: true,
-            textStyle: {
-                color: '#000',
-                fontSize: 12,
             },
-        },
-        splitLine: {
-            show: true,
-            lineStyle: {
-                color: 'rgba(0, 0, 0, 0.15)',
-                width: 1,
-                type: 'solid'
-            }
-        }
-    }],
-    series: [
-		{
-        name: '评论数量',
-        type: 'line',
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 5,
-        showSymbol: false,
-        markPoint: {
-            data: [
-                {name: '55', value: 55, xAxis: 17, yAxis: 55, symbolSize: 8, itemStyle: {color: '#ff6b6b'}}
-            ],
-            symbol: 'circle',
-            symbolSize: 8,
-            label: {
-                show: true,
-                position: 'top',
-                formatter: '{b}',
-                color: '#ff6b6b',
-                fontSize: 12,
-                fontWeight: 'bold'
-            }
-        },
-        lineStyle: {
-            normal: {
-				color: '#4a9eff',
-                width: 2
-            }
-        },
-        areaStyle: {
-            normal: {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                    offset: 0,
-                    color: 'rgba(74, 158, 255, 0.4)'
-                }, {
-                    offset: 0.8,
-                    color: 'rgba(74, 158, 255, 0.1)'
-                }], false),
-                shadowColor: 'rgba(0, 0, 0, 0.1)',
-            }
-        },
-			itemStyle: {
-			normal: {
-				color: '#4a9eff',
-				borderColor: 'rgba(221, 220, 107, .1)',
-				borderWidth: 12
-			}
-		},
-        data: [27, 10, 12, 3, 5, 3, 3, 1, 8, 18, 29, 28, 37, 33, 35, 28, 38, 55, 38, 33, 28, 34, 48, 20]
-    }
-	]
-};
-      
-        // 使用刚指定的配置项和数据显示图表。
+            series: [
+                {
+                    name: '浙江',
+                    type: 'pie',
+                    clockWise: false,
+                    center: ['50%', '42%'],
+                    radius: ['59%', '70%'],
+                    itemStyle: dataStyle,
+                    hoverAnimation: false,
+                    data: [{
+                            value: 80,
+                            name: '01'
+                        }, {
+                            value: 20,
+                            name: 'invisible',
+                            tooltip: { show: false },
+                            itemStyle: placeHolderStyle
+                        }]
+                },
+                {
+                    name: '上海',
+                    type: 'pie',
+                    clockWise: false,
+                    center: ['50%', '42%'],
+                    radius: ['49%', '60%'],
+                    itemStyle: dataStyle,
+                    hoverAnimation: false,
+                    data: [{
+                            value: 70,
+                            name: '02'
+                        }, {
+                            value: 30,
+                            name: 'invisible',
+                            tooltip: { show: false },
+                            itemStyle: placeHolderStyle
+                        }]
+                },
+                {
+                    name: '广东',
+                    type: 'pie',
+                    clockWise: false,
+                    hoverAnimation: false,
+                    center: ['50%', '42%'],
+                    radius: ['39%', '50%'],
+                    itemStyle: dataStyle,
+                    data: [{
+                            value: 65,
+                            name: '03'
+                        }, {
+                            value: 35,
+                            name: 'invisible',
+                            tooltip: { show: false },
+                            itemStyle: placeHolderStyle
+                        }]
+                },
+                {
+                    name: '北京',
+                    type: 'pie',
+                    clockWise: false,
+                    hoverAnimation: false,
+                    center: ['50%', '42%'],
+                    radius: ['29%', '40%'],
+                    itemStyle: dataStyle,
+                    data: [{
+                            value: 60,
+                            name: '04'
+                        }, {
+                            value: 40,
+                            name: 'invisible',
+                            tooltip: { show: false },
+                            itemStyle: placeHolderStyle
+                        }]
+                },
+                {
+                    name: '深圳',
+                    type: 'pie',
+                    clockWise: false,
+                    hoverAnimation: false,
+                    center: ['50%', '42%'],
+                    radius: ['20%', '30%'],
+                    itemStyle: dataStyle,
+                    data: [{
+                            value: 50,
+                            name: '05'
+                        }, {
+                            value: 50,
+                            name: 'invisible',
+                            tooltip: { show: false },
+                            itemStyle: placeHolderStyle
+                        }]
+                },
+            ]
+        };
         myChart.setOption(option);
-        window.addEventListener("resize",function(){
+        window.addEventListener("resize", function () {
             myChart.resize();
         });
     }
-
-function echarts_8() {
-        // 基于准备好的dom，初始化echarts实例
+    function echarts_31() {
+        var myChart = echarts.init(document.getElementById('fb1'));
+        option = {
+            title: [{
+                    text: '年龄分布',
+                    left: 'center',
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: '16'
+                    }
+                }],
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)",
+                position: function (p) {
+                    return [p[0] + 10, p[1] - 10];
+                }
+            },
+            legend: {
+                top: '70%',
+                itemWidth: 10,
+                itemHeight: 10,
+                data: ['0岁以下', '20-29岁', '30-39岁', '40-49岁', '50岁以上'],
+                textStyle: {
+                    color: 'rgba(255,255,255,.5)',
+                    fontSize: '12',
+                }
+            },
+            series: [
+                {
+                    name: '年龄分布',
+                    type: 'pie',
+                    center: ['50%', '42%'],
+                    radius: ['40%', '60%'],
+                    color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab', '#06b4ab', '#06c8ab', '#06dcab', '#06f0ab'],
+                    label: { show: false },
+                    labelLine: { show: false },
+                    data: [
+                        { value: 1, name: '0岁以下' },
+                        { value: 4, name: '20-29岁' },
+                        { value: 2, name: '30-39岁' },
+                        { value: 2, name: '40-49岁' },
+                        { value: 1, name: '50岁以上' },
+                    ]
+                }
+            ]
+        };
+        myChart.setOption(option);
+        window.addEventListener("resize", function () {
+            myChart.resize();
+        });
+    }
+    function echarts_32() {
+        var myChart = echarts.init(document.getElementById('fb2'));
+        option = {
+            title: [{
+                    text: '职业分布',
+                    left: 'center',
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: '16'
+                    }
+                }],
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)",
+                position: function (p) {
+                    return [p[0] + 10, p[1] - 10];
+                }
+            },
+            legend: {
+                top: '70%',
+                itemWidth: 10,
+                itemHeight: 10,
+                data: ['电子商务', '教育', 'IT/互联网', '金融', '学生', '其他'],
+                textStyle: {
+                    color: 'rgba(255,255,255,.5)',
+                    fontSize: '12',
+                }
+            },
+            series: [
+                {
+                    name: '年龄分布',
+                    type: 'pie',
+                    center: ['50%', '42%'],
+                    radius: ['40%', '60%'],
+                    color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab', '#06b4ab', '#06c8ab', '#06dcab', '#06f0ab'],
+                    label: { show: false },
+                    labelLine: { show: false },
+                    data: [
+                        { value: 5, name: '电子商务' },
+                        { value: 1, name: '教育' },
+                        { value: 6, name: 'IT/互联网' },
+                        { value: 2, name: '金融' },
+                        { value: 1, name: '学生' },
+                        { value: 1, name: '其他' },
+                    ]
+                }
+            ]
+        };
+        myChart.setOption(option);
+        window.addEventListener("resize", function () {
+            myChart.resize();
+        });
+    }
+    function echarts_33() {
+        var myChart = echarts.init(document.getElementById('fb3'));
+        option = {
+            title: [{
+                    text: '兴趣分布',
+                    left: 'center',
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: '16'
+                    }
+                }],
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)",
+                position: function (p) {
+                    return [p[0] + 10, p[1] - 10];
+                }
+            },
+            legend: {
+                top: '70%',
+                itemWidth: 10,
+                itemHeight: 10,
+                data: ['汽车', '旅游', '财经', '教育', '软件', '其他'],
+                textStyle: {
+                    color: 'rgba(255,255,255,.5)',
+                    fontSize: '12',
+                }
+            },
+            series: [
+                {
+                    name: '兴趣分布',
+                    type: 'pie',
+                    center: ['50%', '42%'],
+                    radius: ['40%', '60%'],
+                    color: ['#065aab', '#066eab', '#0682ab', '#0696ab', '#06a0ab', '#06b4ab', '#06c8ab', '#06dcab', '#06f0ab'],
+                    label: { show: false },
+                    labelLine: { show: false },
+                    data: [
+                        { value: 2, name: '汽车' },
+                        { value: 3, name: '旅游' },
+                        { value: 1, name: '财经' },
+                        { value: 4, name: '教育' },
+                        { value: 8, name: '软件' },
+                        { value: 1, name: '其他' },
+                    ]
+                }
+            ]
+        };
+        myChart.setOption(option);
+        window.addEventListener("resize", function () {
+            myChart.resize();
+        });
+    }
+    function echarts_7() {
+        var myChart = echarts.init(document.getElementById('echart7'));
+        option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    lineStyle: {
+                        color: '#dddc6b'
+                    }
+                }
+            },
+            grid: {
+                left: '3%',
+                top: '30',
+                right: '65',
+                bottom: '20',
+                containLabel: true
+            },
+            xAxis: [{
+                    type: 'category',
+                    boundaryGap: false,
+                    name: '时间',
+                    nameGap: 20,
+                    nameTextStyle: {
+                        color: '#000',
+                        fontSize: 12
+                    },
+                    axisLabel: {
+                        interval: 4,
+                        textStyle: {
+                            color: "#000",
+                            fontSize: 12,
+                        },
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#000'
+                        }
+                    },
+                    data: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
+                }],
+            yAxis: [{
+                    type: 'value',
+                    name: '评论数',
+                    nameTextStyle: {
+                        color: '#000',
+                        fontSize: 12
+                    },
+                    axisTick: {
+                        show: true,
+                        lineStyle: {
+                            color: '#000',
+                            width: 1
+                        }
+                    },
+                    axisLine: {
+                        show: true,
+                        lineStyle: {
+                            color: '#000',
+                            width: 1
+                        }
+                    },
+                    axisLabel: {
+                        show: true,
+                        textStyle: {
+                            color: '#000',
+                            fontSize: 12,
+                        },
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: 'rgba(0, 0, 0, 0.15)',
+                            width: 1,
+                            type: 'solid'
+                        }
+                    }
+                }],
+            series: [
+                {
+                    name: '评论数量',
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'circle',
+                    symbolSize: 5,
+                    showSymbol: false,
+                    markPoint: {
+                        data: [
+                            { name: '55', value: 55, xAxis: 17, yAxis: 55, symbolSize: 8, itemStyle: { color: '#ff6b6b' } }
+                        ],
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        label: {
+                            show: true,
+                            position: 'top',
+                            formatter: '{b}',
+                            color: '#ff6b6b',
+                            fontSize: 12,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    lineStyle: {
+                        normal: {
+                            color: '#4a9eff',
+                            width: 2
+                        }
+                    },
+                    areaStyle: {
+                        normal: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: 'rgba(74, 158, 255, 0.4)'
+                                }, {
+                                    offset: 0.8,
+                                    color: 'rgba(74, 158, 255, 0.1)'
+                                }], false),
+                            shadowColor: 'rgba(0, 0, 0, 0.1)',
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#4a9eff',
+                            borderColor: 'rgba(221, 220, 107, .1)',
+                            borderWidth: 12
+                        }
+                    },
+                    data: [27, 10, 12, 3, 5, 3, 3, 1, 8, 18, 29, 28, 37, 33, 35, 28, 38, 55, 38, 33, 28, 34, 48, 20]
+                }
+            ]
+        };
+        myChart.setOption(option);
+        window.addEventListener("resize", function () {
+            myChart.resize();
+        });
+    }
+    function echarts_8() {
         console.log('开始初始化知网论文数柱状图...');
         var container = document.getElementById('echart8');
         if (!container) {
             console.error('找不到柱状图容器 #echart8');
             return;
         }
-        
         try {
             var myChart = echarts.init(container);
             console.log('ECharts实例创建成功');
-        } catch (error) {
+        }
+        catch (error) {
             console.error('创建ECharts实例失败:', error);
             return;
         }
-
-       option = {
-    backgroundColor: 'transparent',
-    tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-            type: 'shadow'
-        },
-        formatter: function(params) {
-            return params[0].name + ': ' + params[0].value + '篇';
-        }
-    },
-      grid: {
-          left: '2%',      // 减小左边距
-          right: '10%',    // 增大右边距
-          top: '15%',
-          bottom: '15%',
-          containLabel: true
-      },
-    xAxis: [{
-        type: 'category',
-        name: '主题',
-        nameGap: 5,
-        nameTextStyle: {
-            color: '#000',
-            fontSize: 12
-        },
-        axisLine: {
-            show: true,
-            lineStyle: {
-                color: '#000',
-                width: 1,
-                type: 'solid'
-            }
-        },
-        axisTick: {
-            show: false
-        },
-        axisLabel: {
-            interval: 2,  // 每2个显示一个标签（每隔2个显示一个）
-            rotate: 45, // 倾斜45度显示长标签
-            textStyle: {
-                color: '#000',
-                fontSize: 10
-            }
-        },
-        data: [
-            '客家土楼', '福建土楼', '永定客家土楼', '客家文化', '土楼文化', 
-            '客家民居', '客家人', '客家建筑', '永定县', '闽西客家', 
-            '《土楼》', '福建客家土楼', '客家围屋', '永定土楼', '《土楼神韵》', 
-            '传统民居', '民居建筑', '建筑文化', '客家土楼营造技艺', '承启楼'
-        ]
-    }],
-    yAxis: [{
-        type: 'value',
-        name: '论文数',
-        nameTextStyle: {
-            color: '#000',
-            fontSize: 12
-        },
-        axisTick: {
-            show: false
-        },
-        axisLine: {
-            show: true,
-            lineStyle: {
-                color: '#000',
-                width: 1,
-                type: 'solid'
-            }
-        },
-        splitLine: {
-            lineStyle: {
-                color: 'rgba(255,255,255,.3)'
-            }
-        },
-        axisLabel: {
-            textStyle: {
-                color: '#000',
-                fontSize: 10
-            }
-        }
-    }],
-    series: [{
-        name: '文献数(篇)',
-        type: 'bar',
-        barWidth: '60%',
-        data: [189, 43, 36, 31, 22, 22, 21, 12, 9, 9, 8, 8, 8, 7, 7, 7, 7, 6, 6, 6],
-        itemStyle: {
-            normal: {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                    { offset: 0, color: '#4a9eff' },
-                    { offset: 1, color: '#2a6ad6' }
-                ]),
-                barBorderRadius: [3, 3, 0, 0],
-                opacity: 0.9
+        option = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function (params) {
+                    return params[0].name + ': ' + params[0].value + '篇';
+                }
             },
-            emphasis: {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                    { offset: 0, color: '#ff6b6b' },
-                    { offset: 1, color: '#ff4d4d' }
-                ]),
-                shadowBlur: 10,
-                shadowColor: 'rgba(255,107,107,0.5)'
-            }
-        },
-        label: {
-            show: true,
-            position: 'top',
-            color: '#000',
-            fontSize: 10,
-            fontWeight: 'normal',
-            formatter: function(params) {
-                return params.value;
-            }
-        }
-    }]
-};
-      
-        // 使用刚指定的配置项和数据显示图表。
+            grid: {
+                left: '2%',
+                right: '10%',
+                top: '15%',
+                bottom: '15%',
+                containLabel: true
+            },
+            xAxis: [{
+                    type: 'category',
+                    name: '主题',
+                    nameGap: 5,
+                    nameTextStyle: {
+                        color: '#000',
+                        fontSize: 12
+                    },
+                    axisLine: {
+                        show: true,
+                        lineStyle: {
+                            color: '#000',
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        interval: 2,
+                        rotate: 45,
+                        textStyle: {
+                            color: '#000',
+                            fontSize: 10
+                        }
+                    },
+                    data: [
+                        '客家土楼', '福建土楼', '永定客家土楼', '客家文化', '土楼文化',
+                        '客家民居', '客家人', '客家建筑', '永定县', '闽西客家',
+                        '《土楼》', '福建客家土楼', '客家围屋', '永定土楼', '《土楼神韵》',
+                        '传统民居', '民居建筑', '建筑文化', '客家土楼营造技艺', '承启楼'
+                    ]
+                }],
+            yAxis: [{
+                    type: 'value',
+                    name: '论文数',
+                    nameTextStyle: {
+                        color: '#000',
+                        fontSize: 12
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLine: {
+                        show: true,
+                        lineStyle: {
+                            color: '#000',
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(255,255,255,.3)'
+                        }
+                    },
+                    axisLabel: {
+                        textStyle: {
+                            color: '#000',
+                            fontSize: 10
+                        }
+                    }
+                }],
+            series: [{
+                    name: '文献数(篇)',
+                    type: 'bar',
+                    barWidth: '60%',
+                    data: [189, 43, 36, 31, 22, 22, 21, 12, 9, 9, 8, 8, 8, 7, 7, 7, 7, 6, 6, 6],
+                    itemStyle: {
+                        normal: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: '#4a9eff' },
+                                { offset: 1, color: '#2a6ad6' }
+                            ]),
+                            barBorderRadius: [3, 3, 0, 0],
+                            opacity: 0.9
+                        },
+                        emphasis: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: '#ff6b6b' },
+                                { offset: 1, color: '#ff4d4d' }
+                            ]),
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(255,107,107,0.5)'
+                        }
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#000',
+                        fontSize: 10,
+                        fontWeight: 'normal',
+                        formatter: function (params) {
+                            return params.value;
+                        }
+                    }
+                }]
+        };
         try {
             myChart.setOption(option);
             console.log('知网论文数柱状图配置设置成功');
-            
-            // 添加resize监听
-            window.addEventListener("resize",function(){
+            window.addEventListener("resize", function () {
                 myChart.resize();
             });
-            
-        } catch (error) {
+        }
+        catch (error) {
             console.error('设置柱状图选项失败:', error);
             console.error('错误详情:', error.message, error.stack);
         }
     }
-
-})
-
-
-
-		
-		
-		
-
-
-		
-
-
-
-
-
-
-
-
-
+});

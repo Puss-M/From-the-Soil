@@ -1,21 +1,16 @@
 'use client';
-
 import { useState } from 'react';
 import ScrollAnimation from '@/components/ScrollAnimation';
-
 export default function ScrollDemoPage() {
-  const [expandedState, setExpandedState] = useState<boolean>(false);
-  const [animationDuration, setAnimationDuration] = useState<number>(600);
-  const [contentDelay, setContentDelay] = useState<number>(300);
-  const [initialExpanded, setInitialExpanded] = useState<boolean>(false);
-
-  const handleScrollClick = (isExpanded: boolean) => {
-    console.log('卷轴状态:', isExpanded ? '展开' : '收起');
-    setExpandedState(isExpanded);
-  };
-
-  const sampleContent = (
-    <div className="scroll-demo-content">
+    const [expandedState, setExpandedState] = useState<boolean>(false);
+    const [animationDuration, setAnimationDuration] = useState<number>(600);
+    const [contentDelay, setContentDelay] = useState<number>(300);
+    const [initialExpanded, setInitialExpanded] = useState<boolean>(false);
+    const handleScrollClick = (isExpanded: boolean) => {
+        console.log('卷轴状态:', isExpanded ? '展开' : '收起');
+        setExpandedState(isExpanded);
+    };
+    const sampleContent = (<div className="scroll-demo-content">
       <h2 className="scroll-title">《从土中来》项目介绍</h2>
       <div className="scroll-divider"></div>
       <p className="scroll-paragraph">
@@ -45,18 +40,15 @@ export default function ScrollDemoPage() {
       <p className="scroll-paragraph">
         点击卷轴可以展开或收起内容，体验传统卷轴的展开动画效果。
       </p>
-    </div>
-  );
-
-  return (
-    <div className="scroll-demo-page">
-      {/* 页面标题 */}
+    </div>);
+    return (<div className="scroll-demo-page">
+      
       <header className="demo-header">
         <h1 className="demo-title">卷轴展开动画演示</h1>
         <p className="demo-subtitle">点击卷轴体验横向展开/收起动画效果</p>
       </header>
 
-      {/* 控制面板 */}
+      
       <div className="control-panel guofeng-glass">
         <h3 className="control-title">动画参数设置</h3>
         <div className="control-grid">
@@ -64,45 +56,23 @@ export default function ScrollDemoPage() {
             <label className="control-label">
               动画时长: <span className="control-value">{animationDuration}ms</span>
             </label>
-            <input
-              type="range"
-              min="300"
-              max="1200"
-              step="100"
-              value={animationDuration}
-              onChange={(e) => setAnimationDuration(parseInt(e.target.value))}
-              className="guofeng-slider"
-            />
+            <input type="range" min="300" max="1200" step="100" value={animationDuration} onChange={(e) => setAnimationDuration(parseInt(e.target.value))} className="guofeng-slider"/>
           </div>
           <div className="control-item">
             <label className="control-label">
               内容淡入延迟: <span className="control-value">{contentDelay}ms</span>
             </label>
-            <input
-              type="range"
-              min="0"
-              max="600"
-              step="50"
-              value={contentDelay}
-              onChange={(e) => setContentDelay(parseInt(e.target.value))}
-              className="guofeng-slider"
-            />
+            <input type="range" min="0" max="600" step="50" value={contentDelay} onChange={(e) => setContentDelay(parseInt(e.target.value))} className="guofeng-slider"/>
           </div>
           <div className="control-item">
             <label className="control-label">
               初始状态:
             </label>
             <div className="toggle-group">
-              <button
-                className={`toggle-button ${!initialExpanded ? 'active' : ''}`}
-                onClick={() => setInitialExpanded(false)}
-              >
+              <button className={`toggle-button ${!initialExpanded ? 'active' : ''}`} onClick={() => setInitialExpanded(false)}>
                 收起
               </button>
-              <button
-                className={`toggle-button ${initialExpanded ? 'active' : ''}`}
-                onClick={() => setInitialExpanded(true)}
-              >
+              <button className={`toggle-button ${initialExpanded ? 'active' : ''}`} onClick={() => setInitialExpanded(true)}>
                 展开
               </button>
             </div>
@@ -118,19 +88,14 @@ export default function ScrollDemoPage() {
         </div>
       </div>
 
-      {/* 卷轴演示区域 */}
+      
       <div className="demo-area">
-        <ScrollAnimation
-          initialExpanded={initialExpanded}
-          animationDuration={animationDuration}
-          contentFadeDelay={contentDelay}
-          onClick={handleScrollClick}
-        >
+        <ScrollAnimation initialExpanded={initialExpanded} animationDuration={animationDuration} contentFadeDelay={contentDelay} onClick={handleScrollClick}>
           {sampleContent}
         </ScrollAnimation>
       </div>
 
-      {/* 功能说明 */}
+      
       <div className="feature-grid">
         <div className="feature-card guofeng-glass">
           <div className="feature-icon-large">🎨</div>
@@ -162,7 +127,7 @@ export default function ScrollDemoPage() {
         </div>
       </div>
 
-      {/* 样式 */}
+      
       <style jsx>{`
         .scroll-demo-page {
           min-height: 100vh;
@@ -427,6 +392,5 @@ export default function ScrollDemoPage() {
           }
         }
       `}</style>
-    </div>
-  );
+    </div>);
 }

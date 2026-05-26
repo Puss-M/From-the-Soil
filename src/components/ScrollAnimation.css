@@ -1,4 +1,4 @@
-/* 卷轴动画组件样式 */
+
 
 .scroll-animation-container {
   --scroll-width: 800px;
@@ -21,7 +21,7 @@
   font-family: "Noto Serif SC", "STSong", "SimSun", serif;
 }
 
-/* 卷轴包装器 */
+
 .scroll-wrapper {
   position: relative;
   display: flex;
@@ -41,7 +41,7 @@
   pointer-events: none;
 }
 
-/* 轴样式 */
+
 .scroll-left-axis,
 .scroll-right-axis {
   position: relative;
@@ -82,7 +82,7 @@
   filter: drop-shadow(4px 8px 16px rgba(91, 70, 44, 0.3));
 }
 
-/* 中间纸样式 */
+
 .scroll-middle-paper {
   position: relative;
   height: 100%;
@@ -95,19 +95,19 @@
   transition: width var(--animation-duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 收起状态 */
+
 .scroll-wrapper.collapsed .scroll-middle-paper {
   width: var(--paper-min-width);
   opacity: 0;
 }
 
-/* 展开状态 */
+
 .scroll-wrapper.expanded .scroll-middle-paper {
   width: var(--paper-max-width);
   opacity: 1;
 }
 
-/* 纸张背景 */
+
 .paper-background {
   position: absolute;
   top: 0;
@@ -130,7 +130,7 @@
   opacity: 0.9;
 }
 
-/* 内容区域 */
+
 .scroll-content {
   position: relative;
   width: 100%;
@@ -169,7 +169,7 @@
   }
 }
 
-/* 提示文本 */
+
 .scroll-hint {
   margin-top: 24px;
   text-align: center;
@@ -197,7 +197,7 @@
   border-color: rgba(139, 104, 70, 0.24);
 }
 
-/* 纸张纹理效果 */
+
 .scroll-middle-paper::before {
   content: '';
   position: absolute;
@@ -215,7 +215,7 @@
   z-index: 0;
 }
 
-/* 纸张边缘效果 */
+
 .scroll-middle-paper::after {
   content: '';
   position: absolute;
@@ -228,7 +228,7 @@
   z-index: 0;
 }
 
-/* 响应式设计 */
+
 @media (max-width: 900px) {
   .scroll-animation-container {
     --scroll-width: 90vw;
@@ -259,7 +259,7 @@
   }
 }
 
-/* 动画过程中的特殊效果 */
+
 .scroll-wrapper.animating .scroll-middle-paper {
   animation: paperGlow var(--animation-duration) ease;
 }
@@ -275,14 +275,14 @@
   }
 }
 
-/* 键盘焦点样式 */
+
 .scroll-wrapper:focus-visible {
   outline: 2px solid var(--paper-gold, #b88a3b);
   outline-offset: 4px;
   border-radius: 4px;
 }
 
-/* 打印样式 */
+
 @media print {
   .scroll-animation-container {
     --paper-shadow: none;

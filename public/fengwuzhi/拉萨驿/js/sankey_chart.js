@@ -1,89 +1,61 @@
-﻿
-(function() {
-    
+(function () {
     function initSankeyChart() {
         const chartContainer = document.getElementById('sankey-chart');
         if (!chartContainer) {
             console.error('桑基图容器未找到: #sankey-chart');
             return;
         }
-        
-        
         const chart = echarts.init(chartContainer);
-        
-        
         const nodes = [
-            
             { name: '高原严寒', depth: 0, x: 0.7 },
             { name: '强风', depth: 0, x: 0.7 },
             { name: '干旱', depth: 0, x: 0.7 },
-            
-            
             { name: '石砌墙体', depth: 1, x: 0.3 },
             { name: '小窗', depth: 1, x: 0.3 },
             { name: '平顶', depth: 1, x: 0.3 }
         ];
-        
-        
         const links = [
-            
             { source: '高原严寒', target: '石砌墙体', value: 30 },
-            
-            
             { source: '强风', target: '小窗', value: 25 },
-            
-            
             { source: '干旱', target: '平顶', value: 20 }
         ];
-        
-        
         const colors = {
-            
             '高原严寒': '#4f7de0',
             '强风': '#58c8d2',
             '干旱': '#6ba3ef',
-            
-            
             '石砌墙体': '#d4a017',
             '小窗': '#c8954d',
             '平顶': '#d3a657'
         };
-        
-        
         const option = {
-            
             tooltip: {
                 trigger: 'item',
                 triggerOn: 'mousemove',
-                position: function(point, params, dom, rect, size) {
-                    
+                position: function (point, params, dom, rect, size) {
                     const x = point[0];
                     const y = point[1];
                     const domWidth = dom.offsetWidth || 120;
                     const domHeight = dom.offsetHeight || 80;
                     const viewWidth = size.viewSize[0];
                     const viewHeight = size.viewSize[1];
-                    
-                    
                     let posX = x - domWidth / 2;
                     let posY = y - domHeight - 10;
-                    
-                    
-                    if (posX < 5) posX = 5;
-                    if (posX + domWidth > viewWidth - 5) posX = viewWidth - domWidth - 5;
-                    if (posY < 5) posY = y + 10;
-                    
+                    if (posX < 5)
+                        posX = 5;
+                    if (posX + domWidth > viewWidth - 5)
+                        posX = viewWidth - domWidth - 5;
+                    if (posY < 5)
+                        posY = y + 10;
                     return [posX, posY];
                 },
-                formatter: function(params) {
+                formatter: function (params) {
                     if (params.dataType === 'node') {
-                        
                         return `
                             <div style="font-weight:bold;color:#8a5a1f;font-size:12px;text-align:center;">${params.name}</div>
                             <div style="color:#b38c12;font-size:11px;text-align:center;">${getNodeDescription(params.name)}</div>
                         `;
-                    } else if (params.dataType === 'edge') {
-                        
+                    }
+                    else if (params.dataType === 'edge') {
                         return `
                             <div style="font-weight:bold;color:#8a5a1f;font-size:12px;text-align:center;">构造关系</div>
                             <div style="color:#b38c12;font-size:11px;text-align:center;">${params.data.source} → ${params.data.target}</div>
@@ -103,158 +75,140 @@
                 extraCssText: 'box-shadow: 0 0 6px rgba(139, 91, 31, 0.3); padding: 8px; border-radius: 4px; text-align: center;'
             },
             series: [{
-                type: 'sankey',
-                layout: 'none',
-                draggable: false,
-                focusNodeAdjacency: 'allEdges',
-                nodeAlign: 'left',
-                nodeGap: 6, 
-                nodeWidth: 6, 
-                layoutIterations: 32,
-                orient: 'horizontal',
-                levels: [
-                    {
-                        depth: 0,
-                        itemStyle: {
-                            color: '#4f7de0',
-                            borderColor: '#3a5db0'
+                    type: 'sankey',
+                    layout: 'none',
+                    draggable: false,
+                    focusNodeAdjacency: 'allEdges',
+                    nodeAlign: 'left',
+                    nodeGap: 6,
+                    nodeWidth: 6,
+                    layoutIterations: 32,
+                    orient: 'horizontal',
+                    levels: [
+                        {
+                            depth: 0,
+                            itemStyle: {
+                                color: '#4f7de0',
+                                borderColor: '#3a5db0'
+                            },
+                            lineStyle: {
+                                color: 'source',
+                                opacity: 0.6
+                            }
                         },
-                        lineStyle: {
-                            color: 'source',
-                            opacity: 0.6
+                        {
+                            depth: 1,
+                            itemStyle: {
+                                color: '#d4a017',
+                                borderColor: '#b38c12'
+                            },
+                            lineStyle: {
+                                color: 'source',
+                                opacity: 0.6
+                            }
                         }
-                    },
-                    {
-                        depth: 1,
+                    ],
+                    data: nodes.map(node => ({
+                        ...node,
                         itemStyle: {
-                            color: '#d4a017',
-                            borderColor: '#b38c12'
-                        },
-                        lineStyle: {
-                            color: 'source',
-                            opacity: 0.6
-                        }
-                    }
-                ],
-                data: nodes.map(node => ({
-                    ...node,
-                    itemStyle: {
-                        color: colors[node.name] || '#d4a017',
-                        borderColor: 'rgba(255,255,255,0.3)',
-                        borderWidth: 1
-                    },
-                    label: {
-                        show: true, 
-                        color: '#ffffff', 
-                        fontSize: node.depth === 0 ? 14 : 14, 
-                        fontWeight: 'normal', 
-                        position: node.depth === 0 ? 'right' : 'inside', 
-                        distance: node.depth === 0 ? 5 : 0, 
-                        padding: node.depth === 1 ? [1, 1, 1, 1] : undefined, 
-                        formatter: function(params) {
-                            
-                            return params.name;
-                        }
-                    },
-                    emphasis: {
-                        itemStyle: {
-                            borderColor: '#ffcc00',
-                            borderWidth: 2,
-                            shadowBlur: 10,
-                            shadowColor: 'rgba(255, 204, 0, 0.5)'
+                            color: colors[node.name] || '#d4a017',
+                            borderColor: 'rgba(255,255,255,0.3)',
+                            borderWidth: 1
                         },
                         label: {
-                            show: true, 
-                            color: '#ffffff', 
-                            fontSize: node.depth === 0 ? 13 : 11, 
-                            fontWeight: 'normal', 
-                            position: node.depth === 0 ? 'right' : 'inside' 
+                            show: true,
+                            color: '#ffffff',
+                            fontSize: node.depth === 0 ? 14 : 14,
+                            fontWeight: 'normal',
+                            position: node.depth === 0 ? 'right' : 'inside',
+                            distance: node.depth === 0 ? 5 : 0,
+                            padding: node.depth === 1 ? [1, 1, 1, 1] : undefined,
+                            formatter: function (params) {
+                                return params.name;
+                            }
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                borderColor: '#ffcc00',
+                                borderWidth: 2,
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(255, 204, 0, 0.5)'
+                            },
+                            label: {
+                                show: true,
+                                color: '#ffffff',
+                                fontSize: node.depth === 0 ? 13 : 11,
+                                fontWeight: 'normal',
+                                position: node.depth === 0 ? 'right' : 'inside'
+                            }
                         }
-                    }
-                })),
-                links: links.map(link => ({
-                    ...link,
+                    })),
+                    links: links.map(link => ({
+                        ...link,
+                        lineStyle: {
+                            color: 'source',
+                            curveness: 0.3,
+                            opacity: 0.6
+                        },
+                        emphasis: {
+                            lineStyle: {
+                                opacity: 0.9,
+                                width: 3
+                            }
+                        }
+                    })),
                     lineStyle: {
-                        color: 'source',
+                        color: 'gradient',
                         curveness: 0.3,
                         opacity: 0.6
                     },
                     emphasis: {
                         lineStyle: {
-                            opacity: 0.9,
-                            width: 3
+                            opacity: 0.9
                         }
+                    },
+                    label: {
+                        show: false
                     }
-                })),
-                lineStyle: {
-                    color: 'gradient',
-                    curveness: 0.3,
-                    opacity: 0.6
-                },
-                emphasis: {
-                    lineStyle: {
-                        opacity: 0.9
-                    }
-                },
-                label: {
-                    show: false 
-                }
-            }],
-            graphic: [] 
+                }],
+            graphic: []
         };
-        
-        
         chart.setOption(option);
-        
-        
-        chart.on('click', function(params) {
+        chart.on('click', function (params) {
             if (params.dataType === 'node') {
                 console.log(`点击了节点: ${params.name}`);
-            } else if (params.dataType === 'edge') {
+            }
+            else if (params.dataType === 'edge') {
                 console.log(`点击了关系: ${params.data.source} → ${params.data.target}`);
             }
         });
-        
-        
-        chart.on('mouseover', function(params) {
+        chart.on('mouseover', function (params) {
             if (params.dataType === 'node') {
                 console.log(`悬停在节点: ${params.name}`);
             }
         });
-        
-        
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
             chart.resize();
         });
-        
         return chart;
     }
-    
-        
-        function getNodeDescription(nodeName) {
-            const descriptions = {
-                '高原严寒': '高原地区严寒的气候特点',
-                '强风': '高原地区强风的环境特征',
-                '干旱': '高原地区干旱的气候特点',
-                '石砌墙体': '石砌墙体设计，保温防寒',
-                '小窗': '小窗设计，减少热量流失和风沙侵入',
-                '平顶': '平顶设计，适应干旱少雨环境'
-            };
-            return descriptions[nodeName] || '藏族碉房构造要素';
-        }
-    
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        
+    function getNodeDescription(nodeName) {
+        const descriptions = {
+            '高原严寒': '高原地区严寒的气候特点',
+            '强风': '高原地区强风的环境特征',
+            '干旱': '高原地区干旱的气候特点',
+            '石砌墙体': '石砌墙体设计，保温防寒',
+            '小窗': '小窗设计，减少热量流失和风沙侵入',
+            '平顶': '平顶设计，适应干旱少雨环境'
+        };
+        return descriptions[nodeName] || '藏族碉房构造要素';
+    }
+    document.addEventListener('DOMContentLoaded', function () {
         if (typeof echarts === 'undefined') {
             console.error('ECharts未加载，请确保echarts.min.js已正确引入');
             return;
         }
-        
-        
         initSankeyChart();
     });
-    
-    
     window.initSankeyChart = initSankeyChart;
 })();
